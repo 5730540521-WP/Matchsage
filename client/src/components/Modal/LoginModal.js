@@ -14,34 +14,38 @@ const renderField = (field)=>(
 	</div>
 )
 
-const LoginModal = ({modalState,onCloseLoginModal})=>{
-	return modalState ? (
-		<Modal classID="LoginModal" onClose={onCloseLoginModal}>
-			{/* <Field/> */}
-			<section className="modal-card-body">
-				{/* <!-- Content ... --> */}
-				{/* <button className="delete is-right" aria-label="close"></button> */}
-				เข้าสู่ระบบด้วย Facebook
-				<div className="is-divider" data-content="หรือ"></div>
-				เข้าสู่ระบบ
-				{/* <Field name="username" component={this.renderField}/> */}
-				{/* <Field name="password" component={this.renderField}/> */}
-				
-				<div className="columns">
-					<div className="column">สมัครสมาชิก</div>
-					<div className="is-divider-vertical" data-content="หรือ"></div>
-					<div className="column">ลืมรหัสผ่าน</div>
-				</div>
-			</section>
-		
-		</Modal>
-	) : null;
+//= ({modalState,onCloseLoginModal})=>
+class LoginModal extends React.Component{
+	render(){
+		return this.props.modalState ? (
+			<Modal classID="LoginModal" onClose={this.props.onCloseLoginModal}>
+				{/* <Field/> */}
+				<section className="modal-card-body">
+					{/* <!-- Content ... --> */}
+					{/* <button className="delete is-right" aria-label="close"></button> */}
+					
+					{/* <div className="is-divider" data-content="หรือ"></div> */}
+					เข้าสู่ระบบ
+					{/* <Field name="username" component={this.renderField}/> */}
+					{/* <Field name="password" component={this.renderField}/> */}
+					
+					<div className="columns">
+						<div className="column">สมัครสมาชิก</div>
+						<div className="is-divider-vertical" data-content="หรือ"></div>
+						<div className="column">ลืมรหัสผ่าน</div>
+					</div>
+				</section>
+			
+			</Modal>
+		) : null;
+	}
+	
 }
 
-function validate(values){
-	const errors = {};
-	return errors;
-}
+// function validate(values){
+// 	const errors = {};
+// 	return errors;
+// }
 
 export default LoginModal;
 // export default reduxForm({
