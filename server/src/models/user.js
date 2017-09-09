@@ -21,12 +21,19 @@ const User = new mongoose.Schema({
   },
 })
 
-User.statics.createUser = email => {
+User.statics = {
+  createUser: user => {
   // const count = this.find({}).count()
-  return m.create({
-    email,
-    password: 'wasin'
-  })
+    return m.create(user)
+  },
+
+  findByEmail: email => {
+    return m.findOne({email})
+  },
+
+  authenticate: password => {
+    console.log(password)
+  }
 }
 
 mongoose.model('user', User)
