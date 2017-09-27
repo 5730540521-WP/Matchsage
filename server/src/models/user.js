@@ -13,17 +13,16 @@ const User = new mongoose.Schema({
   },
   first_name: {
     type: String,
-    index: true,
+    index: true
   },
   last_name: {
     type: String,
-    index: true,
-  },
+    index: true
+  }
 })
 
 User.statics = {
   createUser: user => {
-  // const count = this.find({}).count()
     return m.create(user)
   },
 

@@ -23,7 +23,6 @@ async function signUp (values) {
 
   const newUser = await User.createUser(values)
   return newUser
-
 }
 
 module.exports = {
