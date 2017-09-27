@@ -1,7 +1,12 @@
-import mongoose from 'mongoose'
-import Promise from 'bluebird'
+const mongoose = require('mongoose')
+const Promise = require('bluebird')
 
-const User = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
+  user_id: {
+    type: String,
+    required: true,
+    unique: true
+  },
   email: {
     type: String,
     required: true,
@@ -18,26 +23,14 @@ const User = new mongoose.Schema({
   last_name: {
     type: String,
     index: true
+  },
+  user_type: {
+    type: String,
+    required: true
   }
 })
 
-User.statics = {
-  createUser: user => {
-    return m.create(user)
-  },
+const User = mongoose.model('user', UserSchema)
+Promise.promisifyAll(User)
 
-  findByEmail: email => {
-    return m.findOne({email})
-  },
-
-  authenticate: password => {
-    console.log(password)
-  }
-}
-
-mongoose.model('user', User)
-
-const m = mongoose.model('user')
-Promise.promisifyAll(m)
-
-module.exports = m
+module.exports = User
