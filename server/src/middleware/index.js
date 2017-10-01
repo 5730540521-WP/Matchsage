@@ -1,9 +1,7 @@
-import { Router } from 'express';
+const { Router } = require('express')
 
-export default ({ config, db }) => {
-	let routes = Router();
+module.exports = () => {
+  const routes = Router()
 
-	// add middleware here
-
-	return routes;
+  return routes
 }

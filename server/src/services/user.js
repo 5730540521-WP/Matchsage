@@ -1,4 +1,4 @@
-import UserModel from '../models/user'
+const UserModel = require('../models/user')
 
 async function createUser (values) {
   const userCount = await UserModel.find().count()

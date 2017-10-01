@@ -1,5 +1,5 @@
-import UserService from './user'
-import _ from 'lodash'
+const UserService = require('./user')
+const _ = require('lodash')
 
 async function authenticateUser (values) {
   const user = await UserService.findByEmail(values.email)
