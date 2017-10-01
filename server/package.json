@@ -11,9 +11,9 @@
     "test": "eslint src"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "compression": "^1.5.2",
-    "connect-ensure-login": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.7.1",
     "debug": "^3.1.0",
@@ -21,10 +21,9 @@
     "express": "^4.13.3",
     "express-session": "^1.15.6",
     "jade": "^1.11.0",
+    "jsonwebtoken": "^8.0.1",
     "mongoose": "^4.11.10",
     "morgan": "^1.9.0",
-    "passport": "^0.4.0",
-    "passport-auth0": "^0.6.0",
     "resource-router-middleware": "^0.6.0"
   },
   "devDependencies": {

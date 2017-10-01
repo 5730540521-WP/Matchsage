@@ -4,10 +4,12 @@ const cors = require('cors')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const initializeDb = require('./db')
-const middleware = require('./middleware')
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
 const api = require('./api')
 const path = require('path')
-const config = require('./config.json')
+const config = require('./config')
 require('dotenv').config()
 
 let app = express()
@@ -25,22 +27,32 @@ app.use(bodyParser.json({
   limit: config.bodyLimit
 }))
 
+app.use(cookieParser())
+app.use(session({
+  // Here we are creating a unique session identifier
+  secret: 'bkung-loves-wongnai',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxAge: 60000 }
+}))
+
 app.use(express.static(path.join(__dirname, 'src')))
-// connect to db
-// initializeDb(db => {
-// // internal middleware
-//   app.use(middleware({ config, db }))
-//
-// api router
-//   app.use('/api', api({ config, db }))
-//
-//   app.server.listen(process.env.PORT || config.port, () => {
-//     console.log(`Started on port ${app.server.address().port}`)
-//   })
-// })
 
-app.use(middleware())
+// middlewares
+app.use((req, res, next) => {
+  if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
+    jwt.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIS', (err, decode) => {
+      if (err) req.user = undefined
+      req.user = decode
+      next()
+    })
+  } else {
+    req.user = undefined
+    next()
+  }
+})
 
+// add api here
 app.use('/api', api)
 
 app.server.listen(process.env.PORT || config.port, () => {

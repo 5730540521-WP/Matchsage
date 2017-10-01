@@ -6,16 +6,6 @@ async function createUser (values) {
   return UserModel.create(values)
 }
 
-function findByEmail (email) {
-  return UserModel.findOne({email})
-}
-
-function findByUserId (userId) {
-  return UserModel.findOne({user_id: userId})
-}
-
 module.exports = {
-  createUser,
-  findByEmail,
-  findByUserId
+  createUser
 }
