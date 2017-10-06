@@ -7,8 +7,8 @@ module.exports = ({ config, db }) => resource({
 
   load (req, id, callback) {
     let facet = facets.find(facet => facet.id === id),
-      err = facet ? null : 'Not found'
-    callback(err, facet)
+      error = facet ? null : 'Not found'
+    callback(error, facet)
   },
 
 /** GET / - List all entities */

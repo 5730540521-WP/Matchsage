@@ -28,6 +28,9 @@ const UserSchema = new mongoose.Schema({
   user_type: {
     type: String,
     required: true
+  },
+  services: {
+    type: [ String ]
   }
 })
 

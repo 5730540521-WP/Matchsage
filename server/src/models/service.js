@@ -25,15 +25,21 @@ const ServiceSchema = new mongoose.Schema({
 
 ServiceSchema.statics = {
   findByServiceId: function (serviceId) {
-    return Service.findOne({service_id: serviceId})
+    return Service.findOne({ service_id: serviceId })
   },
-  createService: function (values) {
-    const serviceCount = Service.find().count()
-    const serviceId = serviceCount + 1
-    values.service_id = serviceId
+
+  findByName: function (serviceName) {
+    return Service.findOne({ service_name: serviceName })
+  },
+
+  createService: async function (values) {
+    const serviceCount = await Service.find().count()
+    values.service_id = (serviceCount + 1).toString()
     return Service.create(values)
   }
 }
 
 const Service = mongoose.model('service', ServiceSchema)
 Promise.promisifyAll(Service)
+
+module.exports = Service

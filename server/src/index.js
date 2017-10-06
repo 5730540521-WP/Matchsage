@@ -37,12 +37,12 @@ app.use(session({
 }))
 
 app.use(express.static(path.join(__dirname, 'src')))
-
 // middlewares
 app.use((req, res, next) => {
+  // get decoded actor information from token
   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
-    jwt.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIS', (err, decode) => {
-      if (err) req.user = undefined
+    jwt.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIS', (error, decode) => {
+      if (error) req.user = undefined
       req.user = decode
       next()
     })
@@ -54,6 +54,12 @@ app.use((req, res, next) => {
 
 // add api here
 app.use('/api', api)
+
+app.use((err, req, res, next) => {
+  console.log(err)
+  res.status(err.status)
+  res.json({ error: err.message })
+})
 
 app.server.listen(process.env.PORT || config.port, () => {
   console.log(`Started on port ${app.server.address().port}`)

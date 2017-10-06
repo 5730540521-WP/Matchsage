@@ -9,8 +9,8 @@
  *		}
  */
 export function toRes(res, status=200) {
-	return (err, thing) => {
-		if (err) return res.status(500).send(err);
+	return (error, thing) => {
+		if (error) return res.status(500).send(error);
 
 		if (thing && typeof thing.toObject==='function') {
 			thing = thing.toObject();
