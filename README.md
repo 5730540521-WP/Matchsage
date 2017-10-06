@@ -1,10 +1,8 @@
 # Matchsage
 
-## Backend
-
 Matchsage web application (Sofware Engineer term project) using React and NodeJs.
 
-## Getting Started
+## *Backend* Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
