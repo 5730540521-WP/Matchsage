@@ -9,6 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 [ REQUIRED ] Make sure you have NodeJs, Express, Mongodb install on your computer.
+
 [ OPTIONAL ] Robo3T for managing and playing with database info, SourceTree (git GUI)
 
 ### Installing
