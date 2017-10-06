@@ -50,7 +50,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Wasin Watthanasrisong** - *Initial work* - [WasinWatt](https://github.com/wasinwatt)
+* **Wasin Watthanasrisong** - [WasinWatt](https://github.com/wasinwatt)
 
 See also the list of [contributors](https://github.com/we-inc/Matchsage/contributors) who participated in this project.
 
