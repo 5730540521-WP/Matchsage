@@ -1,4 +1,4 @@
-const User = require('../models/user')
+const User = require('models/user')
 
 async function authenticateUser (values) {
   const user = await User.findByEmail(values.email)
@@ -29,7 +29,14 @@ async function signUp (values) {
   return newUser
 }
 
+function isAuthenticated (req, res, next) {
+  // if user is authenticated in the session, carry on
+  if (req.user) return next()
+  // if they aren't throw an error
+  return res.status(401).json({ message: 'Unauthorized. Please log in before proceed.' })
+}
 module.exports = {
   authenticateUser,
-  signUp
+  signUp,
+  isAuthenticated
 }

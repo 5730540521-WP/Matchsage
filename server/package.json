@@ -4,13 +4,12 @@
   "description": "an application for SE term project",
   "main": "dist",
   "scripts": {
-    "dev": "nodemon src",
-    "build": "babel src -s -D -d dist --presets env,stage-0",
-    "start": "node dist",
-    "prestart": "npm run -s build",
+    "start": "nodemon src",
+    "build": "npm run -s build",
     "test": "NODE_ENV=test mocha src/test --timeout 10000"
   },
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "compression": "^1.5.2",

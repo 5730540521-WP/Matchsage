@@ -1,15 +1,15 @@
-const app = require('../index')
+const app = require('../')
 const chai = require('chai')
 const request = require('supertest')
 const _ = require('lodash')
 const mongoose = require('mongoose')
 const Promise = require('bluebird')
 const jwt = require('jsonwebtoken')
-const UserModel = require('../models/user')
+const UserModel = require('models/user')
 
 Promise.promisifyAll(jwt)
 
-const User = require('../models/user')
+const User = require('models/user')
 
 const expect = chai.expect
 describe('API tests', () => {

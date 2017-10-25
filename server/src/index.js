@@ -1,16 +1,20 @@
+require('app-module-path').addPath(__dirname)
 const http = require('http')
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
-const initializeDb = require('./db')
+const path = require('path')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
-const api = require('./api')
-const path = require('path')
-const config = require('./config')
+
 require('dotenv').config()
+
+const initializeDb = require('db')
+const api = require('api')
+
+const config = require('config')
 
 let app = express()
 app.server = http.createServer(app)

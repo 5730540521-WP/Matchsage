@@ -1,5 +1,5 @@
-const Service = require('../models/service')
-const User = require('../models/user')
+const Service = require('models/service')
+const User = require('models/user')
 
 async function createService (values) {
   // check if the caller's id is a service provider

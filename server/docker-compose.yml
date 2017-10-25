@@ -1,0 +1,14 @@
+version: '2'
+services:
+  mongodb:
+    restart: always
+    container_name: 'mongodb'
+    image: 'mongo:3.2'
+    ports:
+      - '27017:27017'
+    volumes:
+      - './docker/config/mongodb:/data/configdb'
+      - 'dbdata:/data/db'
+
+volumes:
+  dbdata:
