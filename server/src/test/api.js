@@ -1,27 +1,27 @@
-const app = require('../')
 const chai = require('chai')
 const request = require('supertest')
 const _ = require('lodash')
 const mongoose = require('mongoose')
 const Promise = require('bluebird')
 const jwt = require('jsonwebtoken')
-const UserModel = require('models/user')
+
+const app = require('../')
+const UserModel = require('../models/user')
+const ServiceModel = require('../models/service')
 
 Promise.promisifyAll(jwt)
 
-const User = require('models/user')
-
 const expect = chai.expect
 describe('API tests', () => {
-  const provider1 = {
-    email: 'provider1@test.com',
+  let owner1 = {
+    email: 'owner1@test.com',
     password: 'test',
-    user_type: 'provider',
+    user_type: 'owner',
     first_name: 'john',
     last_name: 'doe'
   }
 
-  const customer1 = {
+  let customer1 = {
     email: 'customer1@test.com',
     password: 'test',
     user_type: 'customer',
@@ -29,10 +29,22 @@ describe('API tests', () => {
     last_name: 'watt'
   }
 
-  let token = '', actorId = ''
+  let provider1 = {
+    email: 'provider1@test.com',
+    password: 'test',
+    user_type: 'provider'
+  }
+
+  let service1 = {}
+
+  let cusToken = ''
+  let ownerToken = ''
 
   before(async () => {
-    await UserModel.createUser(customer1)
+    owner1 = await UserModel.createUser(owner1)
+    owner1 = await UserModel.findByEmail(owner1.email)
+    ownerToken = jwt.sign({ _id: owner1._id }, 'RESTFULAPIS')
+    ownerToken = `JWT ${ownerToken}`
   })
 
   after(() => {
@@ -54,15 +66,15 @@ describe('API tests', () => {
     it('should be able to sign up && user will appear in the database', () => {
       return request(app)
       .post('/api/signup')
-      .send(provider1)
+      .send(customer1)
       .expect(200)
       .then(async res => {
         expect(res.body).to.have.all.keys('token')
-        token = `JWT ${res.body.token}`
-        const { _id } = await jwt.verify(token.split(' ')[1], 'RESTFULAPIS')
-        actorId = _id
-        const user = await User.findById(_id)
-        expect(user).to.be.an('object')
+        cusToken = `JWT ${res.body.token}`
+        const { _id } = await jwt.verify(cusToken.split(' ')[1], 'RESTFULAPIS')
+        const user = await UserModel.findById(_id)
+        customer1 = user
+        expect(user.email).to.equal('customer1@test.com')
       })
     })
   })
@@ -71,22 +83,22 @@ describe('API tests', () => {
     it('Wrong email  should get 401', () => {
       return request(app)
       .post('/api/auth')
-      .send({ email: 'sss', password: provider1.password })
+      .send({ email: 'sss', password: customer1.password })
       .expect(401)
     })
     it('Wrong password should get 401', () => {
       return request(app)
       .post('/api/auth')
-      .send({ email: provider1.email, password: 'provider1.password' })
+      .send({ email: customer1.email, password: 'customer1.password' })
       .expect(401)
     })
     it('Authorized should be able to logged in', () => {
       return request(app)
       .post('/api/auth')
-      .send({ email: provider1.email, password: provider1.password })
+      .send({ email: customer1.email, password: 'test' })
       .expect(200)
       .then(async res => {
-        expect(res.body.token).to.be.equal(token.split(' ')[1])
+        expect(res.body.token).to.be.equal(cusToken.split(' ')[1])
       })
     })
   })
@@ -101,11 +113,10 @@ describe('API tests', () => {
       return request(app)
       .get('/api/users')
       .set('Accept', 'application/json')
-      .set('Authorization', token)
+      .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
         expect(res.body.users.length).to.equal(2)
-        expect(res.body.users[0].email).to.equal(customer1.email)
       })
     })
   })
@@ -115,11 +126,30 @@ describe('API tests', () => {
       return request(app)
       .get('/api/users/1')
       .set('Accept', 'application/json')
-      .set('Authorization', token)
+      .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
         expect(res.body).to.be.an('object')
         expect(res.body.user_id).to.equal('1')
+      })
+    })
+  })
+
+  describe('# /api/users/:id/update endpoint', () => {
+    it('Should update the user data', () => {
+      const update = {
+        email: 'update_customer@test.com'
+      }
+      return request(app)
+      .post(`/api/users/${customer1.user_id}/update`)
+      .set('Accept', 'appication/json')
+      .set('Authorization', cusToken)
+      .send(update)
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findById(customer1._id)
+        expect(res.body.success).to.equal(true)
+        expect(user.email).to.equal(update.email)
       })
     })
   })
@@ -129,26 +159,48 @@ describe('API tests', () => {
       return request(app)
       .post('/api/services/new')
       .set('Accept', 'application/json')
-      .set('Authorization', token)
+      .set('Authorization', ownerToken)
       .send({ service_name: 'service1' })
       .expect(200)
       .then(async res => {
         expect(res.body.service_name).to.equal('service1')
-        const user = await UserModel.findById(actorId)
-        expect(_.includes(user.services, res.body.service_id)).to.equal(true)
+        service1 = res.body
+        const user = await UserModel.findById(owner1._id)
+        expect(_.includes(user.own_services, res.body.service_id)).to.equal(true)
       })
     })
   })
+
+
 
   describe('# /api/services', () => {
     it('Should list all services', () => {
       return request(app)
       .get('/api/services')
       .set('Accept', 'application/json')
-      .set('Authorization', token)
+      .set('Authorization', ownerToken)
       .expect(200)
       .then(async res => {
         expect(res.body.services[0].service_id).to.equal('1')
+      })
+    })
+  })
+
+  describe('# /api/services/:id/update', () => {
+    const update = {
+      service_name: 'service_new'
+    }
+    it('Should update the service data', () => {
+      return request(app)
+      .post(`/api/services/${service1.service_id}/update`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .send(update)
+      .expect(200)
+      .then(async res => {
+        const service = await ServiceModel.findByName('service_new')
+        expect(res.body.success).to.equal(true)
+        expect(service.service_name).to.be.equal('service_new')
       })
     })
   })

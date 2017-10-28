@@ -20,8 +20,15 @@ const ServiceSchema = new mongoose.Schema({
   contact_number: {
     type: String,
     default: 'XXXXX'
+  },
+  providers: {
+    type: [ String ],
+    default: []
   }
 })
+
+ServiceSchema.methods = {
+}
 
 ServiceSchema.statics = {
   findByServiceId: function (serviceId) {
@@ -36,6 +43,10 @@ ServiceSchema.statics = {
     const serviceCount = await Service.find().count()
     values.service_id = (serviceCount + 1).toString()
     return Service.create(values)
+  },
+
+  updateService: async function (serviceId, values) {
+    return Service.findOneAndUpdate({ service_id: serviceId }, values)
   }
 }
 

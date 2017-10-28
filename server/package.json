@@ -9,7 +9,6 @@
     "test": "NODE_ENV=test mocha src/test --timeout 10000"
   },
   "dependencies": {
-    "app-module-path": "^2.2.0",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "compression": "^1.5.2",

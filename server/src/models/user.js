@@ -29,8 +29,13 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  services: {
-    type: [ String ]
+  own_services: {
+    type: [ String ],
+    default: []
+  },
+  work_for: {
+    type: String,
+    default: null
   }
 })
 

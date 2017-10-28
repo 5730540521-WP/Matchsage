@@ -1,4 +1,3 @@
-require('app-module-path').addPath(__dirname)
 const http = require('http')
 const express = require('express')
 const cors = require('cors')
@@ -11,10 +10,10 @@ const session = require('express-session')
 
 require('dotenv').config()
 
-const initializeDb = require('db')
-const api = require('api')
+const initializeDb = require('./db')
+const api = require('./api')
 
-const config = require('config')
+const config = require('./config')
 
 let app = express()
 app.server = http.createServer(app)

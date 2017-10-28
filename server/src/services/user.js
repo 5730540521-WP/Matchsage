@@ -1,27 +1,25 @@
-const Service = require('models/service')
-const User = require('models/user')
+const UserModel = require('../models/user')
+const ReserveModel = require('../models/reservation')
+const _ = require('lodash')
 
-async function createService (values) {
-  // check if the caller's id is a service provider
-  const user = await User.findById(values.owner_id)
-  if (user.user_type !== 'provider') {
-    const error = new Error('Only service provider can create a service.')
-    error.status = 400
-    throw error
-  }
-
-  const dupService = await Service.findByName(values.service_name)
-  if (dupService) {
-    const error = new Error('Duplicated service name.')
-    error.status = 400
-    throw error
-  }
-
-  const newService = await Service.createService(values)
-  await User.findByIdAndUpdate(values.owner_id, { $push: {services: newService.service_id} })
-  return newService
+async function getAvailableProviders ({ date, startTime, endTime, serviceId }) {
+  const providers = await UserModel.find({ work_for: serviceId, user_type: 'provider' })
+  let avaiProviders = []
+  _.forEach(providers, async (provider) => {
+    const reserve = await ReserveModel.findOne({
+      date,
+      service_id: serviceId,
+      is_cancel: false,
+      provider_id: provider.user_id,
+      $or: [{ start_time: { $gt: startTime, $lt: endTime } }, { end_time: { $gt: startTime, $lt: endTime } }]
+    })
+    if (!reserve) {
+      avaiProviders.append(provider)
+    }
+  })
+  return avaiProviders
 }
 
 module.exports = {
-  createService
+  getAvailableProviders
 }

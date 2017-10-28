@@ -1,4 +1,4 @@
-const User = require('models/user')
+const User = require('../models/user')
 
 async function authenticateUser (values) {
   const user = await User.findByEmail(values.email)
