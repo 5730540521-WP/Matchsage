@@ -21,7 +21,7 @@ const ServiceSchema = new mongoose.Schema({
     type: String,
     default: 'XXXXX'
   },
-  providers: {
+  employees: {
     type: [ String ],
     default: []
   }
@@ -41,7 +41,7 @@ ServiceSchema.statics = {
 
   createService: async function (values) {
     const serviceCount = await Service.find().count()
-    values.service_id = (serviceCount + 1).toString()
+    values.service_id = 'match-ser-' + (serviceCount + 1).toString()
     return Service.create(values)
   },
 

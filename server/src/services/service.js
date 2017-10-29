@@ -1,9 +1,11 @@
 const ServiceModel = require('../models/service')
 const UserModel = require('../models/user')
 const ReserveModel = require('../models/reservation')
+const EmployeeModel = require('../models/employee')
+const _ = require('lodash')
 
 async function createService (values) {
-  // check if the caller's id is a service provider
+  // check if the caller's id is a service owner
   const user = await UserModel.findById(values.owner_id)
   if (user.user_type !== 'owner') {
     const error = new Error('Only service owner can create a service.')
@@ -19,21 +21,43 @@ async function createService (values) {
   }
 
   const newService = await ServiceModel.createService(values)
-  await UserModel.findByIdAndUpdate(values.owner_id, { $push: {own_services: newService.service_id} })
+  await UserModel.findByIdAndUpdate(values.ownern_id, { $push: {own_services: newService.service_id} })
   return newService
 }
 
-// async function isAvailable ({ serviceId, date, startTime, endTime }) {
-//   const reserve = await ReserveModel.findOne({
-//     date,
-//     service_id: serviceId,
-//     is_cancel: false,
-//     $or: [ { start_time: { $gt: startTime, $lt: endTime } }, { end_time: { $gt: startTime, $lt: endTime } } ]
-//   })
-//   if (reserve) return false
-//   return true
-// }
+async function getAvailableEmployees ({ date, start_time, end_time, serviceId }) {
+  const employees = await EmployeeModel.find({ work_for: serviceId })
+  let avaiEmployees = []
+  _.forEach(employees, async (employee) => {
+    const reserve = await ReserveModel.findOne({
+      date,
+      service_id: serviceId,
+      is_cancel: false,
+      employee_id: employee.employee_id,
+      $or: [{ start_time: { $gt: start_time, $lt: end_time } }, { end_time: { $gt: start_time, $lt: end_time } }]
+    })
+    if (!reserve) {
+      avaiEmployees.append(employee)
+    }
+  })
+  return avaiEmployees
+}
+
+async function addEmployee (serviceId, values) {
+  const service = ServiceModel.findByServiceId(serviceId)
+  if (!service) {
+    const error = new Error('Service not found')
+    error.status = 404
+    throw error
+  }
+
+  values.work_for = serviceId
+  const newEmployee = await EmployeeModel.createEmployee(values)
+  await ServiceModel.findOneAndUpdate(serviceId, { $push: { employees: newEmployee.employee_id } })
+}
 
 module.exports = {
-  createService
+  createService,
+  getAvailableEmployees,
+  addEmployee
 }

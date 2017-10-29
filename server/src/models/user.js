@@ -25,6 +25,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     index: true
   },
+  gender: {
+    type: String,
+    require: true
+  },
   user_type: {
     type: String,
     required: true
@@ -32,10 +36,6 @@ const UserSchema = new mongoose.Schema({
   own_services: {
     type: [ String ],
     default: []
-  },
-  work_for: {
-    type: String,
-    default: null
   }
 })
 
@@ -56,7 +56,7 @@ UserSchema.statics = {
 
   createUser: async function (values) {
     const userCount = await User.find().count()
-    values.user_id = (userCount + 1).toString()
+    values.user_id = 'match-user-' + (userCount + 1).toString()
     values.password = await bcrypt.hashSync(values.password, bcrypt.genSaltSync(8), null)
     return User.create(values)
   }

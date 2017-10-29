@@ -14,7 +14,7 @@ const ReservationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  provider_id: {
+  employee_id: {
     type: String,
     required: true
   },
