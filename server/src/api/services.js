@@ -28,10 +28,12 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
 })
 
 router.get('/:id/avai_employees', AuthServ.isAuthenticated, async (req, res) => {
-  const { date, start_time, end_time } = req.query
+  const date = req.query.date || '2000-12-20'
+  const startTime = req.query.start_time || '2500'
+  const endTime = req.query.end_time || '2500'
   const serviceId = req.params.id
-  const employees = await ServiceServ.getAvailableEmployees({ date, start_time, end_time, serviceId })
-  return employees
+  const employees = await ServiceServ.getAvailableEmployees({ date, start_time: startTime, end_time: endTime, serviceId })
+  res.send(employees)
 })
 
 router.get('/:id/employees', AuthServ.isAuthenticated, async(req, res) => {

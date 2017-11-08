@@ -3,6 +3,7 @@ const UserModel = require('../models/user')
 const ReserveModel = require('../models/reservation')
 const EmployeeModel = require('../models/employee')
 const _ = require('lodash')
+const Promise = require('bluebird')
 
 async function createService (values) {
   // check if the caller's id is a service owner
@@ -21,14 +22,13 @@ async function createService (values) {
   }
 
   const newService = await ServiceModel.createService(values)
-  await UserModel.findByIdAndUpdate(values.ownern_id, { $push: {own_services: newService.service_id} })
+  await UserModel.findByIdAndUpdate(values.owner_id, { $push: {own_services: newService.service_id} })
   return newService
 }
 
 async function getAvailableEmployees ({ date, start_time, end_time, serviceId }) {
   const employees = await EmployeeModel.find({ work_for: serviceId })
-  let avaiEmployees = []
-  _.forEach(employees, async (employee) => {
+  const avaiEmployees = await Promise.map(employees, async (employee) => {
     const reserve = await ReserveModel.findOne({
       date,
       service_id: serviceId,
@@ -37,8 +37,9 @@ async function getAvailableEmployees ({ date, start_time, end_time, serviceId })
       $or: [{ start_time: { $gt: start_time, $lt: end_time } }, { end_time: { $gt: start_time, $lt: end_time } }]
     })
     if (!reserve) {
-      avaiEmployees.append(employee)
+      return employee
     }
+    return null
   })
   return avaiEmployees
 }

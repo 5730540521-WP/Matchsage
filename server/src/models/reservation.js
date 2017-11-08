@@ -48,7 +48,8 @@ ReservationSchema.statics = {
 
   createReservation: async function (values) {
     const reserveCount = await Reservation.find().count()
-    values.reservation_id = (reserveCount + 1).toString()
+    values.reserve_id = 'match-res-' + (reserveCount + 1).toString()
+    values.is_cancel = false
     return Reservation.create(values)
   },
 

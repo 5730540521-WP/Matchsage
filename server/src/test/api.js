@@ -9,6 +9,7 @@ const app = require('../')
 const UserModel = require('../models/user')
 const ServiceModel = require('../models/service')
 const EmployeeModel = require('../models/employee')
+const ReserveModel = require('../models/reservation')
 
 Promise.promisifyAll(jwt)
 
@@ -40,6 +41,7 @@ describe('API tests', () => {
   }
 
   let service1 = {}
+  let reserve1 = {}
 
   let cusToken = ''
   let ownerToken = ''
@@ -217,8 +219,62 @@ describe('API tests', () => {
       .then(async () => {
         const service = await ServiceModel.findByServiceId(service1.service_id)
         const employee = await EmployeeModel.findOne()
+        employee1 = employee
         expect(_.includes(service.employees, employee.employee_id)).to.equal(true)
         expect(employee.work_for).to.equal(service.service_id)
+      })
+    })
+  })
+
+  describe('# /api/services/:id/avai_employees', () => {
+    it('Should get all available employee in paticular date and time', () => {
+      return request(app)
+      .get(`/api/services/${service1.service_id}/avai_employees`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.length).to.equal(1)
+        expect(res.body[0].employee_id).to.equal('match-em-1')
+      })
+    })
+  })
+
+  describe('# /api/reservation/new', () => {
+    it('Should create a new reservation', () => {
+      return request(app)
+      .post(`/api/reservations/new`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ service_id: service1.service_id, customer_id: customer1.user_id, employee_id: employee1.employee_id })
+      .expect(200)
+      .then(async res => {
+        reserve1 = res.body
+        expect(res.body.service_id).to.equal(service1.service_id)
+        expect(res.body.customer_id).to.equal(customer1.user_id)
+        expect(res.body.employee_id).to.equal(employee1.employee_id)
+      })
+    })
+  })
+
+  describe('# /api/reservation/:id/cancel', () => {
+    it('UnAuthorized customer should not be able to cancel other reservation', () => {
+      return request(app)
+        .get(`/api/reservations/${reserve1.reserve_id}/cancel`)
+        .set('Accept', 'application/json')
+        .set('Authorization', ownerToken)
+        .expect(400)
+    })
+
+    it('Authorized customer should be able to cancel his own reservation', () => {
+      return request(app)
+      .get(`/api/reservations/${reserve1.reserve_id}/cancel`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async () => {
+        const reserve = await ReserveModel.findByReservationId(reserve1.reserve_id)
+        expect(reserve.is_cancel).to.equal(true)
       })
     })
   })
