@@ -12,8 +12,6 @@ const NavBar = styled.nav.attrs({
 	font-family: "Kanit";
 `
 
-
-
 // const Logo = styled.a.attrs({
 // 	className: "navbar-item"
 // })`
