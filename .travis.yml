@@ -8,6 +8,7 @@ branches:
   only: 
   - master # auto build and deploy in only master branch
 script: # run after installed
+- cd client
 - npm install # install node module
 - npm run build # build project
 install:
