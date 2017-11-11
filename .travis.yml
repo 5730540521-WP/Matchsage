@@ -12,6 +12,8 @@ script: # run after installed
 - cd client
 - npm install # install node module
 - npm run build # build project
+before_install: 
+  if [[ `npm -v` != 5* ]]; then npm i -g npm@5; fi
 install:
   npm install -g firebase-tools # install firebase-cli
 after_success:
