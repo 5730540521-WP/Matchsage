@@ -10,6 +10,8 @@ branches:
   - master # auto build and deploy in only master branch
 script: # run after installed
 - cd client
+- curl checkip.amazonaws.com
+- id
 - npm install # install node module
 - npm run build # build project
 before_install: 
