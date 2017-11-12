@@ -10,6 +10,7 @@ const UserModel = require('../models/user')
 const ServiceModel = require('../models/service')
 const EmployeeModel = require('../models/employee')
 const ReserveModel = require('../models/reservation')
+const RatingModel = require('../models/rating')
 
 Promise.promisifyAll(jwt)
 
@@ -260,10 +261,10 @@ describe('API tests', () => {
   describe('# /api/reservation/:id/cancel', () => {
     it('UnAuthorized customer should not be able to cancel other reservation', () => {
       return request(app)
-        .get(`/api/reservations/${reserve1.reserve_id}/cancel`)
-        .set('Accept', 'application/json')
-        .set('Authorization', ownerToken)
-        .expect(400)
+      .get(`/api/reservations/${reserve1.reserve_id}/cancel`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .expect(400)
     })
 
     it('Authorized customer should be able to cancel his own reservation', () => {
@@ -275,6 +276,37 @@ describe('API tests', () => {
       .then(async () => {
         const reserve = await ReserveModel.findByReservationId(reserve1.reserve_id)
         expect(reserve.is_cancel).to.equal(true)
+      })
+    })
+  })
+
+  describe('# rate', () => {
+    it('rate service should be successful', () => {
+      return request(app)
+      .post(`/api/services/${service1.service_id}/rate`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ score: 4, rating_type: 'service' })
+      .expect(200)
+      .then(async () => {
+        const rating = await RatingModel.findOne({ service_id: service1.service_id })
+        const service = await ServiceModel.findByServiceId(service1.service_id)
+        expect(rating.score).to.equal(4)
+        expect(rating.score).to.equal(service.rating)
+      })
+    })
+    it('rate employee should be successful', () => {
+      return request(app)
+      .post(`/api/employees/${employee1.employee_id}/rate`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ score: 3, rating_type: 'employee' })
+      .expect(200)
+      .then(async () => {
+        const rating = await RatingModel.findOne({ employee_id: employee1.employee_id })
+        const employee = await EmployeeModel.findByEmployeeId(employee1.employee_id)
+        expect(rating.score).to.equal(3)
+        expect(rating.score).to.equal(employee.rating)
       })
     })
   })

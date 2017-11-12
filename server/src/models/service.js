@@ -24,6 +24,11 @@ const ServiceSchema = new mongoose.Schema({
   employees: {
     type: [ String ],
     default: []
+  },
+  rating: {
+    type: Number,
+    required: true,
+    default: 0
   }
 })
 

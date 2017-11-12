@@ -30,7 +30,8 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
     const date = req.body.date || '2000-12-20'
     const startTime = req.body.start_time || '2500'
     const endTime = req.body.end_time || '2500'
-    const body = Object.assign(req.body, { date, start_time: startTime, end_time: endTime })
+    const paidStatus = req.body.paid_status || 'pending'
+    const body = Object.assign(req.body, { date, start_time: startTime, end_time: endTime, paid_status: paidStatus })
     const reserve = await ReserveModel.createReservation(body)
     res.json(reserve)
   } catch (error) {
