@@ -34,6 +34,11 @@ const ReservationSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: false
+  },
+  paid_status: {
+    type: String,
+    required: true,
+    default: 'pending'
   }
 })
 

@@ -3,8 +3,11 @@ const _ = require('lodash')
 
 const AuthServ = require('../services/auth')
 const ServiceServ = require('../services/service')
+const RatingServ = require('../services/rating')
 const ServiceModel = require('../models/service')
 const EmployeeModel = require('../models/employee')
+const UserModel = require('../models/user')
+
 // Services api
 let router = Router()
 
@@ -55,6 +58,17 @@ router.post('/:id/add_employee', AuthServ.isAuthenticated, async (req, res, next
 router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     await ServiceModel.updateService(req.params.id, req.body)
+    res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.post('/:id/rate', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    const user = await UserModel.findById(req.user._id)
+    const opts = Object.assign(req.body, { service_id: req.params.id, customer_id: user.user_id })
+    await RatingServ.rate(opts)
     res.json({ success: true })
   } catch (error) {
     next(error)

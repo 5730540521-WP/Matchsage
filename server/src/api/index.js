@@ -2,17 +2,19 @@ const { version } = require('../../package.json')
 const { Router } = require('express')
 const AuthService = require('../services/auth')
 const jwt = require('jsonwebtoken')
-const apiUsers = require('./users')
-const apiServices = require('./services')
-const apiReserves = require('./reservations')
+const userRoute = require('./users')
+const serviceRoute = require('./services')
+const reserveRoute = require('./reservations')
+const employeeRoute = require('./employees')
 
 const _ = require('lodash')
 
 let api = Router()
 
-api.use('/users', apiUsers)
-api.use('/services', apiServices)
-api.use('/reservations', apiReserves)
+api.use('/users', userRoute)
+api.use('/services', serviceRoute)
+api.use('/reservations', reserveRoute)
+api.use('/employees', employeeRoute)
 
 // sign up
 api.post('/signup', async (req, res, next) => {
@@ -37,7 +39,6 @@ api.post('/auth', async (req, res, next) => {
 
 // logout
 api.post('/signout', (req, res) => {
-  req.user = undefined
   res.send('Logout successful!')
 })
 

@@ -54,7 +54,7 @@ async function addEmployee (serviceId, values) {
 
   values.work_for = serviceId
   const newEmployee = await EmployeeModel.createEmployee(values)
-  await ServiceModel.findOneAndUpdate(serviceId, { $push: { employees: newEmployee.employee_id } })
+  await ServiceModel.findOneAndUpdate({ service_id: serviceId }, { $push: { employees: newEmployee.employee_id } })
 }
 
 module.exports = {
