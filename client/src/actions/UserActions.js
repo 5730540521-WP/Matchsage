@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {apiUrl} from '../constants/ConfigConstants';
-import {userConstants} from '../constants/UserConstants'
+import {userConstants} from '../constants/UserConstants';
 // import validator from 'validator';
 
 export const userActions = {
@@ -30,7 +30,23 @@ function logout(){
 	localStorage.removeItem('user');
 }
 
-function register(email,password){
+function register(firstname, lastname, address, phoneNumber,
+	email, accountNumber, userType, password, confirmedPassword){
 	// if(!validator.isEmail(email)) return false;
+	
+}
 
+
+function deleteAccount(){
+
+}
+
+function editProfile(){
+
+
+}
+
+
+function search(){
+	
 }

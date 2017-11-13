@@ -3,8 +3,8 @@ import React, {Component} from 'react';
 // import {Field,reduxForm} from 'redux-form';
 import styled from 'styled-components';
 
-import LoginModal from './Modal/LoginModal';
-import SignupModal from './Modal/SignupModal';
+import LoginModal from '../Modal/LoginModal';
+import SignupModal from '../Modal/SignupModal';
 
 const NavBar = styled.nav.attrs({
 	className: "navbar"
@@ -24,7 +24,7 @@ class Header extends Component{
 	constructor(){
 		super();
 		this.state = {
-			isLoginModalActive: false,
+			isLoginModalActive: false,	
 			isSignupModalActive: false
 		}
 	}

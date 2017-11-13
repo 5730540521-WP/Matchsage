@@ -1,6 +1,7 @@
 // import axios from 'axios';
 
-export * from './ModalAction';
-export * from './UserAction';
-export * from './ServiceProviderAction';
-export * from './AdminAction';
+export * from './ModalActions';
+export * from './UserActions';
+export * from './ServiceProviderActions';
+export * from './ServiceRecieverActions';
+export * from './AdminActions';
