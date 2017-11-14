@@ -17,7 +17,7 @@ export default ()=>(
 						มานวดกัน
 					</h1>
 					<h2 className="subtitle">
-						เออ เอาดิ
+						OK :)
 					</h2>
 				</div>
 			</div>
