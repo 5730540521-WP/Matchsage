@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import {Field, reduxForm} from 'redux-form';
+// import {Field, reduxForm} from 'redux-form';
 import Modal from './Modal';
 import {userActions} from '../../actions'
 
@@ -25,7 +25,6 @@ class LoginModal extends React.Component{
 			'email':'',
 			'password':''
 		}
-	
 	}
 
 	// onEmailChange(e){
@@ -73,7 +72,7 @@ class LoginModal extends React.Component{
 					/>
 
 					<a className="button is-primary"
-						onClick={()=>this.onLoginSubmit()}>
+						onClick={() => this.onLoginSubmit()}>
 						เข้าสู่ระบบ
 					</a>
 

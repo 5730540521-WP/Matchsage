@@ -3,7 +3,8 @@ import {apiUrl} from '../constants/ConfigConstants';
 import {userConstants} from '../constants/UserConstants';
 
 export const ServiceProviderActions = {
-
+	createService,
+	
 }
 
 // Use case: 19

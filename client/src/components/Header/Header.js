@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import LoginModal from '../Modal/LoginModal';
 import SignupModal from '../Modal/SignupModal';
 
+import {search} from '../../actions';
+
 const NavBar = styled.nav.attrs({
 	className: "navbar"
 })`
@@ -19,6 +21,29 @@ const NavBar = styled.nav.attrs({
 // 		display: none;
 // 	}
 // `;
+
+function onSearch(keyword){
+	
+}
+
+const SearchBox = ()=>{
+
+	return(
+		<div className="field has-addons">
+			<div className="control">
+				<input className="input" type="text" placeholder="ค้นหาบริการ"/>
+			</div>
+			<div className="control">
+				<a className="button is-info" 
+					onClick={()=>{}}
+				>
+					ค้นหา
+				</a>
+			</div>
+		</div>
+	);
+}
+
 
 class Header extends Component{
 	constructor(){
@@ -51,6 +76,8 @@ class Header extends Component{
 							<i className="fa fa-github"></i>
 						</span>
 					</a> */}
+
+				<SearchBox/>
 
 					<div className="navbar-burger burger" data-target="navMenu">
 						<span></span>

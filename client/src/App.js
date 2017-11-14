@@ -6,10 +6,12 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Team from './components/Team';
+import Service from './components/Service/Service'
 import './App.css';
 
 const Body = ()=>(
 	<Switch>
+		<Route path="/service" component={Service}/>
 		<Route path="/team" component={Team}/>
 		<Route path="/" component={Home}/>
 		{/* <Route path="/posts/:id" component={}/> */}

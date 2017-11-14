@@ -1,5 +1,5 @@
 import React from 'react';
-import {Field, reduxForm} from 'redux-form';
+// import {Field, reduxForm} from 'redux-form';
 import Modal from './Modal';
 
 // const renderField = (field)=>(
@@ -20,10 +20,10 @@ class SignupModal extends React.Component{
 		return this.props.modalState ? (
 			<Modal classID="SingupModal" onClose={this.props.onCloseSignupModal}>
 				{/* <Field/> */}
-				<form>
-					<p>Signup</p>
+				<section className="modal-card-body">
+					<p>ลงทะเบียน</p>
 					{/* <Field/> */}
-				</form>
+				</section>
 			</Modal>
 		) : null;
 	}
