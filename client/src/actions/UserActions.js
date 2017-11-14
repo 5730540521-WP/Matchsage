@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {AUTH_HEADER, API_URL} from '../constants/ConfigConstants';
+
 import {userConstants} from '../constants/UserConstants';
 // import validator from 'validator';
 
@@ -22,7 +23,10 @@ async function login(email, password){
 		password
 	}
 	
-	const res = await axios.post(API_URL + '/api/auth', { data });
+	const res = await axios.post(API_URL + '/api/auth', data );
+	console.log(res.data.token);
+	// localStorage.setItem('user', res.data.token);
+	
 	// return {type:LOGIN, state:}
 	// const user = 
 
@@ -33,11 +37,12 @@ async function login(email, password){
 // Use case:
 // Status: 
 async function logout(){
-	const headers = {
+	// const headers = {
 
-	}
-	const res = await axios.post(API_URL + '/logout', { headers });
+	// }
+	// const res = await axios.post(API_URL + '/logout', { headers });
 	localStorage.removeItem('user');
+	// return {type:}
 }
 
 // Use case:
@@ -49,6 +54,7 @@ async function register(first_name, last_name, address, phoneNumber,
 		}
 	// if(!validator.isEmail(email)) return false;
 
+	
 	const data = {
 		// first_name,
 		// password
@@ -58,9 +64,9 @@ async function register(first_name, last_name, address, phoneNumber,
 
 	}
 	const res = await axios.post(API_URL + '/register', { data,headers });
-		
+	console.log(res);
 
-	function register(user){}
+	// function success(user){}
 }
 
 // Use case:
@@ -79,12 +85,12 @@ async function editProfile(){
 // Status: 
 async function search(keyword){
 	const headers = {
-		AUTH_HEADER: ''
+		// : ''
 	}
-const res = await axios.get(API_URL + '/api/services/' + keyword,{ headers });
-const service =  res.services; // Edit pls
+	const res = await axios.get(API_URL + '/api/services/' + keyword,{ headers });
+	// const service =  res.data.services; // Edit pls
 	return {
 		type:'USER_SEARCH',
-		service
+		// service
 	}
 }

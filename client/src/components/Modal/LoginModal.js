@@ -67,7 +67,7 @@ class LoginModal extends React.Component{
 					/>
 
 					<label className="label level-left">รหัสผ่าน</label>
-					<input className="input" name="password" type="text" placeholder=""
+					<input className="input" name="password" type="password" placeholder=""
 						onChange={ e => this.onFieldChange(e)}
 					/>
 
