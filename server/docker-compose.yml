@@ -7,8 +7,7 @@ services:
     ports:
       - '27017:27017'
     volumes:
-      - './docker/config/mongodb:/data/configdb'
-      - 'dbdata:/data/db'
+      - 'dbdata:/data/match-db'
 
 volumes:
   dbdata:
