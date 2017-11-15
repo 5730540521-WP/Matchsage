@@ -31,17 +31,20 @@ const AdminRoute = ()=>(
 	</Switch>
 )
 
-const Body = ({userType})=>(
-	<Switch>
-		<Route path="/team" component={Team}/>
-		{ true
-			? <Route path="/" component={Home}/>
-			: <Route path="/" component={Service}/>
-		}
-		{/* <Route path="/posts/:id" component={}/> */}
-		<Route component={NotFound}/>
-	</Switch>
-);
+const Body = ({userType})=>{
+	const user = localStorage.getItem('user');
+	return(
+		<Switch>
+			<Route path="/team" component={Team}/>
+			{ user
+				? <Route path="/" component={Service}/>
+				: <Route path="/" component={Home}/>
+			}
+			{/* <Route path="/posts/:id" component={}/> */}
+			<Route component={NotFound}/>
+		</Switch>
+	);
+}
 
 class App extends Component {
 	constructor(props){

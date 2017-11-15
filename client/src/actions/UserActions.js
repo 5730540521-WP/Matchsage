@@ -27,11 +27,14 @@ async function login(email, password){
 	const res = await axios.post(API_URL + '/api/auth', data )
 		.catch(err => {
 			console.log(err);
-			failure(err);
+			return failure(err);
 		});
 	
-	// const user = res.data;
-	// localStorage.setItem('user', user);
+	const user = res.data;
+	if (user && user.token){
+		localStorage.setItem('user', JSON.stringify(user));
+		return success(user);
+	}
 	// success(user)
 	
 	// if(res)console.log('200');

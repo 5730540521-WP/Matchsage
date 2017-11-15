@@ -29,7 +29,7 @@ export default class GuestNavbar extends React.Component{
 		const {isLoggingIn} = this.props;
 
 		return(
-			<div>
+			<div className="navbar-end">
 	
 				<div className="navbar-item">
 						<div className="field is-grouped">
