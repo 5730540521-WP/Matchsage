@@ -73,7 +73,7 @@ class App extends Component {
 				{/* <Helmet title="Matchsage"/> */}
 				<Header/>
 				<Body userType={{}}/>
-				<Footer/>
+				{/* <Footer/> */}
       </div>
     );
   }

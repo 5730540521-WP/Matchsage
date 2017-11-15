@@ -38,9 +38,19 @@ async function fetchServices(){
 	}
 }
 
+async function updateService(){
+	return{
+		type:customerConstants.CUSTOMER_UPDATE_SERVICE,
+	}
+}
+
 // Use case: 7
 async function searchService(keyword){
 	
+	return{
+		type: customerConstants.CUSTOMER_SEARCH_SERVICE,
+		payload: keyword
+	}
 }
 
 // Use case: 8

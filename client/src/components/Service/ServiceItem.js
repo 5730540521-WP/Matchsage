@@ -1,6 +1,8 @@
 import React from 'react';
 
 export default (props)=>{
+	console.log(props);
+	const {service} = props;
 	return(
 		<div className="box">
 			<article class="media">
@@ -13,9 +15,9 @@ export default (props)=>{
 				<div class="media-content">
 					<div class="content">
 						<p>
-							<strong>{props.service_name}</strong> <small>@johnsmith</small> <small>31m</small>
+							<strong>{service.service_name}</strong> Rating: <small>{service.rating}</small>
 							<br/>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis.
+							{service.contact_number}
 						</p>
 					</div>
 					<nav class="level is-mobile">
