@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {apiUrl} from '../constants/ConfigConstants';
 import {userConstants} from '../constants/UserConstants';
+import withQuery from 'with-query'
 
 const backendUrl = 'http://128.199.113.165:3001' 
 
@@ -36,6 +37,24 @@ async function login({ email, password }) {
 	}
 }
 
+async function getUsers({ keyword = '', gender, user_type }) {
+	try {
+		const raw = await fetch(withQuery(`${backendUrl}/api/users`, {
+			method: 'GET',
+			headers: myheaders
+		}), {
+			keyword,
+			gender,
+			user_type
+		})
+
+		const res = await raw.json()
+		if (res.error) throw Error(res.error)
+	} catch (error) {
+		alert(error)
+	}
+}
+
 // Use case: 29
 function informComplaint(){
 
@@ -49,5 +68,6 @@ function restrictPrivilege(){
 export {
 	informComplaint,
 	restrictPrivilege,
-	login
+	login,
+	getUsers
 }
