@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import {Route, Switch} from 'react-router-dom';
 import logo from './logo.svg';
 // import Helmet from 'react-helmet';
@@ -30,7 +31,7 @@ const AdminRoute = ()=>(
 	</Switch>
 )
 
-const Body = ()=>(
+const Body = ({userType})=>(
 	<Switch>
 		<Route path="/team" component={Team}/>
 		{ true
@@ -43,16 +44,23 @@ const Body = ()=>(
 );
 
 class App extends Component {
+	constructor(props){
+		super(props);
+	}
   render() {
     return (
       <div className="App">
 				{/* <Helmet title="Matchsage"/> */}
 				<Header/>
-				<Body/>
+				<Body userType={{}}/>
 				<Footer/>
       </div>
     );
   }
 }
 
-export default App;
+function mapStateToProps(state){
+	return state;
+}
+
+export default connect(mapStateToProps)(App);

@@ -27,7 +27,8 @@ class LoginModal extends React.Component{
 		super(props);
 		this.state = {
 			'email':'',
-			'password':''
+			'password':'',
+			'submitted':false
 		}
 	}
 
@@ -39,18 +40,27 @@ class LoginModal extends React.Component{
 	// 	this.setState({password: e.target.value});
 	// }
 	onFieldChange(e){
-		console.log(e.target.name);
-		this.setState({[e.target.name]:e.target.value},()=>console.log(this.state));
+		// console.log(e.target.name);
+		const {name,value} = e.target;
+		this.setState({[name]:value});
 	}
 
 	onLoginSubmit(){
-		this.props.login(
-			this.state.email,
-			this.state.password
-		);
+		const {email, password} = this.state;
+		this.setState({ submitted:true },()=>{
+			//Check that email and password are submitted
+			if(email && password){
+				this.props.login(
+					email,
+					password
+				);
+			}
+		});
 	}
 	
 	render(){
+		const {isLoggingIn} = this.props;
+		const {email, password, submitted} = this.state;
 		return this.props.modalState ? (
 			<Modal classID="LoginModal" onClose={this.props.onCloseLoginModal}>
 				{/* <Field/> */}
@@ -69,23 +79,27 @@ class LoginModal extends React.Component{
 					<input className="input" name="email" type="email" placeholder=""
 						onChange={ e => this.onFieldChange(e)}
 					/>
+					{/* Check that email os not blank */}
+					{submitted && !email && 
+						<div/>
+					}
 
 					<label className="label level-left">รหัสผ่าน</label>
 					<input className="input" name="password" type="password" placeholder=""
 						onChange={ e => this.onFieldChange(e)}
 					/>
-
-					{
-
+					{/* Check that email os not blank */}
+					{submitted && !password && 
+						<div/>
 					}
 
-					{true ? (
+					{isLoggingIn ? (
+						<a className="button is-primary is-loading"/>
+					)	: (
 						<a className="button is-primary"
 							onClick={() => this.onLoginSubmit()}>
 							เข้าสู่ระบบ
 						</a>
-					)	: (
-						<a className="button is-primary is-loading"/>
 					)}
 					
 
@@ -113,9 +127,14 @@ class LoginModal extends React.Component{
 // })(LoginModal);
 // export con
 
+function mapStateToProps({authentication}){
+	const {isLoggingIn} = authentication;
+	return {isLoggingIn};
+}
+
 function mapDispacthToProps(dispatch){
 	const login = userActions.login;
 	return bindActionCreators( {login}, dispatch)
 }
-export default connect(null, mapDispacthToProps)(LoginModal);
+export default connect(mapStateToProps, mapDispacthToProps)(LoginModal);
 // export default LoginModal;

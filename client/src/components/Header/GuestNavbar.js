@@ -1,12 +1,13 @@
 import React from 'react';
+// import {connect} from 'react-redux';
 
 import LoginModal from '../Modal/LoginModal';
 import SignupModal from '../Modal/SignupModal';
 
 
 export default class GuestNavbar extends React.Component{
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 		
 		this.state = {
 			isLoginModalActive: false,	
@@ -25,8 +26,10 @@ export default class GuestNavbar extends React.Component{
 
 
 	render(){
+		const {isLoggingIn} = this.props;
+
 		return(
-			<div className="navbar-end">
+			<div>
 	
 				<div className="navbar-item">
 						<div className="field is-grouped">

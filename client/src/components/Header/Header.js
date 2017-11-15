@@ -73,9 +73,12 @@ class Header extends Component{
 					</a> */}
 
 					{/* {(()=>{
-						switch(userType)
-					})()}
-					{ isLogin && <SearchBox/> } */}
+						switch(userType){
+							default:
+								return null;
+						}
+					})()} */}
+					{ userType && <SearchBox/> }
 				
 
 					<div className="navbar-burger burger" data-target="navMenu">
@@ -86,13 +89,18 @@ class Header extends Component{
 				</div>
 
 				<div id="navMenu" className="navbar-menu">
+					<div className="navbar-end">
 					{/* { isLogin ? null:<GuestNavbar/>} */}
 					{(()=>{
 						switch(userType){
+							case 'customer':
+								return <CustomerNavbar/>
 							default:
-								return <GuestNavbar/>;
+								{/* return <GuestNavbar/>; */}
+								return <CustomerNavbar/>
 						}
 					})()}
+					</div>
 				</div>
 	
 			</NavBar>
