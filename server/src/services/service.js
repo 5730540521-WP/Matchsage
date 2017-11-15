@@ -7,7 +7,7 @@ const Promise = require('bluebird')
 
 async function createService (values) {
   // check if the caller's id is a service owner
-  const user = await UserModel.findById(values.owner_id)
+  const user = await UserModel.findByUserId(values.owner_id)
   if (user.user_type !== 'owner') {
     const error = new Error('Only service owner can create a service.')
     error.status = 400
@@ -22,7 +22,7 @@ async function createService (values) {
   }
 
   const newService = await ServiceModel.createService(values)
-  await UserModel.findByIdAndUpdate(values.owner_id, { $push: {own_services: newService.service_id} })
+  await UserModel.findOneAndUpdate({ user_id: values.owner_id }, { $push: {own_services: newService.service_id} })
   return newService
 }
 

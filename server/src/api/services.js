@@ -15,14 +15,15 @@ const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'ow
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
-  const services = await ServiceModel.find(req.query)
+  const rating = parseFloat(req.query.rating) || 0
+  const services = await ServiceModel.findWithRegexp({ service_name: req.query.service_name, rating })
   res.json({ services: _.map(services, service => _.pick(service, filteredServiceKeys)) })
 })
 
 router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const body = req.body
-    body.owner_id = req.user._id
+    body.owner_id = req.user.user_id
     const newService = await ServiceServ.createService(body)
     res.json(_.pick(newService, filteredServiceKeys))
   } catch (error) {
@@ -66,8 +67,7 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
 
 router.post('/:id/rate', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    const user = await UserModel.findById(req.user._id)
-    const opts = Object.assign(req.body, { service_id: req.params.id, customer_id: user.user_id })
+    const opts = Object.assign(req.body, { service_id: req.params.id, customer_id: req.user.user_id })
     await RatingServ.rate(opts)
     res.json({ success: true })
   } catch (error) {

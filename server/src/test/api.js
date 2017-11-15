@@ -50,7 +50,7 @@ describe('API tests', () => {
   before(async () => {
     owner1 = await UserModel.createUser(owner1)
     owner1 = await UserModel.findByEmail(owner1.email)
-    ownerToken = jwt.sign({ _id: owner1._id }, 'RESTFULAPIS')
+    ownerToken = jwt.sign({ user_id: owner1.user_id, user_type: owner1.uesr_type }, 'RESTFULAPIS')
     ownerToken = `JWT ${ownerToken}`
   })
 
@@ -78,8 +78,8 @@ describe('API tests', () => {
       .then(async res => {
         expect(res.body).to.have.all.keys('token')
         cusToken = `JWT ${res.body.token}`
-        const { _id } = await jwt.verify(cusToken.split(' ')[1], 'RESTFULAPIS')
-        const user = await UserModel.findById(_id)
+        const { user_id } = await jwt.verify(cusToken.split(' ')[1], 'RESTFULAPIS')
+        const user = await UserModel.findByUserId(user_id)
         customer1 = user
         expect(user.email).to.equal('customer1@test.com')
       })
@@ -118,12 +118,22 @@ describe('API tests', () => {
     })
     it('Authorized should get all users', () => {
       return request(app)
-      .get('/api/users')
+      .get('/api/users?keyword=')
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
         expect(res.body.users.length).to.equal(2)
+      })
+    })
+    it('Authorized should get all users', () => {
+      return request(app)
+      .get('/api/users?user_type=owner&keyword=own')
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.users.length).to.equal(1)
       })
     })
   })
@@ -154,7 +164,7 @@ describe('API tests', () => {
       .send(update)
       .expect(200)
       .then(async res => {
-        const user = await UserModel.findById(customer1._id)
+        const user = await UserModel.findByUserId(customer1.user_id)
         expect(res.body.success).to.equal(true)
         expect(user.email).to.equal(update.email)
       })
@@ -172,21 +182,31 @@ describe('API tests', () => {
       .then(async res => {
         expect(res.body.service_name).to.equal('service1')
         service1 = res.body
-        const user = await UserModel.findById(owner1._id)
+        const user = await UserModel.findByUserId(owner1.user_id)
         expect(_.includes(user.own_services, res.body.service_id)).to.equal(true)
       })
     })
   })
 
-  describe('# /api/services', () => {
+  describe('# search services', () => {
     it('Should list all services', () => {
       return request(app)
       .get('/api/services')
       .set('Accept', 'application/json')
-      .set('Authorization', ownerToken)
+      .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
         expect(res.body.services[0].service_id).to.equal('match-ser-1')
+      })
+    })
+    it('Should list services containing input string', () => {
+      return request(app)
+      .get('/api/services?service_name=ser&rating=1.5')
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.services.length).to.equal(0)
       })
     })
   })
@@ -300,12 +320,12 @@ describe('API tests', () => {
       .post(`/api/employees/${employee1.employee_id}/rate`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ score: 3, rating_type: 'employee' })
+      .send({ score: 3.5, rating_type: 'employee' })
       .expect(200)
       .then(async () => {
         const rating = await RatingModel.findOne({ employee_id: employee1.employee_id })
         const employee = await EmployeeModel.findByEmployeeId(employee1.employee_id)
-        expect(rating.score).to.equal(3)
+        expect(rating.score).to.equal(3.5)
         expect(rating.score).to.equal(employee.rating)
       })
     })

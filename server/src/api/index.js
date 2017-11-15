@@ -20,7 +20,7 @@ api.use('/employees', employeeRoute)
 api.post('/signup', async (req, res, next) => {
   try {
     const newUser = await AuthService.signUp(req.body)
-    res.json({ token: jwt.sign({ _id: newUser._id }, 'RESTFULAPIS') })
+    res.json({ token: jwt.sign({ user_id: newUser.user_id, user_type: newUser.user_type }, 'RESTFULAPIS') })
   } catch (error) {
     next(error)
   }
@@ -31,7 +31,7 @@ api.post('/auth', async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await AuthService.authenticateUser({ email, password })
-    res.json({ token: jwt.sign({ _id: user._id }, 'RESTFULAPIS') })
+    res.json({ token: jwt.sign({ user_id: user.user_id, user_type: user.user_type }, 'RESTFULAPIS') })
   } catch (error) {
     next(error)
   }

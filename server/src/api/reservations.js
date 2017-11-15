@@ -41,7 +41,7 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
 
 router.get('/:id/cancel', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    await ReserveServ.cancelReservation(req.user._id, req.params.id)
+    await ReserveServ.cancelReservation(req.user.user_id, req.params.id)
     res.send('Cancel reservation success')
   } catch (error) {
     next(error)
