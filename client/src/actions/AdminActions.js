@@ -39,8 +39,7 @@ async function login({ email, password }) {
 
 async function getUsers({ keyword = '', gender, user_type }) {
 	try {
-		const raw = await fetch(withQuery(`${backendUrl}/api/users`, {
-			method: 'GET',
+		const raw = await fetch(withQuery(`${backendUrl}/api/users`, {			
 			headers: myheaders
 		}), {
 			keyword,
