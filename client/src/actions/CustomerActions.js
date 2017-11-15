@@ -31,7 +31,7 @@ let headers ={
 async function fetchServices(){
 	console.log(token);
 	const res = await axios.get(API_URL + '/api/services', {headers});
-	console.log(res.data);
+	// console.log(res.data);
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICES,
 		payload: res
