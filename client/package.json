@@ -14,7 +14,8 @@
     "redux": "^3.7.2",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.2.0",
-    "styled-components": "^2.1.2"
+    "styled-components": "^2.1.2",
+    "with-query": "^1.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
