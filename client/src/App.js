@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import Team from './components/Team';
 import AdminLogin from './components/Admin/Login';
+import AdminSearch from './components/Admin/Search';
 import Service from './components/Service/Service'
 import NotFound from './components/NotFound';
 import './App.css';
@@ -52,6 +53,7 @@ const Body = ({userType})=>{
 					console.log('yey')
 				}
 			}} /> */}
+			<Route path="/admin/search" component={AdminSearch}/>
 			<Route path="/team" component={Team}/>
 			{ user
 				? <Route path="/" component={Service}/>
