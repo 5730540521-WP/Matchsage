@@ -13,26 +13,32 @@ export const userActions = {
 // Use case:
 // Status : 
 async function login(email, password){
-	// function reque
-	// return await axios.post('/...');
-	console.log(API_URL);
-	console.log(email + " "+ password);
-
 	const data = {
 		email,
 		password
 	}
-
-	return dispatch =>{
-		
+	
+	try{
+		const res = await axios.post(API_URL + '/api/auth', data );
+		console.log(res.validateStatus);
+	}catch(err){
+		console.log(err);
 	}
 	
-	const res = await axios.post(API_URL + '/api/auth', data );
-	console.log(res.data.token);
-	// localStorage.setItem('user', res.data.token);
+	// if(res)console.log('200');
+	// else console.log('401');
+	// const user = res.data.token;
+	// if(user){
+	// 	console.log('Success :)')
+	// 	// localStorage.setItem('user', res.data.token);
+	// }else{
+	// 	console.log('Failed')
+	// }
+	// return dispactch => {}
 	
 	// return {type:LOGIN, state:}
 	// const user = 
+
 
 	// function success(user){return {type:userConstants.LOGIN_SUCCESS,user}}
 	// function failure(error){return {type:userConstants.LOGIN_FAILURE,error}}

@@ -10,6 +10,26 @@ import Service from './components/Service/Service'
 import NotFound from './components/NotFound';
 import './App.css';
 
+const GuestRoute = ()=>(
+	<Switch>
+	</Switch>
+)
+
+const CustomerRoute = ()=>(
+	<Switch>
+	</Switch>
+)
+
+const ServiceOwnerRoute = ()=>(
+	<Switch>
+	</Switch>
+)
+
+const AdminRoute = ()=>(
+	<Switch>
+	</Switch>
+)
+
 const Body = ()=>(
 	<Switch>
 		<Route path="/team" component={Team}/>

@@ -3,8 +3,10 @@ import {connect} from 'react-redux';
 // import {Field,reduxForm} from 'redux-form';
 import styled from 'styled-components';
 
-import LoginModal from '../Modal/LoginModal';
-import SignupModal from '../Modal/SignupModal';
+import GuestNavbar from './GuestNavbar';
+import CustomerNavbar from './CustomerNavbar'
+import ServiceOwnerNavbar from './ServiceOwnerNavbar'
+// import AdminNavbar from './AdminNavbar'
 
 import {search} from '../../actions';
 
@@ -26,6 +28,7 @@ function onSearch(keyword){
 	
 }
 
+
 const SearchBox = ()=>{
 
 	return(
@@ -46,23 +49,14 @@ const SearchBox = ()=>{
 
 
 class Header extends Component{
-	constructor(){
-		super();
-		this.state = {
-			isLoginModalActive: false,	
-			isSignupModalActive: false
-		}
-	}
+	constructor(props){
+		super(props);
 
-	toggleLoginModal(modalValue){
-		this.setState({isLoginModalActive: modalValue});
-	}
-
-	toggleSignupModal(modalValue){
-		this.setState({isSignupModalActive: modalValue})
 	}
 
 	render(){
+		const {isLogin} = this.props;
+
 		return(
 			<NavBar>
 				<div className="navbar-brand">
@@ -77,7 +71,11 @@ class Header extends Component{
 						</span>
 					</a> */}
 
-				<SearchBox/>
+					{/* {(()=>{
+						switch(userStatus)
+					})()}
+					{ isLogin && <SearchBox/> } */}
+				
 
 					<div className="navbar-burger burger" data-target="navMenu">
 						<span></span>
@@ -87,37 +85,9 @@ class Header extends Component{
 				</div>
 
 				<div id="navMenu" className="navbar-menu">
-					<div className="navbar-end">
-
-						<div className="navbar-item">
-								<div className="field is-grouped">
-									{/* <p className="control"> */}
-									<p>
-										<a className="modal-button" data-target="LoginModal" 
-											onClick={()=>this.toggleLoginModal(true)}>
-											<span>เข้าสู่ระบบ</span>
-										</a>
-										
-									</p>
-								</div>
-							</div>
-
-						<div className="navbar-item">
-							<div className="field is-grouped">
-								<p className="control">
-									<a className="button is-primary modal-button" data-target="SignupModal" 
-										onClick={()=>this.toggleSignupModal(true)}>
-										<span>สมัครสมาชิก</span>
-									</a>	
-								</p>
-							</div>
-						</div>
-
-					</div>
+					{ isLogin ? null:<GuestNavbar/>}
 				</div>
-
-				<LoginModal modalState={this.state.isLoginModalActive} onCloseLoginModal={()=>this.toggleLoginModal(false)}/>
-				<SignupModal modalState={this.state.isSignupModalActive} onCloseSignupModal={()=>this.toggleSignupModal(false)}/> 
+	
 			</NavBar>
 		)
 	}
@@ -137,7 +107,8 @@ class Header extends Component{
 // 	return {toggleLoginModal,toggleSignupModal};
 // }
 
-function mapStateToProps({isLogin}){
+function mapStateToProps({authentication}){
+	const {isLogin} = authentication; 
 	return {isLogin};
 }
 
