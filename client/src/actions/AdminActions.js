@@ -11,7 +11,7 @@ let myheaders = new Headers({
 
 function setHeaderWithAccessToken() {
 	myheaders = new Headers({
-		Authorization: 'JWT ' + localStorage.getItem('admin'),
+		"Authorization": 'JWT ' + localStorage.getItem('admin'),
 		"Content-Type": "application/json"
 	})
 }
@@ -39,17 +39,23 @@ async function login({ email, password }) {
 
 async function getUsers({ keyword = '', gender, user_type }) {
 	try {
-		const raw = await fetch(withQuery(`${backendUrl}/api/users`, {			
-			headers: myheaders
-		}), {
+		console.log(localStorage.getItem('admin'))
+		const url = withQuery(`${backendUrl}/api/users`, {
 			keyword,
 			gender,
 			user_type
+		})
+		const raw = await fetch(url, {
+			headers: {
+				"Authorization": 'JWT ' + localStorage.getItem('admin'),
+				"Content-Type": "application/json"
+			}
 		})
 
 		const res = await raw.json()
 		return res
 		if (res.error) throw Error(res.error)
+		return res
 	} catch (error) {
 		alert(error)
 	}

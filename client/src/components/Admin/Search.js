@@ -17,6 +17,7 @@ class AdminSearch extends Component {
           isFemale: false,
           isOwner: false,
           isCustomer: false,
+          users: []
         }
       }
 
@@ -29,8 +30,9 @@ class AdminSearch extends Component {
       if(this.isOwner && !this.state.isCustomer) gender = 'owner'
       else if(!this.isOwner && this.state.isCustomer) gender = 'customer'
 
-      const list = getUsers(this.state.keyword ,gender ,user_type)
-      console.log(this.state)
+      const res = await getUsers(this.state.keyword ,gender ,user_type)
+      this.setState({ users: res.users })
+      console.log(this.state.users)
   }
 
   onChangeMale = () => {
@@ -51,7 +53,7 @@ class AdminSearch extends Component {
 
   onChangeKeyword = (e) => {
     this.setState({keyword: e.target.value})
-  }
+  }  
 
   renderSearchBar = () =>{
       return(
