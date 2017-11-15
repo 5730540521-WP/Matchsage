@@ -1,0 +1,5 @@
+import React, { Component } from 'react'
+import propTypes from 'prop-types'
+import { Form, Icon, Input, Button, Menu, Dropdown } from 'antd'
+import { login } from '../../actions/AdminActions'
+import './Login.css'
