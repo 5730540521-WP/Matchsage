@@ -22,7 +22,6 @@ class NormalLoginForm extends React.Component {
       if (!err) {
         login({ email: values.userName, password: values.password })
           .then(() => {
-            console.log('fuck')
             // pushRoute('/users')
             this.setState({ loginState: false })
           })
