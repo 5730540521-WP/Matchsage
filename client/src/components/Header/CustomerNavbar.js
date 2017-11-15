@@ -12,7 +12,6 @@ class CustomerNavbar extends React.Component{
 	}
 
 	onLogout(){
-		// logout();
 		this.props.logout();
 	}
 

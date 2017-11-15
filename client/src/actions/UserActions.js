@@ -59,11 +59,8 @@ async function login(email, password){
 // Use case:
 // Status: 
 async function logout(){
-	// const headers = {
-
-	// }
-	// const res = await axios.post(API_URL + '/logout', { headers });
 	localStorage.removeItem('user');
+	return {type: userConstants.LOGOUT};
 	// return {type:}
 }
 
