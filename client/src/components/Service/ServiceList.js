@@ -14,10 +14,7 @@ class ServiceList extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			services:[
-				{"name":"1","id":1},
-				{"name":"2","id":2}
-			],
+			services: this.props.services,
 			term:''
 			// servicesDisplayed: this
 		}
@@ -26,6 +23,9 @@ class ServiceList extends React.Component{
 	componentDidMount(){
 		const {fetchServices} = this.props;
 		fetchServices();
+		console.log('Hodor');
+		console.log(this.props.services);
+		console.log('Hodor2');
 		// const services = getServices();
 	}
 
@@ -57,7 +57,6 @@ class ServiceList extends React.Component{
 
 // Do "services" shoud be in redux really?
 function mapStateToProps({service}){
-	console.log(services);
 	const {services} = service;
 	return {services};
 }
