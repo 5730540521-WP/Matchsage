@@ -6,15 +6,14 @@ import styled from 'styled-components';
 import GuestNavbar from './GuestNavbar';
 import CustomerNavbar from './CustomerNavbar'
 import ServiceOwnerNavbar from './ServiceOwnerNavbar'
-// import AdminNavbar from './AdminNavbar'
-
-import {search} from '../../actions';
+// import AdminNavbar from './AdminNavbar';
+// import {userActions} from '../../actions';
 
 const NavBar = styled.nav.attrs({
 	className: "navbar"
 })`
 	font-family: "Kanit";
-`
+`;
 
 // const Logo = styled.a.attrs({
 // 	className: "navbar-item"
@@ -28,9 +27,7 @@ function onSearch(keyword){
 	
 }
 
-
 const SearchBox = ()=>{
-
 	return(
 		<div className="field has-addons">
 			<div className="control">
@@ -56,8 +53,8 @@ class Header extends Component{
 
 	render(){
 		// const {isLogin} = this.props;
-		const {userType} = this.props;
-
+		// const {userType} = this.props;
+		const user = localStorage.getItem('user');
 		return(
 			<NavBar>
 				<div className="navbar-brand">
@@ -72,10 +69,7 @@ class Header extends Component{
 						</span>
 					</a> */}
 
-					{/* {(()=>{
-						switch(userType)
-					})()}
-					{ isLogin && <SearchBox/> } */}
+					{/* { userType && <SearchBox/> } */}
 				
 
 					<div className="navbar-burger burger" data-target="navMenu">
@@ -86,13 +80,19 @@ class Header extends Component{
 				</div>
 
 				<div id="navMenu" className="navbar-menu">
-					{/* { isLogin ? null:<GuestNavbar/>} */}
-					{(()=>{
-						switch(userType){
+					
+					{/* {(()=>{
+						switch(user.user_type){
+							case 'customer':
+								return <CustomerNavbar/>
+							case 'serviceOwner':
+								return <ServiceOwnerNavbar/>
 							default:
 								return <GuestNavbar/>;
 						}
-					})()}
+					})()} */}
+					{user ? <CustomerNavbar/> : <GuestNavbar/>}
+					
 				</div>
 	
 			</NavBar>
@@ -114,12 +114,12 @@ class Header extends Component{
 // 	return {toggleLoginModal,toggleSignupModal};
 // }
 
-function mapStateToProps({authentication}){
-	// const {isLogin} = authentication; 
-	// return {isLogin};
-	const {userType} = authentication;
-	return {userType};
-}
+// function mapStateToProps({authentication}){
+// 	// const {isLogin} = authentication; 
+// 	// return {isLogin};
+// 	const {userType} = authentication;
+// 	return {userType};
+// }
 
-export default connect(mapStateToProps)(Header);
-// export default Header;
+// export default connect(mapStateToProps)(Header);
+export default Header;

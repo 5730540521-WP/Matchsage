@@ -18,12 +18,24 @@ async function login(email, password){
 		password
 	}
 	
-	try{
-		const res = await axios.post(API_URL + '/api/auth', data );
-		console.log(res.data.token);
-	}catch(err){
-		failure(err)
+	// try{
+	// 	const res = await axios.post(API_URL + '/api/auth', data );
+	// 	console.log(res.data);
+	// }catch(err){
+	// 	failure(err)
+	// }
+	const res = await axios.post(API_URL + '/api/auth', data )
+		.catch(err => {
+			console.log(err);
+			return failure(err);
+		});
+	
+	const user = res.data;
+	if (user && user.token){
+		localStorage.setItem('user', JSON.stringify(user));
+		return success(user);
 	}
+	// success(user)
 	
 	// if(res)console.log('200');
 	// else console.log('401');
@@ -39,7 +51,7 @@ async function login(email, password){
 	// return {type:LOGIN, state:}
 	// const user = 
 
-
+	function request(user){return {type:userConstants.LOGIN_REQUEST,user}}
 	function success(user){return {type:userConstants.LOGIN_SUCCESS,user}}
 	function failure(error){return {type:userConstants.LOGIN_FAILURE,error}}
 }
@@ -47,11 +59,8 @@ async function login(email, password){
 // Use case:
 // Status: 
 async function logout(){
-	// const headers = {
-
-	// }
-	// const res = await axios.post(API_URL + '/logout', { headers });
 	localStorage.removeItem('user');
+	return {type: userConstants.LOGOUT};
 	// return {type:}
 }
 
