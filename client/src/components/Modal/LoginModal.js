@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 // import {Field, reduxForm} from 'redux-form';
 import Modal from './Modal';
 import {userActions} from '../../actions'
+import styled from 'styled-components';
 
 // const renderField = (field)=>(
 // 	<div className="form-group">
@@ -18,6 +19,9 @@ import {userActions} from '../../actions'
 // )
 
 //= ({modalState,onCloseLoginModal})=>
+
+// const loginSubmitButtonLoading = styled.
+// const loginSubmitButton = styl
 class LoginModal extends React.Component{
 	constructor(props){
 		super(props);
@@ -71,10 +75,19 @@ class LoginModal extends React.Component{
 						onChange={ e => this.onFieldChange(e)}
 					/>
 
-					<a className="button is-primary"
-						onClick={() => this.onLoginSubmit()}>
-						เข้าสู่ระบบ
-					</a>
+					{
+
+					}
+
+					{true ? (
+						<a className="button is-primary"
+							onClick={() => this.onLoginSubmit()}>
+							เข้าสู่ระบบ
+						</a>
+					)	: (
+						<a className="button is-primary is-loading"/>
+					)}
+					
 
 					<div className="columns">
 						<div className="column">สมัครสมาชิก</div>

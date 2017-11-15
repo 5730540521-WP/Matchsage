@@ -22,6 +22,10 @@ async function login(email, password){
 		email,
 		password
 	}
+
+	return dispatch =>{
+		
+	}
 	
 	const res = await axios.post(API_URL + '/api/auth', data );
 	console.log(res.data.token);
@@ -83,7 +87,7 @@ async function editProfile(){
 
 // Use case:
 // Status: 
-async function search(keyword){
+async function guestSearch(keyword){
 	const headers = {
 		// : ''
 	}

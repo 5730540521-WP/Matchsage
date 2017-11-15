@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 // import {Field,reduxForm} from 'redux-form';
 import styled from 'styled-components';
 
@@ -137,5 +137,9 @@ class Header extends Component{
 // 	return {toggleLoginModal,toggleSignupModal};
 // }
 
-// export default connect(mapStateToProps)(Header);
-export default Header;
+function mapStateToProps({isLogin}){
+	return {isLogin};
+}
+
+export default connect(mapStateToProps)(Header);
+// export default Header;
