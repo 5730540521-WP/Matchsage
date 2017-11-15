@@ -53,6 +53,7 @@ async function getUsers({ keyword = '', gender, user_type }) {
 		})
 
 		const res = await raw.json()
+		return res
 		if (res.error) throw Error(res.error)
 		return res
 	} catch (error) {

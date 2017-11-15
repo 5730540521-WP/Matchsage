@@ -4,10 +4,11 @@ import styled from 'styled-components';
 const Footer = styled.footer.attrs({
 	className: "footer"
 })`
-	position:absolute;
-	left:0;
-	bottom:0;
-	right:0
+	clear: both;
+	position: relative;
+	z-index: 10;
+	height: 1.5em;
+	margin-top: -1.5em;
 `;
 
 export default ()=>(

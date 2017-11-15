@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import propTypes from 'prop-types'
-import { Form, Icon, Input, Button, Menu, Dropdown, Checkbox } from 'antd'
+import { Form, Icon, Input, Button, Menu, Dropdown, Checkbox, Table} from 'antd'
 import { getUsers } from '../../actions/AdminActions'
 import './Search.css'
 // import { pushRoute } from '../../helpers/router'
@@ -15,36 +15,76 @@ class AdminSearch extends Component {
           keyword: '',
           isMale: false,
           isFemale: false,
-          isOwnew: false,
+          isOwner: false,
           isCustomer: false,
-          users: []
+          users: undefined
         }
       }
 
   onSearchButtonClick = async () => {
-      const res = await getUsers('a','','')
-      this.setState({ users: res.users })
-      console.log(this.state.users)
+      let user_type = undefined
+      let gender = undefined
+
+
+
+      if(this.state.isMale && !this.state.isFemale) gender = 'male'
+      if(!this.state.isMale && this.state.isFemale) gender = 'female'
+     
+      if(this.state.isOwner && !this.state.isCustomer) user_type = 'owner'
+      if(!this.state.isOwner && this.state.isCustomer) user_type = 'customer'     
+
+
+      const res = await getUsers({keyword: this.state.keyword ,gender:gender ,user_type:user_type})
+      const list = res.users.map((r) =>({
+          first_name: r.first_name ? r.first_name : '-', 
+          last_name: r.last_name ? r.last_name : '-', 
+          email: r.email ? r.email : '-', 
+          user_type: r.user_type,
+          gender: r.gender ? r.gender : '-'
+        }))
+      this.setState({ users: list })
+
   }
+
+  onChangeMale = () => {
+    this.setState({isMale: !this.state.isMale})
+  }
+
+  onChangeFemale = () => {
+    this.setState({isFemale: !this.state.isFemale})
+  }
+
+  onChangeOwner = () => {
+    this.setState({isOwner: !this.state.isOwner})
+  }
+
+  onChangeCustomer = () => {
+    this.setState({isCustomer: !this.state.isCustomer})
+  }
+
+  onChangeKeyword = (e) => {
+    this.setState({keyword: e.target.value})
+  }  
 
   renderSearchBar = () =>{
       return(
-        <Form onSubmit={this.handleSubmit} className="search-form">
+        <Form className="search-form">
         <h1> Admin Search </h1>
         <br/>
         <FormItem>        
             <Input
               size='large'
               prefix={<Icon type='search' style={{ fontSize: 13 }} />}
-              placeholder='search user'              
+              placeholder='search user'
+              onChange={this.onChangeKeyword}              
             />
             <label>User Type </label>               
-            <Checkbox/> <label>Customer </label>
-            <Checkbox/> <label>Owner </label> 
+            <Checkbox onChange={this.onChangeCustomer}   /> <label>Customer </label>
+            <Checkbox onChange={this.onChangeOwner}/> <label>Owner </label> 
             <br/> 
             <label>Gender </label>               
-            <Checkbox/> <label>Male </label>
-            <Checkbox/> <label>Female </label>               
+            <Checkbox onChange={this.onChangeMale}/> <label>Male </label>
+            <Checkbox onChange={this.onChangeFemale}/> <label>Female </label>               
             <Button
             type='primary'
             htmlType='submit'
@@ -58,11 +98,39 @@ class AdminSearch extends Component {
       </Form>
       )
   }
+
+  
     
   render() {
+
+    const columns = [{
+        title: 'First Name',
+        dataIndex: 'first_name',
+        key: 'first_name',
+      }, {
+        title: 'Last Name',
+        dataIndex: 'last_name',
+        key: 'last_name',
+      }, {
+        title: 'User Type',
+        dataIndex: 'user_type',
+        key: 'user_type',
+      }, {
+        title: 'Gender',
+        dataIndex: 'gender',
+        key: 'gender',
+      }];
+
     return (
-      <div className="fuck">
-        {this.renderSearchBar()}
+      <div>
+        <div className="fuck">
+            {this.renderSearchBar()}        
+        </div>        
+        {this.state.users && 
+        <div>
+            <Table className="tableja" dataSource={this.state.users} columns={columns} pagination={false}/>
+        </div>
+        }
       </div>
     )
   }

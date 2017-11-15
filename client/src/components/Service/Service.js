@@ -20,7 +20,8 @@ class Service extends React.Component{
 		super(props);
 		this.state = {
 			services: this.props.services,
-			term:''
+			term:'',
+			isServiceLoaded: false
 		};
 
 		this.onInputChange = this.onInputChange.bind(this);
@@ -37,8 +38,11 @@ class Service extends React.Component{
 	}
 
 	renderServices(){
+		// this.setState({services:this.props.services});
+		if(!this.state.isServiceLoaded && this.props.services.length > 0) {
+			this.setState({ services: this.props.services, isServiceLoaded: true })
+		}
 		return this.state.services.map( service =>{
-			console.log(service.id);
 			return(
 				<ServiceItem key={service.service_id} service={service}/>
 			);
@@ -46,13 +50,23 @@ class Service extends React.Component{
 	}
 
 	onInputChange(e){
-		// let newlyDisplayed = _.filter();
+		const term = e.target.value.toLowerCase();
+		let newlyDisplayed = _.filter(this.props.services,service =>{
+			console.log(term);
+			return (
+				service.service_name.toLowerCase().includes(term)
+				|| service.contact_number.includes(term)
+			);
+		});
+		this.setState({services:newlyDisplayed});
+
 	}
 
 	onSilderChange(ratingMin){
 		// console.log(e.target.value);
 		console.log(ratingMin);
-		let newlyDisplayed = this.props.services.filter(rating=> (rating >= ratingMin  ) );
+		let newlyDisplayed = this.props.services.filter(service => (service.rating >= ratingMin ) );
+		console.log(this.props.services);
 		this.setState({services:newlyDisplayed});
 	}
 
