@@ -2,210 +2,120 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
+//Mock
+import { Input,Slider } from 'antd';
+import ServiceItem from './ServiceItem';
+
 import SearchNavigator from './SearchNavigator';
 import ServiceList from './ServiceList';
 
-// const SearchBox = ()=>{
-// 	return(
-// 		// <div className='container landing-container'>
-// 		// 	<div className='columns is-mobile box search-box'>
-// 		// 		<div className='column is-4 is-paddingless'>
-// 		// 			<form className='search-block'>
-// 		// 				<label className='search-label label'>
-// 		// 					<span>Where</span>
-// 		// 				</label>
-// 		// 				<input className='search-input home-input' placeholder='Address, City, State' type='/search' value=''/>
-// 		// 			</form>
-// 		// 		</div>
-// 		// 		<div className='column is-3 is-paddingless'>
-// 		// 			<form className='price-block'>
-// 		// 				<label className='price-label label'>
-// 		// 					<span>Rent Range</span>
-// 		// 				</label>
-// 		// 				<a className='button' href='#' title='Rent Range'>
-// 		// 					<span>Rent Range</span>
-// 		// 				</a>
-// 		// 				<div className='dropdown-container'>
-// 		// 					<div className='dropdown'>
-// 		// 						<div className='range-container'>
-// 		// 							<div className='left-input'>
-// 		// 								<input className='minRentInput active' maxlength='6' placeholder='Min Rent' type='tel'/>
-// 		// 							</div>
-// 		// 							<div className='right-input'>
-// 		// 								<input className='maxRentInput' maxlength='6' placeholder='Max Rent' type='tel'/>
-// 		// 							</div>
-// 		// 						</div>
-// 		// 						<ul className='min-options'>
-// 		// 							<li>No Min</li>
-// 		// 							<li>$500</li>
-// 		// 							<li>$700</li>
-// 		// 							<li>$900</li>
-// 		// 							<li>$1100</li>
-// 		// 							<li>$1300</li>
-// 		// 							<li>$1500</li>
-// 		// 						</ul>
-// 		// 						<ul className='max-options'>
-// 		// 							<li>$1100</li>
-// 		// 							<li>$1300</li>
-// 		// 							<li>$1500</li>
-// 		// 							<li>$1700</li>
-// 		// 							<li>$1900</li>
-// 		// 							<li>$2100</li>
-// 		// 							<li>No Max</li>
-// 		// 						</ul>
-// 		// 					</div>
-// 		// 				</div>
-// 		// 			</form>
-// 		// 		</div>
-// 		// 		<div className='column is-3 is-paddingless'>
-// 		// 			<div className='price-block'>
-// 		// 				<label className='price-label label'>
-// 		// 					<span>Extra's</span>
-// 		// 				</label>
-// 		// 				<a className='button' href='#' title="Extra's">
-// 		// 					<span>Beds x Baths</span>
-// 		// 				</a>
-// 		// 				<div className='dropdown-container'>
-// 		// 					<div className='dropdown'>
-// 		// 						<div className='options-container'>
-// 		// 							<p>Beds</p>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='allBed'>
-// 		// 									<input id='allBeds' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								All Beds
-// 		// 							</div>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='studioBed'>
-// 		// 									<input id='studioBed' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								Studio
-// 		// 							</div>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='oneBed'>
-// 		// 									<input id='oneBed' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								1 Bed
-// 		// 							</div>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='twoBed'>
-// 		// 									<input id='twoBed' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								2 Beds
-// 		// 							</div>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='threeBed'>
-// 		// 									<input id='threeBed' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								3 Beds
-// 		// 							</div>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='maxBeds'>
-// 		// 									<input id='maxBeds' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								4+ Beds
-// 		// 							</div>
-// 		// 						</div>
-// 		// 						<div className='options-container'>
-// 		// 							<p>Baths</p>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='allBath'>
-// 		// 									<input id='allBath' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								All Baths
-// 		// 							</div>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='oneBath'>
-// 		// 									<input id='oneBath' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								1+ Bath
-// 		// 							</div>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='twoBath'>
-// 		// 									<input id='twoBath' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								2+ Bath
-// 		// 							</div>
-// 		// 							<div className='checkbox'>
-// 		// 								<label for='threeBath'>
-// 		// 									<input id='threeBath' type='checkbox'/>
-// 		// 									<span className='checkbox-material'>
-// 		// 										<span className='check'></span>
-// 		// 									</span>
-// 		// 								</label>
-// 		// 								3+ Baths
-// 		// 							</div>
-// 		// 						</div>
-// 		// 					</div>
-// 		// 				</div>
-// 		// 			</div>
-// 		// 		</div>
-// 		// 		<div className='column is-2 is-paddingless'>
-// 		// 			<a className='button is-primary is-large search-button'>Search</a>
-// 		// 		</div>
-// 		// 	</div>
-// 		// </div>
-// 		<div/>
-// 	);
-// }
+import {CustomerActions} from '../../actions';
 
-// const SearchNavigator = ()=>{
-// 	return(
-// 		<div>
+import _ from 'lodash';
 
-// 		</div>
-// 	);
-// }
+const SearchInput = Input.Search;
 
 class Service extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			//Just for present SPRINT 
-			services:[]
-		}
+			services: this.props.services,
+			term:''
+		};
+
+		this.onInputChange = this.onInputChange.bind(this);
+	}	
+
+	componentDidMount(){
+		const {fetchServices} = this.props;
+		// fetchServices(()=>{
+		// 	console.log(this.props.services)
+		// 	this.setState({services:this.props.services});
+		// });
+		fetchServices();
+		// const services = getServices();
 	}
-	
+
+	renderServices(){
+		return this.state.services.map( service =>{
+			console.log(service.id);
+			return(
+				<ServiceItem key={service.service_id} service={service}/>
+			);
+		});
+	}
+
+	onInputChange(e){
+		// let newlyDisplayed = _.filter();
+	}
+
+	onSilderChange(ratingMin){
+		// console.log(e.target.value);
+		console.log(ratingMin);
+		let newlyDisplayed = this.props.services.filter(rating=> (rating >= ratingMin  ) );
+		this.setState({services:newlyDisplayed});
+	}
+
 	render(){
 		
 		return(
 			<div className="columns">
 				{/* <SearchBox/> */}
 
-				<SearchNavigator/>
-				<ServiceList/>
+				{/* <SearchNavigator/> */}
+				{/* Mock Search Nav */}
+				<div className="column is-one-quarter">
+					<nav className="panel">
+						<p className="panel-heading">
+							ค้นหาบริการ
+						</p>
+						{/* <div className="panel-block">
+							<p className="control has-icons-left">
+								<input className="input is-small" type="text" placeholder="ค้นหา"/>
+								<span className="icon is-small is-left">
+									<i className="fa fa-search"></i>
+								</span>
+							</p>
+						</div> */}
+						<SearchInput
+							placeholder="ค้นหา"
+							onChange={(e)=>this.onInputChange(e)}
+						/>
+						<p>คะแนนความพึงพอใจ</p>
+						<Slider defaultValue={0} max={5}
+							onChange={rate=>this.onSilderChange(rate)}
+						/>
+					</nav>
+				</div>
+				{/* <ServiceList/> */}
+				{/* Mock Service List */}
+				<div className="column">
+					<div className="rows">
+						{/* {
+							this.props.services.map( service =>{
+								return(
+									<ServiceItem key={service.id}/>
+								);
+							})
+						} */}
+						{this.renderServices()}
+					</div>
+				</div>
 			</div>
 		);
 	}
 }
+function mapStateToProps({service}){
+	const {services} = service;
+	return {services};
+}
 
+function mapDispatchToProps(dispatch){
+	const fetchServices = CustomerActions.fetchServices;
+	return bindActionCreators({
+		fetchServices
+	},dispatch);
+}
 
-// export default connect(null, mapDispatchToProps)(Service);
-export default Service;
+export default connect(mapStateToProps, mapDispatchToProps)(Service);
+// export default Service;

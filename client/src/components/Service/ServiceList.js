@@ -14,19 +14,34 @@ class ServiceList extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			services: this.props.services,
-			term:''
-			// servicesDisplayed: this
-		}
+			services: this.props.services
+		};
 	}	
 
 	componentDidMount(){
 		const {fetchServices} = this.props;
+		// fetchServices(()=>{
+		// 	console.log(this.props.services)
+		// 	this.setState({services:this.props.services});
+		// });
 		fetchServices();
-		console.log('Hodor');
-		console.log(this.props.services);
-		console.log('Hodor2');
 		// const services = getServices();
+	}
+
+	// componentWillReceiveProps(){
+	// 	// this.setState({this.props})
+	// 	console.log('Hmmm');
+	// 	console.log(this.props.services);
+	// 	this.setState({services:this.props.services},()=>console.log(this.state.services));
+	// }
+
+	renderServices(){
+		return this.props.services.map( service =>{
+			console.log(service.id);
+			return(
+				<ServiceItem key={service.service_id} service={service}/>
+			);
+		});
 	}
 
 	render(){
@@ -40,14 +55,7 @@ class ServiceList extends React.Component{
 							);
 						})
 					} */}
-					{
-						this.state.services.map( service =>{
-							console.log(service.id);
-							return(
-								<ServiceItem key={service.id}/>
-							);
-						})
-					}
+					{this.renderServices()}
 				</div>
 			</div>
 		);
