@@ -15,10 +15,10 @@ export default ()=>(
 		<div className="container">
 			<div className="content has-text-centered">
 				<p>
-					<strong>Matchsage</strong> by <a href="http://facebook.com/chrsow">GG Hanzo</a>. 
+					<strong>Matchsage</strong> by <a href="https://github.com/we-inc/Matchsage">GG Hanzo</a>. 
 				</p>
 				<p>
-					<a className="icon" href="https://github.com/jgthms/bulma">
+					<a className="icon" href="https://github.com/we-inc/Matchsage">
 						<i className="fa fa-github"></i>
 					</a>
 				</p>
