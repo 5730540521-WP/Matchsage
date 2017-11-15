@@ -20,9 +20,9 @@ async function login(email, password){
 	
 	try{
 		const res = await axios.post(API_URL + '/api/auth', data );
-		console.log(res.validateStatus);
+		console.log(res.data.token);
 	}catch(err){
-		console.log(err);
+		failure(err)
 	}
 	
 	// if(res)console.log('200');
@@ -40,8 +40,8 @@ async function login(email, password){
 	// const user = 
 
 
-	// function success(user){return {type:userConstants.LOGIN_SUCCESS,user}}
-	// function failure(error){return {type:userConstants.LOGIN_FAILURE,error}}
+	function success(user){return {type:userConstants.LOGIN_SUCCESS,user}}
+	function failure(error){return {type:userConstants.LOGIN_FAILURE,error}}
 }
 
 // Use case:

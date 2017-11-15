@@ -55,7 +55,8 @@ class Header extends Component{
 	}
 
 	render(){
-		const {isLogin} = this.props;
+		// const {isLogin} = this.props;
+		const {userType} = this.props;
 
 		return(
 			<NavBar>
@@ -72,7 +73,7 @@ class Header extends Component{
 					</a> */}
 
 					{/* {(()=>{
-						switch(userStatus)
+						switch(userType)
 					})()}
 					{ isLogin && <SearchBox/> } */}
 				
@@ -85,7 +86,13 @@ class Header extends Component{
 				</div>
 
 				<div id="navMenu" className="navbar-menu">
-					{ isLogin ? null:<GuestNavbar/>}
+					{/* { isLogin ? null:<GuestNavbar/>} */}
+					{(()=>{
+						switch(userType){
+							default:
+								return <GuestNavbar/>;
+						}
+					})()}
 				</div>
 	
 			</NavBar>
@@ -108,8 +115,10 @@ class Header extends Component{
 // }
 
 function mapStateToProps({authentication}){
-	const {isLogin} = authentication; 
-	return {isLogin};
+	// const {isLogin} = authentication; 
+	// return {isLogin};
+	const {userType} = authentication;
+	return {userType};
 }
 
 export default connect(mapStateToProps)(Header);
