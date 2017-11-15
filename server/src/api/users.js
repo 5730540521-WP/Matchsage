@@ -9,7 +9,10 @@ const filteredUserKeys = ['user_id', 'email', 'first_name', 'last_name', 'user_t
 
 // search users admin purpose
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
-  const users = await UserModel.find(req.query)
+  const keyword = req.query.keyword || ''
+  let opts = req.query
+  delete opts.keyword
+  const users = await UserModel.findWithRegexp(keyword, opts)
   res.json({ users: _.map(users, user => _.pick(user, filteredUserKeys)) })
 })
 // get user detail

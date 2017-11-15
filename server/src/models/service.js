@@ -1,3 +1,5 @@
+// import { RegExp } from 'core-js/library/web/timers'
+
 const mongoose = require('mongoose')
 const Promise = require('bluebird')
 
@@ -42,6 +44,10 @@ ServiceSchema.statics = {
 
   findByName: function (serviceName) {
     return Service.findOne({ service_name: serviceName })
+  },
+
+  findWithRegexp: function ({ service_name, rating }) {
+    return Service.find({ service_name: new RegExp(service_name, 'i'), rating: { $gte: rating } }).sort({ rating: -1 })
   },
 
   createService: async function (values) {

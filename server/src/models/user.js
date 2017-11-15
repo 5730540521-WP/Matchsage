@@ -54,6 +54,17 @@ UserSchema.statics = {
     return User.findOne({user_id: userId})
   },
 
+  findWithRegexp: function (keyword, opts) {
+    const filter = Object.assign({}, opts, {
+      $or: [
+        { email: new RegExp(keyword, 'i') },
+        { first_name: new RegExp(keyword, 'i') },
+        { last_name: new RegExp(keyword, 'i') }
+      ]
+    })
+    return User.find(filter).sort({ user_id: 1 })
+  },
+
   createUser: async function (values) {
     const userCount = await User.find().count()
     values.user_id = 'match-user-' + (userCount + 1).toString()

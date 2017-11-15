@@ -9,8 +9,7 @@ let router = Router()
 
 router.post('/:id/rate', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    const user = await UserModel.findById(req.user._id)
-    const opts = Object.assign(req.body, { employee_id: req.params.id, customer_id: user.user_id })
+    const opts = Object.assign(req.body, { employee_id: req.params.id, customer_id: req.user.user_id })
     await RatingServ.rate(opts)
     res.json({ success: true })
   } catch (error) {
