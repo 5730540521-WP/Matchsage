@@ -6,8 +6,6 @@ import ServiceItem from './ServiceItem';
 
 import {CustomerActions} from '../../actions';
 
-import _ from 'lodash';
-
 class ServiceList extends React.Component{
 	// const services = {
 	// 	1:{id:1},
