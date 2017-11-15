@@ -17,12 +17,14 @@ class AdminSearch extends Component {
           isFemale: false,
           isOwnew: false,
           isCustomer: false,
+          users: []
         }
       }
 
-  onSearchButtonClick = () => {
-      const list = getUsers('a','','')
-      console.log(list)
+  onSearchButtonClick = async () => {
+      const res = await getUsers('a','','')
+      this.setState({ users: res.users })
+      console.log(this.state.users)
   }
 
   renderSearchBar = () =>{
