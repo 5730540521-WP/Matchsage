@@ -1,8 +1,9 @@
 import axios from 'axios';
-import {apiUrl} from '../constants/ConfigConstants';
-import {userConstants} from '../constants/UserConstants';
+import {customerConstants} from '../constants/CustomerConstants';
+import {API_URL, AUTH_HEADER} from '../constants/ConfigConstants';
 
-export const ServiceRecieverActions = {
+export const CustomerActions = {
+	fetchServices,
 	searchService,
 	reserveService,
 	cancelReserveService,
@@ -17,9 +18,29 @@ export const ServiceRecieverActions = {
 	sendComplaint
 }
 
-// Use case: 7
-function searchService(){
+const user = JSON.parse(localStorage.getItem('user'));
+let token = '';
+if(user) token = user.token;
+console.log(user);
 
+let headers ={
+	[AUTH_HEADER]: 'JWT ' + token
+	// 'JWT': token
+}
+
+async function fetchServices(){
+	console.log(token);
+	const res = await axios.get(API_URL + '/api/services', {headers});
+	console.log(res.data);
+	return{
+		type: customerConstants.CUSTOMER_FETCH_SERVICES,
+		payload: res
+	}
+}
+
+// Use case: 7
+async function searchService(keyword){
+	
 }
 
 // Use case: 8

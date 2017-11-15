@@ -71,7 +71,6 @@ class Header extends Component{
 
 					{/* { userType && <SearchBox/> } */}
 				
-
 					<div className="navbar-burger burger" data-target="navMenu">
 						<span></span>
 						<span></span>

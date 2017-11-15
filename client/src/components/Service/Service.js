@@ -3,6 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
 import SearchNavigator from './SearchNavigator';
+import ServiceList from './ServiceList';
 
 // const SearchBox = ()=>{
 // 	return(
@@ -184,14 +185,27 @@ import SearchNavigator from './SearchNavigator';
 // }
 
 class Service extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			//Just for present SPRINT 
+			services:[]
+		}
+	}
+	
 	render(){
+		
 		return(
-			<div>
+			<div className="columns">
 				{/* <SearchBox/> */}
+
 				<SearchNavigator/>
+				<ServiceList/>
 			</div>
 		);
 	}
 }
 
-export default connect(null)(Service);
+
+// export default connect(null, mapDispatchToProps)(Service);
+export default Service;

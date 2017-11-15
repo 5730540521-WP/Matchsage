@@ -6,6 +6,7 @@ import ServiceProviderReducer from './ServiceProviderReducer';
 import ServiceRecieverReducer from './ServiceRecieverReducer';
 import AdminReducer from './AdminReducer';
 import {authentication} from './AuthenticationReducer';
+import {service} from './Service';
 
 const rootReducer = combineReducers({
 	// navbarState: NavBarReducer
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
 	ServiceProviderReducer,
 	ServiceRecieverReducer,
 	AdminReducer,
-	authentication
+	authentication,
+	service
 });
 
 export default rootReducer;
