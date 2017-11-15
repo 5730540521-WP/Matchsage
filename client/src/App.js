@@ -7,14 +7,18 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import Team from './components/Team';
 import Service from './components/Service/Service'
+import NotFound from './components/NotFound';
 import './App.css';
 
 const Body = ()=>(
 	<Switch>
-		<Route path="/service" component={Service}/>
 		<Route path="/team" component={Team}/>
-		<Route path="/" component={Home}/>
+		{ true
+			? <Route path="/" component={Home}/>
+			: <Route path="/" component={Service}/>
+		}
 		{/* <Route path="/posts/:id" component={}/> */}
+		<Route component={NotFound}/>
 	</Switch>
 );
 
