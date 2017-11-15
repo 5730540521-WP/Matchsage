@@ -40,7 +40,7 @@ class AdminSearch extends Component {
           last_name: r.last_name ? r.last_name : '-', 
           email: r.email ? r.email : '-', 
           user_type: r.user_type,
-          gender: r.gender ? r.gender : 'male'
+          gender: r.gender ? r.gender : '-'
         }))
       this.setState({ users: list })
 
