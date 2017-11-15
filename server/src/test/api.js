@@ -11,6 +11,7 @@ const ServiceModel = require('../models/service')
 const EmployeeModel = require('../models/employee')
 const ReserveModel = require('../models/reservation')
 const RatingModel = require('../models/rating')
+const AdminModel = require('../models/admin')
 
 Promise.promisifyAll(jwt)
 
@@ -41,16 +42,24 @@ describe('API tests', () => {
     gender: 'female'
   }
 
+  let admin1 = {
+    email: 'admin1@test.com',
+    password: 'test',
+    first_name: 'pun',
+    last_name: 'pun'
+  }
+
   let service1 = {}
   let reserve1 = {}
 
   let cusToken = ''
   let ownerToken = ''
+  let adminToken = ''
 
   before(async () => {
     owner1 = await UserModel.createUser(owner1)
     owner1 = await UserModel.findByEmail(owner1.email)
-    ownerToken = jwt.sign({ user_id: owner1.user_id, user_type: owner1.uesr_type }, 'RESTFULAPIS')
+    ownerToken = jwt.sign({ user_id: owner1.user_id, user_type: owner1.user_type }, 'MATCHSAGE_USER')
     ownerToken = `JWT ${ownerToken}`
   })
 
@@ -78,7 +87,7 @@ describe('API tests', () => {
       .then(async res => {
         expect(res.body).to.have.all.keys('token')
         cusToken = `JWT ${res.body.token}`
-        const { user_id } = await jwt.verify(cusToken.split(' ')[1], 'RESTFULAPIS')
+        const { user_id } = await jwt.verify(cusToken.split(' ')[1], 'MATCHSAGE_USER')
         const user = await UserModel.findByUserId(user_id)
         customer1 = user
         expect(user.email).to.equal('customer1@test.com')
@@ -89,23 +98,52 @@ describe('API tests', () => {
   describe('# /api/auth endpoint', () => {
     it('Wrong email  should get 401', () => {
       return request(app)
-      .post('/api/auth')
-      .send({ email: 'sss', password: customer1.password })
-      .expect(401)
+        .post('/api/auth')
+        .send({ email: 'sss', password: customer1.password })
+        .expect(401)
     })
     it('Wrong password should get 401', () => {
       return request(app)
-      .post('/api/auth')
-      .send({ email: customer1.email, password: 'customer1.password' })
-      .expect(401)
+        .post('/api/auth')
+        .send({ email: customer1.email, password: 'customer1.password' })
+        .expect(401)
     })
     it('Authorized should be able to logged in', () => {
       return request(app)
-      .post('/api/auth')
-      .send({ email: customer1.email, password: 'test' })
+        .post('/api/auth')
+        .send({ email: customer1.email, password: 'test' })
+        .expect(200)
+        .then(async res => {
+          expect(res.body.token).to.be.equal(cusToken.split(' ')[1])
+        })
+    })
+  })
+
+  describe('# /api/admin-signup endpoint', () => {
+    it('should be able to sign up && user will appear in the database', () => {
+      return request(app)
+        .post('/api/admin-signup')
+        .send(admin1)
+        .expect(200)
+        .then(async res => {
+          expect(res.body).to.have.all.keys('token')
+          adminToken = `JWT ${res.body.token}`
+          const { admin_id } = await jwt.verify(adminToken.split(' ')[1], 'MATCHSAGE_ADMIN')
+          const admin = await AdminModel.findByAdminId(admin_id)
+          admin1 = admin
+          expect(admin.email).to.equal('admin1@test.com')
+        })
+    })
+  })
+
+  describe('# /api/admin-auth endpoint', () => {
+    it('Authorized admin should be able to logged in', () => {
+      return request(app)
+      .post('/api/admin-auth')
+      .send({ email: admin1.email, password: 'test' })
       .expect(200)
       .then(async res => {
-        expect(res.body.token).to.be.equal(cusToken.split(' ')[1])
+        expect(res.body.token).to.be.equal(adminToken.split(' ')[1])
       })
     })
   })
@@ -120,7 +158,7 @@ describe('API tests', () => {
       return request(app)
       .get('/api/users?keyword=')
       .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
+      .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
         expect(res.body.users.length).to.equal(2)
@@ -130,7 +168,7 @@ describe('API tests', () => {
       return request(app)
       .get('/api/users?user_type=owner&keyword=own')
       .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
+      .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
         expect(res.body.users.length).to.equal(1)

@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'src')))
 app.use((req, res, next) => {
   // get decoded actor information from token
   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
-    jwt.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIS', (error, decode) => {
+    jwt.verify(req.headers.authorization.split(' ')[1], 'MATCHSAGE_USER', (error, decode) => {
       if (error) req.user = undefined
       req.user = decode
       next()
@@ -55,6 +55,20 @@ app.use((req, res, next) => {
   }
 })
 
+// optimize later
+app.use((req, res, next) => {
+  // get decoded actor information from token
+  if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
+    jwt.verify(req.headers.authorization.split(' ')[1], 'MATCHSAGE_ADMIN', (error, decode) => {
+      if (error) req.admin = undefined
+      req.admin = decode
+      next()
+    })
+  } else {
+    req.admin = undefined
+    next()
+  }
+})
 // add api here
 app.use('/api', api)
 

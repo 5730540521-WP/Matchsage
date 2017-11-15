@@ -1,6 +1,6 @@
 const { version } = require('../../package.json')
 const { Router } = require('express')
-const AuthService = require('../services/auth')
+const AuthServ = require('../services/auth')
 const jwt = require('jsonwebtoken')
 const userRoute = require('./users')
 const serviceRoute = require('./services')
@@ -16,22 +16,43 @@ api.use('/services', serviceRoute)
 api.use('/reservations', reserveRoute)
 api.use('/employees', employeeRoute)
 
-// sign up
+// user signup
 api.post('/signup', async (req, res, next) => {
   try {
-    const newUser = await AuthService.signUp(req.body)
-    res.json({ token: jwt.sign({ user_id: newUser.user_id, user_type: newUser.user_type }, 'RESTFULAPIS') })
+    const newUser = await AuthServ.signup(req.body)
+    res.json({ token: jwt.sign({ user_id: newUser.user_id, user_type: newUser.user_type }, 'MATCHSAGE_USER') })
   } catch (error) {
     next(error)
   }
 })
 
-// authentication
+// user authentication
 api.post('/auth', async (req, res, next) => {
   try {
     const { email, password } = req.body
-    const user = await AuthService.authenticateUser({ email, password })
-    res.json({ token: jwt.sign({ user_id: user.user_id, user_type: user.user_type }, 'RESTFULAPIS') })
+    const user = await AuthServ.authenticateUser({ email, password })
+    res.json({ token: jwt.sign({ user_id: user.user_id, user_type: user.user_type }, 'MATCHSAGE_USER') })
+  } catch (error) {
+    next(error)
+  }
+})
+
+// admin signup
+api.post('/admin-signup', async (req, res, next) => {
+  try {
+    const newAdmin = await AuthServ.signupAdmin(req.body)
+    res.json({ token: jwt.sign({ admin_id: newAdmin.admin_id }, 'MATCHSAGE_ADMIN') })
+  } catch (error) {
+    next(error)
+  }
+})
+
+// admin authentication
+api.post('/admin-auth', async (req, res, next) => {
+  try {
+    const { email, password } = req.body
+    const admin = await AuthServ.authenticateAdmin({ email, password })
+    res.json({ token: jwt.sign({ admin_id: admin.admin_id }, 'MATCHSAGE_ADMIN') })
   } catch (error) {
     next(error)
   }
