@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import propTypes from 'prop-types'
-import { Form, Icon, Input, Button, Menu, Dropdown, Checkbox } from 'antd'
+import { Form, Icon, Input, Button, Menu, Dropdown, Checkbox, Table} from 'antd'
 import { getUsers } from '../../actions/AdminActions'
 import './Search.css'
 // import { pushRoute } from '../../helpers/router'
@@ -17,22 +17,33 @@ class AdminSearch extends Component {
           isFemale: false,
           isOwner: false,
           isCustomer: false,
-          users: []
+          users: undefined
         }
       }
 
-  onSearchButtonClick = () => {
-      let user_type = ''
-      if(this.isMale && !this.state.isFemale) user_type = 'male'
-      else if(!this.isMale && this.state.isFemale) user_type = 'male'
+  onSearchButtonClick = async () => {
+      let user_type = undefined
+      let gender = undefined
 
-      let gender = ''
-      if(this.isOwner && !this.state.isCustomer) gender = 'owner'
-      else if(!this.isOwner && this.state.isCustomer) gender = 'customer'
 
-      const res = await getUsers(this.state.keyword ,gender ,user_type)
-      this.setState({ users: res.users })
-      console.log(this.state.users)
+
+      if(this.state.isMale && !this.state.isFemale) gender = 'male'
+      if(!this.state.isMale && this.state.isFemale) gender = 'female'
+     
+      if(this.state.isOwner && !this.state.isCustomer) user_type = 'owner'
+      if(!this.state.isOwner && this.state.isCustomer) user_type = 'customer'     
+
+
+      const res = await getUsers({keyword: this.state.keyword ,gender:gender ,user_type:user_type})
+      const list = res.users.map((r) =>({
+          first_name: r.first_name ? r.first_name : '-', 
+          last_name: r.last_name ? r.last_name : '-', 
+          email: r.email ? r.email : '-', 
+          user_type: r.user_type,
+          gender: r.gender ? r.gender : 'male'
+        }))
+      this.setState({ users: list })
+
   }
 
   onChangeMale = () => {
@@ -87,11 +98,39 @@ class AdminSearch extends Component {
       </Form>
       )
   }
+
+  
     
   render() {
+
+    const columns = [{
+        title: 'First Name',
+        dataIndex: 'first_name',
+        key: 'first_name',
+      }, {
+        title: 'Last Name',
+        dataIndex: 'last_name',
+        key: 'last_name',
+      }, {
+        title: 'User Type',
+        dataIndex: 'user_type',
+        key: 'user_type',
+      }, {
+        title: 'Gender',
+        dataIndex: 'gender',
+        key: 'gender',
+      }];
+
     return (
-      <div className="fuck">
-        {this.renderSearchBar()}
+      <div>
+        <div className="fuck">
+            {this.renderSearchBar()}        
+        </div>        
+        {this.state.users && 
+        <div>
+            <Table className="tableja" dataSource={this.state.users} columns={columns} pagination={false}/>
+        </div>
+        }
       </div>
     )
   }
