@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {apiUrl} from '../constants/ConfigConstants';
 import {customerConstants} from '../constants/CustomerConstants';
 import {API_URL, AUTH_HEADER} from '../constants/ConfigConstants';
 
@@ -20,7 +19,9 @@ export const CustomerActions = {
 }
 
 const user = JSON.parse(localStorage.getItem('user'));
-const token = user.token;
+let token = '';
+if(user) token = user.token;
+console.log(user);
 
 let headers ={
 	[AUTH_HEADER]: 'JWT ' + token

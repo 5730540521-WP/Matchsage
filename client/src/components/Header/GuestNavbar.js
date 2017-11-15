@@ -23,8 +23,7 @@ export default class GuestNavbar extends React.Component{
 	toggleSignupModal(modalValue){
 		this.setState({isSignupModalActive: modalValue})
 	}
-
-
+	
 	render(){
 		const {isLoggingIn} = this.props;
 

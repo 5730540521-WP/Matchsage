@@ -33,21 +33,21 @@ class ServiceList extends React.Component{
 		return(
 			<div className="column">
 				<div className="rows">
-					{/* {
+					{
 						this.props.services.map( service =>{
 							return(
 								<ServiceItem key={service.id}/>
 							);
 						})
-					} */}
-					{
+					}
+					{/* {
 						this.state.services.map( service =>{
 							console.log(service.id);
 							return(
 								<ServiceItem key={service.id}/>
 							);
 						})
-					}
+					} */}
 				</div>
 			</div>
 		);

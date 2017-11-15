@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ()=>{
+export default (props)=>{
 	return(
 		<div className="box">
 			<article class="media">
@@ -13,7 +13,7 @@ export default ()=>{
 				<div class="media-content">
 					<div class="content">
 						<p>
-							<strong>John Smith</strong> <small>@johnsmith</small> <small>31m</small>
+							<strong>{props.service_name}</strong> <small>@johnsmith</small> <small>31m</small>
 							<br/>
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis.
 						</p>
