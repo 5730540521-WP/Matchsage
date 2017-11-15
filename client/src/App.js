@@ -45,7 +45,13 @@ const Body = ({userType})=>{
 					return (<AdminLogin />)
 				}
 			}} />
-			{/* <Route path="/admin" component={Admin}/> */}
+			{/* <Route path="/admin" component={Admin} render={() => {
+				if (!localStorage.admin) {
+					return (<Redirect to='/admin/login' />)
+				} else {
+					console.log('yey')
+				}
+			}} /> */}
 			<Route path="/team" component={Team}/>
 			{ user
 				? <Route path="/" component={Service}/>

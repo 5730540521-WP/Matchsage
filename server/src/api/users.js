@@ -5,7 +5,7 @@ const UserModel = require('../models/user')
 const _ = require('lodash')
 
 let router = Router()
-const filteredUserKeys = ['user_id', 'email', 'first_name', 'last_name', 'user_type']
+const filteredUserKeys = ['user_id', 'email', 'first_name', 'last_name', 'user_type', 'own_services']
 
 // search users admin purpose
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
