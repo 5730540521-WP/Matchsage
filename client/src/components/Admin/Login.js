@@ -5,6 +5,7 @@ import { login } from '../../actions/AdminActions'
 import './Login.css'
 // import { pushRoute } from '../../helpers/router'
 import { connect } from 'react-redux'
+import history from '../../helpers/history'
 const FormItem = Form.Item
 class NormalLoginForm extends React.Component {
 
@@ -22,8 +23,9 @@ class NormalLoginForm extends React.Component {
       if (!err) {
         login({ email: values.userName, password: values.password })
           .then(() => {
-            // pushRoute('/users')
             this.setState({ loginState: false })
+            alert('Login successful!')
+            history.push('/admin')
           })
           .catch(e => {
             this.setState({ loginState: false })
