@@ -16,7 +16,7 @@ const ComplaintSchema = new mongoose.Schema({
     },
     Note:{
         type: String,
-        required: true
+        required: false
     }
 })
 
