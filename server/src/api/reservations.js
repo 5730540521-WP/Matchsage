@@ -7,6 +7,9 @@ const ReserveServ = require('../services/reservation')
 // Reservations api
 let router = Router()
 
+const filteredReserveKeys = ['reserve_id','service_id','customer_id','employee_id','start_time',
+  'end_time','date','is_cancel','paid_status']
+
 router.get('/', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const reserves = await ReserveModel.find(req.query)
@@ -19,7 +22,12 @@ router.get('/', AuthServ.isAuthenticated, async (req, res, next) => {
 router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const reserve = await ReserveModel.findByReservationId(req.params.id)
-    res.json(_.pick(reserve, []))
+    if(req.user.user_id !== reserve.customer_id && req.user.user_id !== reserve.service_id){
+      const error = new Error('Only customer/service owner of this reservation can access the reservation.')
+      error.status = 400
+      throw error
+    }
+    res.json(_.pick(reserve, filteredReserveKeys))
   } catch (error) {
     next(error)
   }

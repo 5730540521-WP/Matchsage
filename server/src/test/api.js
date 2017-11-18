@@ -35,6 +35,15 @@ describe('API tests', () => {
     gender: 'male'
   }
 
+  let customer2 = {
+    email: 'customer2@test.com',
+    password: 'test',
+    user_type: 'customer',
+    first_name: 'Monkey',
+    last_name: 'Luffy',
+    gender: 'male'
+  }
+
   let employee1 = {
     email: 'employee1@test.com',
     user_type: 'employee',
@@ -55,12 +64,17 @@ describe('API tests', () => {
   let cusToken = ''
   let ownerToken = ''
   let adminToken = ''
+  let cusToken2 = ''
 
   before(async () => {
     owner1 = await UserModel.createUser(owner1)
     owner1 = await UserModel.findByEmail(owner1.email)
     ownerToken = jwt.sign({ user_id: owner1.user_id, user_type: owner1.user_type }, 'MATCHSAGE_USER')
     ownerToken = `JWT ${ownerToken}`
+    customer2 = await UserModel.createUser(customer2)
+    customer2 = await UserModel.findByEmail(customer2.email)
+    cusToken2 = jwt.sign({user_id:customer2.user_id, user_type: customer2.user_type}, 'MATCHSAGE_USER')
+    cusToken2 = `JWT ${cusToken2}`
   })
 
   after(() => {
@@ -161,7 +175,7 @@ describe('API tests', () => {
       .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
-        expect(res.body.users.length).to.equal(2)
+        expect(res.body.users.length).to.equal(3)
       })
     })
     it('Authorized should get all users', () => {
@@ -313,6 +327,16 @@ describe('API tests', () => {
         expect(res.body.customer_id).to.equal(customer1.user_id)
         expect(res.body.employee_id).to.equal(employee1.employee_id)
       })
+    })
+  })
+
+  describe('# /api/reservation/:id', () => {
+    it('Unauthorized user should not be able to access to other\'s reservation', () => {
+      return request(app)
+      .get(`/api/reservations/${reserve1.reserve_id}/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken2)
+      .expect(400)
     })
   })
 
