@@ -6,6 +6,7 @@ const userRoute = require('./users')
 const serviceRoute = require('./services')
 const reserveRoute = require('./reservations')
 const employeeRoute = require('./employees')
+const complaintRouter = require('./complant')
 
 const _ = require('lodash')
 
@@ -15,6 +16,7 @@ api.use('/users', userRoute)
 api.use('/services', serviceRoute)
 api.use('/reservations', reserveRoute)
 api.use('/employees', employeeRoute)
+api.use('/complaint', complaintRouter)
 
 // user signup
 api.post('/signup', async (req, res, next) => {
