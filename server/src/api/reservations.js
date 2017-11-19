@@ -4,6 +4,7 @@ const AuthServ = require('../services/auth')
 const ReserveModel = require('../models/reservation')
 const ReserveServ = require('../services/reservation')
 const UserModel = require('../models/user')
+const ServiceModel = require('../models/service')
 
 // Reservations api
 let router = Router()

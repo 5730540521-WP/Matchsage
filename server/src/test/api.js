@@ -26,6 +26,15 @@ describe('API tests', () => {
     gender: 'male'
   }
 
+  let owner2 = {
+    email: 'owner2@test.com',
+    password: 'test',
+    user_type: 'owner',
+    first_name: 'Roronoa',
+    last_name: 'Zoro',
+    gender: 'male'
+  }
+
   let customer1 = {
     email: 'customer1@test.com',
     password: 'test',
@@ -65,14 +74,16 @@ describe('API tests', () => {
   let ownerToken = ''
   let adminToken = ''
   let cusToken2 = ''
+  let ownerToken2 = ''
 
   before(async () => {
     owner1 = await UserModel.createUser(owner1)
-    owner1 = await UserModel.findByEmail(owner1.email)
     ownerToken = jwt.sign({ user_id: owner1.user_id, user_type: owner1.user_type }, 'MATCHSAGE_USER')
     ownerToken = `JWT ${ownerToken}`
+    owner2 = await UserModel.createUser(owner2)
+    ownerToken2 = jwt.sign({ user_id: owner2.user_id, user_type: owner2.user_type }, 'MATCHSAGE_USER')
+    ownerToken2 = `JWT ${ownerToken2}`
     customer2 = await UserModel.createUser(customer2)
-    customer2 = await UserModel.findByEmail(customer2.email)
     cusToken2 = jwt.sign({user_id:customer2.user_id, user_type: customer2.user_type}, 'MATCHSAGE_USER')
     cusToken2 = `JWT ${cusToken2}`
   })
@@ -175,7 +186,7 @@ describe('API tests', () => {
       .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
-        expect(res.body.users.length).to.equal(3)
+        expect(res.body.users.length).to.equal(4)
       })
     })
     it('Authorized should get all users', () => {
@@ -185,7 +196,7 @@ describe('API tests', () => {
       .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
-        expect(res.body.users.length).to.equal(1)
+        expect(res.body.users.length).to.equal(2)
       })
     })
   })
@@ -331,11 +342,18 @@ describe('API tests', () => {
   })
 
   describe('# /api/reservation/:id', () => {
-    it('Unauthorized user should not be able to access to other\'s reservation', () => {
+    it('Unauthorized customer should not be able to access to other\'s reservation', () => {
       return request(app)
       .get(`/api/reservations/${reserve1.reserve_id}/`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken2)
+      .expect(400)
+    })
+    it('Unauthorized service owner should not be able to access to other\'s reservation', () => {
+      return request(app)
+      .get(`/api/reservations/${reserve1.reserve_id}/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken2)
       .expect(400)
     })
   })
