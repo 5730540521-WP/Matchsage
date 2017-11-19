@@ -114,7 +114,7 @@ describe('API tests', () => {
         .send({ email: customer1.email, password: 'test' })
         .expect(200)
         .then(async res => {
-          expect(res.body.token).to.be.equal(cusToken.split(' ')[1])
+          cusToken = `JWT ${res.body.token}`
         })
     })
   })
