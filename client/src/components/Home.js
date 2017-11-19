@@ -7,14 +7,7 @@ import SignupModal from './Modal/SignupModal';
 const Hero = styled.div.attrs({
 	className:"hero is-medium is-primary is-bold"
 })``;
-const text = {
-	'text-indent':'50px',
-	'text-align': 'left',
-	'font-size':'30',
-	'font-family': "Kanit"
-}
-const imgurl1 = './images/1150.jpg';
-const imgurl2 = './images/1142.jpg';
+
 
 export default class Home extends React.Component{
 	constructor(props){
@@ -31,6 +24,13 @@ export default class Home extends React.Component{
 	}
 	
 	render(){
+		const text = {
+			'text-indent':'50px',
+			'text-align': 'left',
+			'font-size':'30',
+			'font-family': "Kanit"
+		}
+		const imgurl1 = './images/1150.jpg',imgurl2 = './images/1142.jpg';
 		return (
 			<section className="section">
 				<Row>
@@ -42,8 +42,8 @@ export default class Home extends React.Component{
 								<h1 style={{'font-weight':'bold', color:'white'}}>
 									Matchsage
 								</h1>					
-								<h1 style={{color:'white','padding-right':'1.5%',display:'inline-block'}}>แหล่งรวบรวมร้านนวดคุณภาพ</h1>
-								<Button type="primary" style={{display:'inline-block','transform': 'translate(0%, -18%)',width:'100px',height:'50px','font-size':'19'}}
+								<h1 style={{color:'white',display:'inline-block'}}>แหล่งรวบรวมร้านนวดคุณภาพ</h1>
+								<Button type="primary" style={{display:'inline-block','transform': 'translate(0%, -18%)',width:'100px',height:'50px','font-size':'19','margin-left':'1.5%'}}
 									onClick={()=>this.toggleSignupModal(true)}>สมัครฟรี</Button>
 								 
 							</div>
