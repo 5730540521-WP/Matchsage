@@ -14,6 +14,6 @@ async function createComplaint (values) {
 }
 
 module.exports = {
-    complain
+    createComplaint
 }
 

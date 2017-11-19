@@ -53,6 +53,7 @@ describe('API tests', () => {
   let reserve1 = {}
   let complaint1 = {}
 
+
   let cusToken = ''
   let ownerToken = ''
   let adminToken = ''
@@ -376,10 +377,10 @@ describe('API tests', () => {
       .post(`/api/complaint/new`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ service_id: service1.service_id, customer_id: customer1.user_id, employee_id: employee1.employee_id })
+      .send({ customer_id: customer1.user_id , service_id: service1.service_id })
       .expect(200)
       .then(async res => {
-        complaint1 = res.body
+        console.log(res)
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
       })
