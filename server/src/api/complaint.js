@@ -30,7 +30,8 @@ router.get('/:serviceid', AuthServ.isAuthenticatedAdmin, async (req, res, next) 
 //create new complain (customer)
 router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
     try {
-        const complain = await ComplaintModel.createComplain(req.body)
+        const complaint = await ComplaintServ.createComplaint(req.body)
+        res.json(complaint)
     } catch (error) {
         next(error)
     }
