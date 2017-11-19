@@ -7,12 +7,13 @@ const ComplaintServ = require('../services/complaint')
 // Complaint api
 let router = Router()
 
-//get lish of complains (admin)
-router.get('/', AuthServ.isAuthenticatedAdmin, async (req, res) => {
+//get list of complains (admin)
+router.get('/', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
     try {
-        const complains = await ComplaintModel.find(req.query)
-        res.json({ complains: _.map(complains, complain => _.pick(complain, [])) })
+        const complaints = await ComplaintModel.find(req.query)
+        res.json({ complaint: complaints })
     } catch (error){
+
         next (error)
     }
 })

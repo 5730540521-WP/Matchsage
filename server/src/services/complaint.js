@@ -10,7 +10,8 @@ async function createComplaint (values) {
         throw error
     }
 
-    await ComplaintModel.createComplaint(values)
+    const newComplaint = await ComplaintModel.createComplaint(values)
+    return newComplaint
 }
 
 module.exports = {
