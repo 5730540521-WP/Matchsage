@@ -3,6 +3,7 @@ const _ = require('lodash')
 const AuthServ = require('../services/auth')
 const ReserveModel = require('../models/reservation')
 const ReserveServ = require('../services/reservation')
+const UserModel = require('../models/user')
 
 // Reservations api
 let router = Router()
@@ -13,7 +14,7 @@ const filteredReserveKeys = ['reserve_id','service_id','customer_id','employee_i
 router.get('/', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const reserves = await ReserveModel.find(req.query)
-    res.json({ reservations: _.map(reserves, reserve => _.pick(reserve, [])) })
+    res.json({ reservations: _.map(reserves, reserve => _.pick(reserve, filteredReserveKeys)) })
   } catch (error) {
     next(error)
   }
@@ -22,11 +23,19 @@ router.get('/', AuthServ.isAuthenticated, async (req, res, next) => {
 router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const reserve = await ReserveModel.findByReservationId(req.params.id)
-    if(req.user.user_id !== reserve.customer_id && req.user.user_id !== reserve.service_id){
-      const error = new Error('Only customer/service owner of this reservation can access the reservation.')
+    const user = await UserModel.findByUserId(req.user.user_id)
+    const service = await ServiceModel.findByServiceId(reserve.service_id)
+    if(user.user_type === 'customer' && user.user_id !== reserve.customer_id){
+      const error = new Error('Only customer of this reservation can access the reservation.')
       error.status = 400
       throw error
     }
+    else if(user.user_type === 'owner' && user.user_id !== service.owner_id){
+      const error = new Error('Only service owner of this reservation can access the reservation.')
+      error.status = 400
+      throw error
+    }
+    
     res.json(_.pick(reserve, filteredReserveKeys))
   } catch (error) {
     next(error)
