@@ -36,7 +36,7 @@ const AdminRoute = ()=>(
 )
 
 const Body = ({userType})=>{
-	const user = localStorage.getItem('user');
+	const user = localStorage.getItem('user');	
 	const admin = localStorage.getItem('admin');
 	return(
 		<Router history={browserHistory}>

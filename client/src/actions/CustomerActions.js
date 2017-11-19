@@ -23,13 +23,12 @@ let token = '';
 if(user) token = user.token;
 console.log(user);
 
-let headers ={
-	[AUTH_HEADER]: 'JWT ' + token
-	// 'JWT': token
-}
-
 async function fetchServices(){
 	console.log(token);
+	let headers ={
+		[AUTH_HEADER]: 'JWT ' + token
+		// 'JWT': token
+	}
 	const res = await axios.get(API_URL + '/api/services', {headers});
 	// console.log(res.data);
 	return{
