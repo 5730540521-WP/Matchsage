@@ -7,7 +7,7 @@ services:
     ports:
       - '27017:27017'
     volumes:
-      - 'dbdata:/data/match-db'
+      - 'dbdata:/data/db'
 
 volumes:
   dbdata:
