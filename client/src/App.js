@@ -9,8 +9,8 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Team from './components/Team';
-import AdminLogin from './components/Admin/Login';
-import AdminSearch from './components/Admin/Search';
+import AdminLogin from './components/Admin/AdminLogin';
+import AdminSearch from './components/Admin/AdminSearch';
 import Service from './components/Service/Service'
 import NotFound from './components/NotFound';
 import './App.css';
@@ -36,7 +36,7 @@ const AdminRoute = ()=>(
 )
 
 const Body = ({userType})=>{
-	const user = localStorage.getItem('user');
+	const user = localStorage.getItem('user');	
 	const admin = localStorage.getItem('admin');
 	return(
 		<Router history={browserHistory}>
