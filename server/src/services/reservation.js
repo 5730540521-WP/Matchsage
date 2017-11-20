@@ -1,6 +1,5 @@
 const ReserveModel = require('../models/reservation')
 const UserModel = require('../models/user')
-const ServiceModel = require('../models/service')
 
 async function cancelReservation (userId, reserveId) {
   const reserve = await ReserveModel.findByReservationId(reserveId)

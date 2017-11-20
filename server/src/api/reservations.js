@@ -5,6 +5,7 @@ const ReserveModel = require('../models/reservation')
 const ReserveServ = require('../services/reservation')
 const UserModel = require('../models/user')
 const ServiceModel = require('../models/service')
+const emailServ = require('../services/email')
 
 // Reservations api
 let router = Router()
@@ -49,6 +50,7 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
     const paidStatus = req.body.paid_status || 'pending'
     const body = Object.assign(req.body, { date, start_time: startTime, end_time: endTime, paid_status: paidStatus })
     const reserve = await ReserveModel.createReservation(body)
+    emailServ.mailConfirmReservation(reserve.customer_id, reserve.reserve_id)
     res.json(reserve)
   } catch (error) {
     next(error)
