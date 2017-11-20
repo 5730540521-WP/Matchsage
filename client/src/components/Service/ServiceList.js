@@ -39,7 +39,7 @@ class ServiceList extends React.Component{
 		return this.props.services.map( service =>{
 			console.log(service.id);
 			return(
-				<ServiceItem key={service.service_id} service={service} onClick={()=>onServiceClick(service.service_id)}/>
+				<ServiceItem key={service.service_id} service={service}/>
 			);
 		});
 	}
@@ -73,8 +73,7 @@ function mapDispatchToProps(dispatch){
 	const fetchServices = CustomerActions.fetchServices;
 	const fetchService = CustomerActions.fetchService;
 	return bindActionCreators({
-		fetchServices,
-		fetchService
+		fetchServices
 	},dispatch);
 }
 

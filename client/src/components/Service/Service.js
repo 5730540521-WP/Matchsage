@@ -37,6 +37,7 @@ class Service extends React.Component{
 		// const services = getServices();
 	}
 
+	
 	renderServices(){
 		// this.setState({services:this.props.services});
 		if(!this.state.isServiceLoaded && this.props.services.length > 0) {
@@ -44,10 +45,12 @@ class Service extends React.Component{
 		}
 		return this.state.services.map( service =>{
 			return(
-				<ServiceItem key={service.service_id} service={service} onClick={()=>onServiceClick(service.service_id)}/>
+				<ServiceItem key={service.service_id} service={service}/>
 			);
 		});
 	}
+
+	
 
 	onInputChange(e){
 		const term = e.target.value.toLowerCase();
@@ -127,8 +130,7 @@ function mapStateToProps({service}){
 function mapDispatchToProps(dispatch){
 	const fetchServices = CustomerActions.fetchServices;
 	return bindActionCreators({
-		fetchServices,
-		
+		fetchServices
 	},dispatch);
 }
 

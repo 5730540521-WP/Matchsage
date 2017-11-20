@@ -5,6 +5,7 @@ import {authHeader} from '../helpers';
 
 export const CustomerActions = {
 	fetchServices,
+	fetchService,
 	searchService,
 	reserveService,
 	cancelReserveService,
@@ -26,7 +27,7 @@ async function fetchServices(){
 	// }
 	const headers = authHeader();
 	const res = await axios.get(API_URL + '/api/services', {headers});
-	// console.log(res.data);
+	//console.log(res.data);
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICES,
 		payload: res
@@ -34,9 +35,8 @@ async function fetchServices(){
 }
 
 async function fetchService(id){
-	console.log(token);
-	const res = await axios.get(API_URL + '/api/services/{id}', {headers});
-	// console.log(res.data);
+	const headers = authHeader();
+	const res = await axios.get(API_URL + `/api/services/${id}`, {headers});
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICE,
 		payload: res
