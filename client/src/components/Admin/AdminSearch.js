@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import propTypes from 'prop-types'
 import { Form, Icon, Input, Button, Menu, Dropdown, Checkbox, Table} from 'antd'
-import { getUsers } from '../../actions/AdminActions'
-import './Search.css'
+import { AdminActions } from '../../actions/AdminActions'
+import './AdminSearch.css';
 // import { pushRoute } from '../../helpers/router'
 import { connect } from 'react-redux'
 const FormItem = Form.Item
 
 class AdminSearch extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -34,7 +33,7 @@ class AdminSearch extends Component {
       if(!this.state.isOwner && this.state.isCustomer) user_type = 'customer'     
 
 
-      const res = await getUsers({keyword: this.state.keyword ,gender:gender ,user_type:user_type})
+      const res = await AdminActions.getUsers({keyword: this.state.keyword ,gender:gender ,user_type:user_type})
       const list = res.users.map((r) =>({
           first_name: r.first_name ? r.first_name : '-', 
           last_name: r.last_name ? r.last_name : '-', 
