@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {customerConstants} from '../constants/CustomerConstants';
 import {API_URL, AUTH_HEADER} from '../constants/ConfigConstants';
+import {authHeader} from '../helpers';
 
 export const CustomerActions = {
 	fetchServices,
@@ -18,17 +19,12 @@ export const CustomerActions = {
 	sendComplaint
 }
 
-const user = JSON.parse(localStorage.getItem('user'));
-let token = '';
-if(user) token = user.token;
-console.log(user);
-
 async function fetchServices(){
-	console.log(token);
-	let headers ={
-		[AUTH_HEADER]: 'JWT ' + token
-		// 'JWT': token
-	}
+	// let headers ={
+	// 	// [AUTH_HEADER]: 'JWT ' + token
+	// 	// 'JWT': token
+	// }
+	const headers = authHeader();
 	const res = await axios.get(API_URL + '/api/services', {headers});
 	// console.log(res.data);
 	return{
