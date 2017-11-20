@@ -33,6 +33,7 @@ async function login(email, password){
 	const user = res.data;
 	if (user && user.token){
 		localStorage.setItem('user', JSON.stringify(user));
+		console.log(localStorage.getItem('user')); 
 		return success(user);
 	}
 	// success(user)

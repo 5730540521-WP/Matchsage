@@ -5,8 +5,9 @@
   "dependencies": {
     "antd": "^2.13.10",
     "axios": "^0.16.2",
-    "history": "^4.7.2",
+    "cross-env": "^5.1.1",
     "griddle-react": "^1.9.0",
+    "history": "^4.7.2",
     "lodash": "^4.17.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -20,7 +21,7 @@
     "with-query": "^1.0.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env NODE_PATH=src react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
