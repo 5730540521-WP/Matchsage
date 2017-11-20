@@ -43,19 +43,12 @@ const Body = ({userType})=>{
 			<Switch>
 				<Route path='/admin/login' render={() => {
 					if (localStorage.admin) {
-						return (<Redirect to='/admin' />)
+						return (<Redirect to='/admin/users/search' />)
 					} else {
 						return (<AdminLogin />)
 					}
 				}} />
-				{/* <Route path="/admin" component={Admin} render={() => {
-					if (!localStorage.admin) {
-						return (<Redirect to='/admin/login' />)
-					} else {
-						console.log('yey')
-					}
-				}} /> */}
-				<Route path="/admin/" render={() => {
+				<Route path="/admin/users/search" render={() => {
 					if (!localStorage.admin) {
 						return (<Redirect to='/admin/login'/>)
 					} else {

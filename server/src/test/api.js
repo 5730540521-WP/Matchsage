@@ -12,6 +12,7 @@ const EmployeeModel = require('../models/employee')
 const ReserveModel = require('../models/reservation')
 const RatingModel = require('../models/rating')
 const AdminModel = require('../models/admin')
+const PaymentAccountModel = require('../models/payment-account')
 
 Promise.promisifyAll(jwt)
 
@@ -93,7 +94,7 @@ describe('API tests', () => {
     mongoose.connection.db.dropDatabase()
   })
 
-  describe('# /api endpoint', () => {
+  describe('# check connection', () => {
     it('should get the software version', () => {
       return request(app)
       .get('/api')
@@ -104,7 +105,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/signup endpoint', () => {
+  describe('# user signup', () => {
     it('should be able to sign up && user will appear in the database', () => {
       return request(app)
       .post('/api/signup')
@@ -121,7 +122,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/auth endpoint', () => {
+  describe('# user auth', () => {
     it('Wrong email  should get 401', () => {
       return request(app)
         .post('/api/auth')
@@ -145,7 +146,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/admin-signup endpoint', () => {
+  describe('# admin signup', () => {
     it('should be able to sign up && user will appear in the database', () => {
       return request(app)
         .post('/api/admin-signup')
@@ -162,7 +163,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/admin-auth endpoint', () => {
+  describe('# admin auth', () => {
     it('Authorized admin should be able to logged in', () => {
       return request(app)
       .post('/api/admin-auth')
@@ -174,7 +175,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/users endpoint', () => {
+  describe('# search users', () => {
     it('Unauthorized should get 401', () => {
       return request(app)
       .get('/api/users')
@@ -202,7 +203,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/users/:id endpoint', () => {
+  describe('# see user', () => {
     it('Should return user detail', () => {
       return request(app)
       .get('/api/users/match-user-1')
@@ -216,7 +217,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/users/:id/update endpoint', () => {
+  describe('# update user', () => {
     it('Should update the user data', () => {
       const update = {
         email: 'update_customer@test.com'
@@ -235,7 +236,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/services/new', () => {
+  describe('# create service', () => {
     it('Should create a new service', () => {
       return request(app)
       .post('/api/services/new')
@@ -275,7 +276,20 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/services/:id/update', () => {
+  describe('# see service', () => {
+    it('should get service detail', () => {
+      return request(app)
+      .get(`/api/services/match-ser-1`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.service_id).to.equal('match-ser-1')
+      })
+    })
+  })
+
+  describe('# update service', () => {
     const update = {
       service_name: 'service_new'
     }
@@ -293,7 +307,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/services/:id/add_employee', () => {
+  describe('# add employee', () => {
     it('Should add an employee to the service', () => {
       return request(app)
       .post(`/api/services/${service1.service_id}/add_employee`)
@@ -311,7 +325,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/services/:id/avai_employees', () => {
+  describe('# get available employees', () => {
     it('Should get all available employee in paticular date and time', () => {
       return request(app)
       .get(`/api/services/${service1.service_id}/avai_employees`)
@@ -325,7 +339,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/reservation/new', () => {
+  describe('# create reservation', () => {
     it('Should create a new reservation', () => {
       return request(app)
       .post(`/api/reservations/new`)
@@ -342,7 +356,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/reservation/:id', () => {
+  describe('# see reservation', () => {
     it('Unauthorized customer should not be able to access to other\'s reservation', () => {
       return request(app)
       .get(`/api/reservations/${reserve1.reserve_id}/`)
@@ -359,7 +373,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/reservation/:id/cancel', () => {
+  describe('# cancel reservation', () => {
     it('UnAuthorized customer should not be able to cancel other reservation', () => {
       return request(app)
       .get(`/api/reservations/${reserve1.reserve_id}/cancel`)
@@ -434,6 +448,39 @@ describe('API tests', () => {
       .expect(200)
       .then(async res => {
         expect(res.body.complaint[0].complaint_id).to.equal('match-com-1')
+      })
+    })
+  })
+
+  describe('# add payment', () => {
+    it('should be able to add credit card', () => {
+      return request(app)
+      .post(`/api/users/add-credit-card`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000 })
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customer1.user_id)
+        const card = await PaymentAccountModel.findByNumber('xxxxxxxxxxxxxxxx')
+        expect(card.user_id).to.equal(customer1.user_id)
+        expect(card.amount).to.equal(5000)
+        expect(user.payment_accounts[0]).to.equal('xxxxxxxxxxxxxxxx')
+      })
+    })
+    it('should be able to add bank account', () => {
+      return request(app)
+      .post(`/api/users/add-bank-account`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000 })
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customer1.user_id)
+        const account = await PaymentAccountModel.findByNumber('yyyyyyyyyyyyyyyy')
+        expect(account.user_id).to.equal(customer1.user_id)
+        expect(account.amount).to.equal(7000)
+        expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
       })
     })
   })

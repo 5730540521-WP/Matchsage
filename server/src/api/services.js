@@ -20,6 +20,15 @@ router.get('/', AuthServ.isAuthenticated, async (req, res) => {
   res.json({ services: _.map(services, service => _.pick(service, filteredServiceKeys)) })
 })
 
+router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    const service = await ServiceModel.findOne({ service_id: req.params.id })
+    res.json(_.pick(service, filteredServiceKeys))
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const body = req.body
