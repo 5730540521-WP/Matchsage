@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Row, Col,Button } from 'antd';
-import SignupModal from './Modal/SignupModal';
+import SignupModal from './Common/Modal/SignupModal';
 
 
 const Hero = styled.div.attrs({
