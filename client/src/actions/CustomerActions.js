@@ -21,10 +21,6 @@ export const CustomerActions = {
 }
 
 async function fetchServices(){
-	// let headers ={
-	// 	// [AUTH_HEADER]: 'JWT ' + token
-	// 	// 'JWT': token
-	// }
 	const headers = authHeader();
 	const res = await axios.get(API_URL + '/api/services', {headers});
 	//console.log(res.data);

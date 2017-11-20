@@ -45,19 +45,12 @@ const Body = ({userType})=>{
 				<Route exact path="/" component={user ? Service : Home }/>
 				<Route exact path='/admin/login' render={() => {
 					if (localStorage.admin) {
-						return (<Redirect to='/admin' />)
+						return (<Redirect to='/admin/users/search' />)
 					} else {
 						return (<AdminLogin />)
 					}
 				}} />
-				{/* <Route path="/admin" component={Admin} render={() => {
-					if (!localStorage.admin) {
-						return (<Redirect to='/admin/login' />)
-					} else {
-						console.log('yey')
-					}
-				}} /> */}
-				<Route exact path="/admin/" render={() => {
+				<Route exact path="/admin/users/search" render={() => {
 					if (!localStorage.admin) {
 						return (<Redirect to='/admin/login'/>)
 					} else {
