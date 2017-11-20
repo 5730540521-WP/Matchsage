@@ -1,25 +1,19 @@
-// const EmployeeModel = require('../models/employee')
-// const ReserveModel = require('../models/reservation')
-// const _ = require('lodash')
+const PaymentAccountModel = require('../models/payment-account')
+const UserModel = require('../models/user')
 
-// async function getAvailableEmployees ({ date, startTime, endTime, serviceId }) {
-//   const employees = await EmployeeModel.find({ work_for: serviceId })
-//   let avaiemployees = []
-//   _.forEach(employees, async (employee) => {
-//     const reserve = await ReserveModel.findOne({
-//       date,
-//       service_id: serviceId,
-//       is_cancel: false,
-//       employee_id: employee.user_id,
-//       $or: [{ start_time: { $gt: startTime, $lt: endTime } }, { end_time: { $gt: startTime, $lt: endTime } }]
-//     })
-//     if (!reserve) {
-//       avaiemployees.append(employee)
-//     }
-//   })
-//   return avaiemployees
-// }
+async function addCreditCard (userId, values) {
+  const opts = Object.assign({}, values, { user_id: userId, method: 'credit-card' })
+  const newCreditCard = await PaymentAccountModel.createPayment(opts)
+  await UserModel.findOneAndUpdate({ user_id: userId }, { $push: { payment_accounts: newCreditCard.number } })
+}
 
-// module.exports = {
-//   getAvailableEmployees
-// }
+async function addBankAccount (userId, values) {
+  const opts = Object.assign({}, values, { user_id: userId, method: 'bank-account' })
+  const newBankAccount = await PaymentAccountModel.createPayment(opts)
+  await UserModel.findOneAndUpdate({ user_id: userId }, { $push: { payment_accounts: newBankAccount.number } })
+}
+
+module.exports = {
+  addCreditCard,
+  addBankAccount
+}
