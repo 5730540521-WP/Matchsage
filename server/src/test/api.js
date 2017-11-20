@@ -69,6 +69,8 @@ describe('API tests', () => {
 
   let service1 = {}
   let reserve1 = {}
+  let complaint1 = {}
+
 
   let cusToken = ''
   let ownerToken = ''
@@ -410,4 +412,31 @@ describe('API tests', () => {
       })
     })
   })
+
+  // add complaint test
+  describe('# complaint', () => {
+    it('should create a new complaint', () => {
+      return request(app)
+      .post(`/api/complaint/new`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ customer_id: customer1.user_id , service_id: service1.service_id })
+      .expect(200)
+      .then(async res => {
+        expect(res.body.service_id).to.equal(service1.service_id)
+        expect(res.body.customer_id).to.equal(customer1.user_id)
+      })
+    })
+    it('should list all complaints', () => {
+      return request(app)
+      .get(`/api/complaint/`) 
+      .set('Accept', 'application/json')
+      .set('Authorization',  adminToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.complaint[0].complaint_id).to.equal('match-com-1')
+      })
+    })
+  })
 })
+
