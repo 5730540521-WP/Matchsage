@@ -25,7 +25,7 @@ class NormalLoginForm extends React.Component {
           .then(() => {
             this.setState({ loginState: false })
             alert('Login successful!')
-            history.push('/admin')
+            history.push('/admin/users/search')
           })
           .catch(e => {
             this.setState({ loginState: false })
