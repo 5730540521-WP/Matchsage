@@ -71,7 +71,6 @@ describe('API tests', () => {
   let reserve1 = {}
   let complaint1 = {}
 
-
   let cusToken = ''
   let ownerToken = ''
   let adminToken = ''
@@ -86,7 +85,7 @@ describe('API tests', () => {
     ownerToken2 = jwt.sign({ user_id: owner2.user_id, user_type: owner2.user_type }, 'MATCHSAGE_USER')
     ownerToken2 = `JWT ${ownerToken2}`
     customer2 = await UserModel.createUser(customer2)
-    cusToken2 = jwt.sign({user_id:customer2.user_id, user_type: customer2.user_type}, 'MATCHSAGE_USER')
+    cusToken2 = jwt.sign({user_id: customer2.user_id, user_type: customer2.user_type}, 'MATCHSAGE_USER')
     cusToken2 = `JWT ${cusToken2}`
   })
 
@@ -420,7 +419,7 @@ describe('API tests', () => {
       .post(`/api/complaint/new`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ customer_id: customer1.user_id , service_id: service1.service_id })
+      .send({ customer_id: customer1.user_id, service_id: service1.service_id })
       .expect(200)
       .then(async res => {
         expect(res.body.service_id).to.equal(service1.service_id)
@@ -429,9 +428,9 @@ describe('API tests', () => {
     })
     it('should list all complaints', () => {
       return request(app)
-      .get(`/api/complaint/`) 
+      .get(`/api/complaint/`)
       .set('Accept', 'application/json')
-      .set('Authorization',  adminToken)
+      .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
         expect(res.body.complaint[0].complaint_id).to.equal('match-com-1')
@@ -439,4 +438,3 @@ describe('API tests', () => {
     })
   })
 })
-

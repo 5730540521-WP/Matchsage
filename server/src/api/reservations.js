@@ -9,8 +9,8 @@ const ServiceModel = require('../models/service')
 // Reservations api
 let router = Router()
 
-const filteredReserveKeys = ['reserve_id','service_id','customer_id','employee_id','start_time',
-  'end_time','date','is_cancel','paid_status']
+const filteredReserveKeys = ['reserve_id', 'service_id', 'customer_id', 'employee_id', 'start_time',
+  'end_time', 'date', 'is_cancel', 'paid_status']
 
 router.get('/', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
@@ -26,17 +26,15 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
     const reserve = await ReserveModel.findByReservationId(req.params.id)
     const user = await UserModel.findByUserId(req.user.user_id)
     const service = await ServiceModel.findByServiceId(reserve.service_id)
-    if(user.user_type === 'customer' && user.user_id !== reserve.customer_id){
+    if (user.user_type === 'customer' && user.user_id !== reserve.customer_id) {
       const error = new Error('Only customer of this reservation can access the reservation.')
       error.status = 400
       throw error
-    }
-    else if(user.user_type === 'owner' && user.user_id !== service.owner_id){
+    } else if (user.user_type === 'owner' && user.user_id !== service.owner_id) {
       const error = new Error('Only service owner of this reservation can access the reservation.')
       error.status = 400
       throw error
     }
-    
     res.json(_.pick(reserve, filteredReserveKeys))
   } catch (error) {
     next(error)
