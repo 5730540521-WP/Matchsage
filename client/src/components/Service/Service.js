@@ -44,7 +44,7 @@ class Service extends React.Component{
 		}
 		return this.state.services.map( service =>{
 			return(
-				<ServiceItem key={service.service_id} service={service}/>
+				<ServiceItem key={service.service_id} service={service} onClick={()=>onServiceClick(service.service_id)}/>
 			);
 		});
 	}
@@ -127,7 +127,8 @@ function mapStateToProps({service}){
 function mapDispatchToProps(dispatch){
 	const fetchServices = CustomerActions.fetchServices;
 	return bindActionCreators({
-		fetchServices
+		fetchServices,
+		
 	},dispatch);
 }
 

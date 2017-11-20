@@ -53,7 +53,9 @@ export default class Home extends React.Component{
 				<h1 style={{'font-size':'35','font-family': "Kanit", 'text-align': 'left'}}>Matchsage คืออะไร...</h1>
 				<Row gutter={16}>
 					<Col span={12}>
-						<img src={imgurl2} style={{'border-radius':'2%'}}/>
+						<figure>
+							<img src={imgurl2} style={{'border-radius':'2%'}}/>
+						</figure>
 					</Col>
 					<Col span={12}>
 						<p style={text}>Matchsage เป็นตัวกลางระหว่างร้านนวดจากทั่วประเทศและลูกค้า โดยจะเป็นระบบที่รวบรวมข้อมูลร้านนวดต่างๆทั่วประเทศมารวมกันไว้เพื่อให้สะดวกต่อการค้นหา

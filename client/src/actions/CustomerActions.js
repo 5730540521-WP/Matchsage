@@ -38,6 +38,16 @@ async function fetchServices(){
 	}
 }
 
+async function fetchService(id){
+	console.log(token);
+	const res = await axios.get(API_URL + '/api/services/{id}', {headers});
+	// console.log(res.data);
+	return{
+		type: customerConstants.CUSTOMER_FETCH_SERVICE,
+		payload: res
+	}
+}
+
 async function updateService(){
 	return{
 		type:customerConstants.CUSTOMER_UPDATE_SERVICE,
