@@ -276,6 +276,19 @@ describe('API tests', () => {
     })
   })
 
+  describe('# see service', () => {
+    it('should get service detail', () => {
+      return request(app)
+      .get(`/api/services/match-ser-1`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.service_id).to.equal('match-ser-1')
+      })
+    })
+  })
+
   describe('# update service', () => {
     const update = {
       service_name: 'service_new'
