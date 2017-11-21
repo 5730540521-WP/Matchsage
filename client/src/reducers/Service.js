@@ -5,9 +5,11 @@ const initialState = {
 export function service(state=initialState,action){
 	switch(action.type){
 		case(customerConstants.CUSTOMER_FETCH_SERVICES):
-		
 			const services = action.payload.data.services;
 			return {...state,services};
+		case(customerConstants.CUSTOMER_FETCH_SERVICE):
+			const service = action.payload.data;
+			return {...state,service};
 		case(customerConstants.CUSTOMER_SEARCH_SERVICE):
 			const updatedServices = action.payload.keyword;	
 			// return {...state,services:updatedServices}

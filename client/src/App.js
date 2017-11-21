@@ -11,7 +11,8 @@ import Home from './components/Home';
 import Team from './components/Team';
 import AdminLogin from './components/Admin/AdminLogin';
 import AdminSearch from './components/Admin/AdminSearch';
-import Service from './components/Service/Service'
+import Service from './components/Service/Service';
+import ServiceDetail from './components/Service/ServiceDetail';
 import NotFound from './components/NotFound';
 import './App.css';
 
@@ -41,27 +42,29 @@ const Body = ({userType})=>{
 	return(
 		<Router history={browserHistory}>
 			<Switch>
-				<Route path='/admin/login' render={() => {
+				<Route exact path="/" component={user ? Service : Home }/>
+				<Route exact path='/admin/login' render={() => {
 					if (localStorage.admin) {
 						return (<Redirect to='/admin/users/search' />)
 					} else {
 						return (<AdminLogin />)
 					}
 				}} />
-				<Route path="/admin/users/search" render={() => {
+				<Route exact path="/admin/users/search" render={() => {
 					if (!localStorage.admin) {
 						return (<Redirect to='/admin/login'/>)
 					} else {
 						return (<AdminSearch />)
 					}
 				}}/>
-				<Route path="/team" component={Team}/>
-				{ user
-					? <Route path="/" component={Service}/>
-					: <Route path="/" component={Home}/>
-				}
+				<Route exact path="/team" component={Team}/>
+				
+				
+				<Route exact path="/service/:id" component={user?ServiceDetail:()=>{return <Redirect to='/'/>}}/>
+				
 				{/* <Route path="/posts/:id" component={}/> */}
 				<Route component={NotFound}/>
+				
 			</Switch>
 		</Router>
 	);
