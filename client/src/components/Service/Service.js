@@ -44,7 +44,7 @@ class Service extends React.Component{
 		if(!this.state.isServiceLoaded && this.props.services.length > 0) {
 			this.setState({ services: this.props.services, isServiceLoaded: true })
 		}
-		return <Row gutter={20}>
+		return <Row gutter={24}>
 				<Col span={12}>{this.state.services.map( (service,index) =>{
 					return index%2==0?<ServiceItem key={service.service_id} service={service}/>:null})}
 				</Col>
@@ -88,7 +88,7 @@ class Service extends React.Component{
 				{/* <SearchNavigator/> */}
 				{/* Mock Search Nav */}
 				<div className="column is-one-quarter">
-					<nav className="panel">
+					<nav className="panel"  style={{paddingLeft:'24px',paddingRight:'24px'}}>
 						<p className="panel-heading">
 							ค้นหาบริการ
 						</p>
@@ -113,7 +113,7 @@ class Service extends React.Component{
 				{/* <ServiceList/> */}
 				{/* Mock Service List */}
 				<div className="column">
-					<div className="rows">
+					<div className="rows" style={{paddingLeft:'24px',paddingRight:'24px'}}>
 						{/* {
 							this.props.services.map( service =>{
 								return(
