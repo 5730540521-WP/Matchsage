@@ -47,6 +47,9 @@ const UserSchema = new mongoose.Schema({
   payment_accounts: {
     type: [ String ],
     default: []
+  },
+  contact: {
+    type: String
   }
 })
 
