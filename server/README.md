@@ -32,15 +32,13 @@ npm run dev
 
 ## Running the tests
 
-<for Linux/OSX>
-
 ```
+## for linux/OSx ##
 npm run test
 ```
 
-<for Windows>
-
 ```
+## for Windows ##
 set ENV_NODE=test
 mocha src/test --timeout 10000
 ```
