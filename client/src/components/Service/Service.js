@@ -37,6 +37,7 @@ class Service extends React.Component{
 		// const services = getServices();
 	}
 
+	
 	renderServices(){
 		// this.setState({services:this.props.services});
 		if(!this.state.isServiceLoaded && this.props.services.length > 0) {
@@ -48,6 +49,8 @@ class Service extends React.Component{
 			);
 		});
 	}
+
+	
 
 	onInputChange(e){
 		const term = e.target.value.toLowerCase();
