@@ -27,8 +27,7 @@ export default class Home extends React.Component{
 		const text = {
 			textIndent:'50px',
 			textAlign: 'left',
-			fontSize:'30px',
-			fontFamily: "Kanit"
+			fontSize:'30px'
 		}
 		const imgurl1 = './images/1150.jpg',imgurl2 = './images/1142.jpg';
 		return (
@@ -38,7 +37,7 @@ export default class Home extends React.Component{
 					<Col span={24}>
 								<img src={imgurl1} style={{display: 'block',margin:'auto',position:'relative',width:'100%',height:'40.1vw'}}/>
 							<div style={{position:'absolute', bottom:'0%', width:'100%', height:'40%', 'backgroundColor':'black', opacity:.2}}></div>
-							<div style={{position:'absolute', bottom:'8%' ,left:'2%',width:'70%',fontSize:'20px',fontFamily: "Kanit",textAlign: 'left'}}>
+							<div style={{position:'absolute', bottom:'8%' ,left:'2%',width:'70%',fontSize:'20px',textAlign: 'left'}}>
 								<h1 style={{fontWeight:'bold', color:'white'}}>
 									Matchsage
 								</h1>					
@@ -50,18 +49,18 @@ export default class Home extends React.Component{
 					</Col>
 					
 				</Row>
-				<h1 style={{fontSize:'35px',fontFamily: "Kanit", textAlign: 'left'}}>Matchsage คืออะไร...</h1>
+				<h1 style={{fontSize:'35px', textAlign: 'left'}}>Matchsage คืออะไร...</h1>
 				<Row gutter={16}>
 					<Col span={12}>
 						<figure>
 							<img src={imgurl2} style={{borderRadius:'2%'}}/>
 						</figure>
 					</Col>
-					<Col span={12}>
-						<p style={text}>Matchsage เป็นตัวกลางระหว่างร้านนวดจากทั่วประเทศและลูกค้า โดยจะเป็นระบบที่รวบรวมข้อมูลร้านนวดต่างๆทั่วประเทศมารวมกันไว้เพื่อให้สะดวกต่อการค้นหา
+					<Col span={12} style={text}>
+						<p>Matchsage เป็นตัวกลางระหว่างร้านนวดจากทั่วประเทศและลูกค้า โดยจะเป็นระบบที่รวบรวมข้อมูลร้านนวดต่างๆทั่วประเทศมารวมกันไว้เพื่อให้สะดวกต่อการค้นหา
 						</p>
 						<br/>
-						<p style={text}>นอกจากนี้ยังมีส่วนระบบจับคู่ผู้ต้องการใช้และผู้ให้บริการเข้าด้วยกันเพื่อให้ผู้บริการสามารถไปให้บริการได้ถึงสถานที่ที่ลูกค้าต้องการ เป็นการเพิ่มความสะดวกสบายรวมไปถึงความประทับใจให้กับลูกค้าอีกด้วย
+						<p>นอกจากนี้ยังมีส่วนระบบจับคู่ผู้ต้องการใช้และผู้ให้บริการเข้าด้วยกันเพื่อให้ผู้บริการสามารถไปให้บริการได้ถึงสถานที่ที่ลูกค้าต้องการ เป็นการเพิ่มความสะดวกสบายรวมไปถึงความประทับใจให้กับลูกค้าอีกด้วย
 						</p>
 					</Col>
 				</Row>
