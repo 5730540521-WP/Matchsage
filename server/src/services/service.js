@@ -2,7 +2,6 @@ const ServiceModel = require('../models/service')
 const UserModel = require('../models/user')
 const ReserveModel = require('../models/reservation')
 const EmployeeModel = require('../models/employee')
-const _ = require('lodash')
 const Promise = require('bluebird')
 
 async function createService (values) {
