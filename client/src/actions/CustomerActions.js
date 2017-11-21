@@ -33,9 +33,14 @@ async function fetchServices(){
 async function fetchService(id){
 	const headers = authHeader();
 	const res = await axios.get(API_URL + `/api/services/${id}`, {headers});
+	const res2 = await axios.get(API_URL + `/api/users/${res.data.owner_id}`,{headers});
+	const res3 = await axios.get(API_URL + `/api/services/${id}/employees` , {headers});
+	console.log(res3.data);
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICE,
-		payload: res
+		payload: res,
+		payload2: res2,
+		payload3: res3
 	}
 }
 
