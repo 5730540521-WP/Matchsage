@@ -35,6 +35,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  address: {
+    type: String,
+    required: true,
+    default: 'Wutthakat'
+  },
   own_services: {
     type: [ String ],
     default: []
