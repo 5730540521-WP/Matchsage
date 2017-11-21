@@ -220,7 +220,7 @@ describe('API tests', () => {
   describe('# update user', () => {
     it('Should update the user data', () => {
       const update = {
-        email: 'matchsage@outlook.com'
+        first_name: 'Robert'
       }
       return request(app)
       .post(`/api/users/${customer1.user_id}/update`)
@@ -231,7 +231,7 @@ describe('API tests', () => {
       .then(async res => {
         const user = await UserModel.findByUserId(customer1.user_id)
         expect(res.body.success).to.equal(true)
-        expect(user.email).to.equal(update.email)
+        expect(user.first_name).to.equal(update.first_name)
       })
     })
   })
