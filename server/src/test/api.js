@@ -345,7 +345,7 @@ describe('API tests', () => {
       .post(`/api/reservations/new`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ service_id: service1.service_id, customer_id: customer1.user_id, employee_id: employee1.employee_id })
+      .send({ service_id: service1.service_id, employee_id: employee1.employee_id })
       .expect(200)
       .then(async res => {
         reserve1 = res.body
