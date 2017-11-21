@@ -5,11 +5,12 @@
   "dependencies": {
     "antd": "^2.13.10",
     "axios": "^0.16.2",
-    "history": "^4.7.2",
     "griddle-react": "^1.9.0",
+    "history": "^4.7.2",
     "lodash": "^4.17.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-google-maps": "^9.2.2",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.11",
@@ -20,13 +21,14 @@
     "with-query": "^1.0.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env NODE_PATH=src react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint:css": "stylelint './src/components/**/*.js'"
   },
   "devDependencies": {
+    "cross-env": "^5.1.1",
     "stylelint": "^8.0.0",
     "stylelint-config-standard": "^17.0.0",
     "stylelint-processor-styled-components": "^0.4.0"

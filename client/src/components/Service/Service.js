@@ -12,6 +12,7 @@ import ServiceList from './ServiceList';
 import {CustomerActions} from '../../actions';
 
 import _ from 'lodash';
+import {Row,Col} from 'antd';
 
 const SearchInput = Input.Search;
 
@@ -37,17 +38,25 @@ class Service extends React.Component{
 		// const services = getServices();
 	}
 
+	
 	renderServices(){
 		// this.setState({services:this.props.services});
 		if(!this.state.isServiceLoaded && this.props.services.length > 0) {
 			this.setState({ services: this.props.services, isServiceLoaded: true })
 		}
-		return this.state.services.map( service =>{
-			return(
-				<ServiceItem key={service.service_id} service={service}/>
-			);
-		});
+		return <Row gutter={24}>
+				<Col span={12}>{this.state.services.map( (service,index) =>{
+					return index%2==0?<ServiceItem key={service.service_id} service={service}/>:null})}
+				</Col>
+				<Col span={12}>{this.state.services.map( (service,index) =>{
+					return index%2==1?<ServiceItem key={service.service_id} service={service}/>:null})}
+				</Col>
+			</Row>
+			
+		;
 	}
+
+	
 
 	onInputChange(e){
 		const term = e.target.value.toLowerCase();
@@ -79,7 +88,7 @@ class Service extends React.Component{
 				{/* <SearchNavigator/> */}
 				{/* Mock Search Nav */}
 				<div className="column is-one-quarter">
-					<nav className="panel">
+					<nav className="panel"  style={{paddingLeft:'24px',paddingRight:'24px'}}>
 						<p className="panel-heading">
 							ค้นหาบริการ
 						</p>
@@ -104,7 +113,7 @@ class Service extends React.Component{
 				{/* <ServiceList/> */}
 				{/* Mock Service List */}
 				<div className="column">
-					<div className="rows">
+					<div className="rows" style={{paddingLeft:'24px',paddingRight:'24px'}}>
 						{/* {
 							this.props.services.map( service =>{
 								return(

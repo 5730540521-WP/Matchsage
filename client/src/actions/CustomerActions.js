@@ -1,9 +1,11 @@
 import axios from 'axios';
 import {customerConstants} from '../constants/CustomerConstants';
 import {API_URL, AUTH_HEADER} from '../constants/ConfigConstants';
+import {authHeader} from '../helpers';
 
 export const CustomerActions = {
 	fetchServices,
+	fetchService,
 	searchService,
 	reserveService,
 	cancelReserveService,
@@ -18,23 +20,27 @@ export const CustomerActions = {
 	sendComplaint
 }
 
-const user = JSON.parse(localStorage.getItem('user'));
-let token = '';
-if(user) token = user.token;
-console.log(user);
-
-let headers ={
-	[AUTH_HEADER]: 'JWT ' + token
-	// 'JWT': token
-}
-
 async function fetchServices(){
-	console.log(token);
+	const headers = authHeader();
 	const res = await axios.get(API_URL + '/api/services', {headers});
-	// console.log(res.data);
+	//console.log(res.data);
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICES,
 		payload: res
+	}
+}
+
+async function fetchService(id){
+	const headers = authHeader();
+	const res = await axios.get(API_URL + `/api/services/${id}`, {headers});
+	const res2 = await axios.get(API_URL + `/api/users/${res.data.owner_id}`,{headers});
+	const res3 = await axios.get(API_URL + `/api/services/${id}/employees` , {headers});
+	console.log(res3.data);
+	return{
+		type: customerConstants.CUSTOMER_FETCH_SERVICE,
+		payload: res,
+		payload2: res2,
+		payload3: res3
 	}
 }
 

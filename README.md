@@ -1,16 +1,16 @@
 # Matchsage
+> ![section label](https://img.shields.io/badge/section-2-33cccc.svg?style=flat-square) ![section label](https://img.shields.io/badge/Semester-1/2017-3380cc.svg?style=flat-square)
+> <br><b>2110423 Software Engineering</b>
+> <br>Computer Engineering, Chulalongkorn University
 
-Matchsage web application (Sofware Engineer term project) using React and NodeJs.
+Matchsage web application using React and NodeJs.
 
 ## Built With
-
+```
 * [Node.js](https://nodejs.org/en/) - Javascript framework used for backend development
 * [React](https://reactjs.org/) - Javascript framework used for frontend development
 * [MongoDB](https://www.mongodb.com/) - Database
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/we-inc/Matchsage/tags). 
+```
 
 ## Authors
 

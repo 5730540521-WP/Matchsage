@@ -11,13 +11,22 @@ const UserModel = require('../models/user')
 // Services api
 let router = Router()
 
-const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating']
+const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating', 'location']
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
   const rating = parseFloat(req.query.rating) || 0
   const services = await ServiceModel.findWithRegexp({ service_name: req.query.service_name, rating })
   res.json({ services: _.map(services, service => _.pick(service, filteredServiceKeys)) })
+})
+
+router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    const service = await ServiceModel.findOne({ service_id: req.params.id })
+    res.json(_.pick(service, filteredServiceKeys))
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {

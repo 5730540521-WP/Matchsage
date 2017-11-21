@@ -19,11 +19,13 @@ const UserSchema = new mongoose.Schema({
   },
   first_name: {
     type: String,
-    index: true
+    index: true,
+    required: true
   },
   last_name: {
     type: String,
-    index: true
+    index: true,
+    required: true
   },
   gender: {
     type: String,
@@ -33,9 +35,21 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  address: {
+    type: String,
+    required: true,
+    default: 'Wutthakat'
+  },
   own_services: {
     type: [ String ],
     default: []
+  },
+  payment_accounts: {
+    type: [ String ],
+    default: []
+  },
+  contact: {
+    type: String
   }
 })
 

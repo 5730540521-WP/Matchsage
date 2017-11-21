@@ -9,10 +9,12 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Team from './components/Team';
-import AdminLogin from './components/Admin/Login';
-import AdminSearch from './components/Admin/Search';
-import Service from './components/Service/Service'
+import AdminLogin from './components/Admin/AdminLogin';
+import AdminSearch from './components/Admin/AdminSearch';
+import Service from './components/Service/Service';
+import ServiceDetail from './components/Service/ServiceDetail';
 import NotFound from './components/NotFound';
+import './theme.css';
 import './App.css';
 
 const GuestRoute = ()=>(
@@ -36,39 +38,34 @@ const AdminRoute = ()=>(
 )
 
 const Body = ({userType})=>{
-	const user = localStorage.getItem('user');
+	const user = localStorage.getItem('user');	
 	const admin = localStorage.getItem('admin');
 	return(
 		<Router history={browserHistory}>
 			<Switch>
-				<Route path='/admin/login' render={() => {
+				<Route exact path="/" component={user ? Service : Home }/>
+				<Route exact path='/admin/login' render={() => {
 					if (localStorage.admin) {
-						return (<Redirect to='/admin' />)
+						return (<Redirect to='/admin/users/search' />)
 					} else {
 						return (<AdminLogin />)
 					}
 				}} />
-				{/* <Route path="/admin" component={Admin} render={() => {
-					if (!localStorage.admin) {
-						return (<Redirect to='/admin/login' />)
-					} else {
-						console.log('yey')
-					}
-				}} /> */}
-				<Route path="/admin/" render={() => {
+				<Route exact path="/admin/users/search" render={() => {
 					if (!localStorage.admin) {
 						return (<Redirect to='/admin/login'/>)
 					} else {
 						return (<AdminSearch />)
 					}
 				}}/>
-				<Route path="/team" component={Team}/>
-				{ user
-					? <Route path="/" component={Service}/>
-					: <Route path="/" component={Home}/>
-				}
+				<Route exact path="/team" component={Team}/>
+				
+				
+				<Route exact path="/service/:id" component={user?ServiceDetail:()=>{return <Redirect to='/'/>}}/>
+				
 				{/* <Route path="/posts/:id" component={}/> */}
 				<Route component={NotFound}/>
+				
 			</Switch>
 		</Router>
 	);
@@ -80,7 +77,7 @@ class App extends Component {
 	}
   render() {
     return (
-      <div className="App">
+      <div className="App" style={{fontFamily:'Kanit'}}>
 				{/* <Helmet title="Matchsage"/> */}
 				<Header/>
 				<Body userType={{}}/>

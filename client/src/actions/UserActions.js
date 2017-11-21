@@ -1,7 +1,9 @@
 import axios from 'axios';
-import {AUTH_HEADER, API_URL} from '../constants/ConfigConstants';
+import {AUTH_HEADER, API_URL} from 'constants/ConfigConstants';
 
-import {userConstants} from '../constants/UserConstants';
+import {userConstants} from 'constants/UserConstants';
+import { authHeader,history } from 'helpers';
+
 // import validator from 'validator';
 
 export const userActions = {
@@ -33,6 +35,8 @@ async function login(email, password){
 	const user = res.data;
 	if (user && user.token){
 		localStorage.setItem('user', JSON.stringify(user));
+		console.log(localStorage.getItem('user')); 
+		history.push('/');
 		return success(user);
 	}
 	// success(user)
@@ -66,26 +70,33 @@ async function logout(){
 
 // Use case:
 // Status: 
-async function register(first_name, last_name, address, phoneNumber,
-	email, accountNumber, userType, password, confirmedPassword){
-		if(!email){
-			// return
-		}
-	// if(!validator.isEmail(email)) return false;
-
+// async function register(first_name, last_name, address, phoneNumber,
+// 	email, accountNumber, userType, password, confirmedPassword){
+async function register(first_name,last_name,email,password,
+	gender,user_type) {
 	
 	const data = {
-		// first_name,
-		// password
+		first_name,last_name,email,
+		password,gender,user_type
 	}
 
-	const headers = {
-
+	const headers = authHeader();
+	const res = await axios.post(API_URL + '/api/signup', data,{headers	})
+		.catch(err => {
+			console.log(err);
+			return failure(err);
+		});
+	
+	const user = res.data;
+	if (user && user.token){
+		localStorage.setItem('user', JSON.stringify(user));
+		history.push('/');
+		return success(user);
 	}
-	const res = await axios.post(API_URL + '/register', { data,headers });
-	console.log(res);
 
-	// function success(user){}
+	function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
+	function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
+	function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
 
 // Use case:

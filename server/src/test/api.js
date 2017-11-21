@@ -12,6 +12,7 @@ const EmployeeModel = require('../models/employee')
 const ReserveModel = require('../models/reservation')
 const RatingModel = require('../models/rating')
 const AdminModel = require('../models/admin')
+const PaymentAccountModel = require('../models/payment-account')
 
 Promise.promisifyAll(jwt)
 
@@ -26,12 +27,30 @@ describe('API tests', () => {
     gender: 'male'
   }
 
+  let owner2 = {
+    email: 'owner2@test.com',
+    password: 'test',
+    user_type: 'owner',
+    first_name: 'Roronoa',
+    last_name: 'Zoro',
+    gender: 'male'
+  }
+
   let customer1 = {
     email: 'customer1@test.com',
     password: 'test',
     user_type: 'customer',
     first_name: 'wasin',
     last_name: 'watt',
+    gender: 'male'
+  }
+
+  let customer2 = {
+    email: 'customer2@test.com',
+    password: 'test',
+    user_type: 'customer',
+    first_name: 'Monkey',
+    last_name: 'Luffy',
     gender: 'male'
   }
 
@@ -51,23 +70,31 @@ describe('API tests', () => {
 
   let service1 = {}
   let reserve1 = {}
+  let complaint1 = {}
 
   let cusToken = ''
   let ownerToken = ''
   let adminToken = ''
+  let cusToken2 = ''
+  let ownerToken2 = ''
 
   before(async () => {
     owner1 = await UserModel.createUser(owner1)
-    owner1 = await UserModel.findByEmail(owner1.email)
     ownerToken = jwt.sign({ user_id: owner1.user_id, user_type: owner1.user_type }, 'MATCHSAGE_USER')
     ownerToken = `JWT ${ownerToken}`
+    owner2 = await UserModel.createUser(owner2)
+    ownerToken2 = jwt.sign({ user_id: owner2.user_id, user_type: owner2.user_type }, 'MATCHSAGE_USER')
+    ownerToken2 = `JWT ${ownerToken2}`
+    customer2 = await UserModel.createUser(customer2)
+    cusToken2 = jwt.sign({user_id: customer2.user_id, user_type: customer2.user_type}, 'MATCHSAGE_USER')
+    cusToken2 = `JWT ${cusToken2}`
   })
 
   after(() => {
     mongoose.connection.db.dropDatabase()
   })
 
-  describe('# /api endpoint', () => {
+  describe('# check connection', () => {
     it('should get the software version', () => {
       return request(app)
       .get('/api')
@@ -78,7 +105,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/signup endpoint', () => {
+  describe('# user signup', () => {
     it('should be able to sign up && user will appear in the database', () => {
       return request(app)
       .post('/api/signup')
@@ -95,7 +122,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/auth endpoint', () => {
+  describe('# user auth', () => {
     it('Wrong email  should get 401', () => {
       return request(app)
         .post('/api/auth')
@@ -114,12 +141,12 @@ describe('API tests', () => {
         .send({ email: customer1.email, password: 'test' })
         .expect(200)
         .then(async res => {
-          expect(res.body.token).to.be.equal(cusToken.split(' ')[1])
+          cusToken = `JWT ${res.body.token}`
         })
     })
   })
 
-  describe('# /api/admin-signup endpoint', () => {
+  describe('# admin signup', () => {
     it('should be able to sign up && user will appear in the database', () => {
       return request(app)
         .post('/api/admin-signup')
@@ -136,19 +163,19 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/admin-auth endpoint', () => {
+  describe('# admin auth', () => {
     it('Authorized admin should be able to logged in', () => {
       return request(app)
       .post('/api/admin-auth')
       .send({ email: admin1.email, password: 'test' })
       .expect(200)
       .then(async res => {
-        expect(res.body.token).to.be.equal(adminToken.split(' ')[1])
+        adminToken = `JWT ${res.body.token}`
       })
     })
   })
 
-  describe('# /api/users endpoint', () => {
+  describe('# search users', () => {
     it('Unauthorized should get 401', () => {
       return request(app)
       .get('/api/users')
@@ -161,7 +188,7 @@ describe('API tests', () => {
       .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
-        expect(res.body.users.length).to.equal(2)
+        expect(res.body.users.length).to.equal(4)
       })
     })
     it('Authorized should get all users', () => {
@@ -171,12 +198,12 @@ describe('API tests', () => {
       .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
-        expect(res.body.users.length).to.equal(1)
+        expect(res.body.users.length).to.equal(2)
       })
     })
   })
 
-  describe('# /api/users/:id endpoint', () => {
+  describe('# see user', () => {
     it('Should return user detail', () => {
       return request(app)
       .get('/api/users/match-user-1')
@@ -190,10 +217,10 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/users/:id/update endpoint', () => {
+  describe('# update user', () => {
     it('Should update the user data', () => {
       const update = {
-        email: 'update_customer@test.com'
+        first_name: 'Robert'
       }
       return request(app)
       .post(`/api/users/${customer1.user_id}/update`)
@@ -204,12 +231,12 @@ describe('API tests', () => {
       .then(async res => {
         const user = await UserModel.findByUserId(customer1.user_id)
         expect(res.body.success).to.equal(true)
-        expect(user.email).to.equal(update.email)
+        expect(user.first_name).to.equal(update.first_name)
       })
     })
   })
 
-  describe('# /api/services/new', () => {
+  describe('# create service', () => {
     it('Should create a new service', () => {
       return request(app)
       .post('/api/services/new')
@@ -249,7 +276,20 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/services/:id/update', () => {
+  describe('# see service', () => {
+    it('should get service detail', () => {
+      return request(app)
+      .get(`/api/services/match-ser-1`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.service_id).to.equal('match-ser-1')
+      })
+    })
+  })
+
+  describe('# update service', () => {
     const update = {
       service_name: 'service_new'
     }
@@ -267,7 +307,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/services/:id/add_employee', () => {
+  describe('# add employee', () => {
     it('Should add an employee to the service', () => {
       return request(app)
       .post(`/api/services/${service1.service_id}/add_employee`)
@@ -285,7 +325,7 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/services/:id/avai_employees', () => {
+  describe('# get available employees', () => {
     it('Should get all available employee in paticular date and time', () => {
       return request(app)
       .get(`/api/services/${service1.service_id}/avai_employees`)
@@ -299,13 +339,13 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/reservation/new', () => {
+  describe('# create reservation', () => {
     it('Should create a new reservation', () => {
       return request(app)
       .post(`/api/reservations/new`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ service_id: service1.service_id, customer_id: customer1.user_id, employee_id: employee1.employee_id })
+      .send({ service_id: service1.service_id, employee_id: employee1.employee_id })
       .expect(200)
       .then(async res => {
         reserve1 = res.body
@@ -316,7 +356,24 @@ describe('API tests', () => {
     })
   })
 
-  describe('# /api/reservation/:id/cancel', () => {
+  describe('# see reservation', () => {
+    it('Unauthorized customer should not be able to access to other\'s reservation', () => {
+      return request(app)
+      .get(`/api/reservations/${reserve1.reserve_id}/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken2)
+      .expect(400)
+    })
+    it('Unauthorized service owner should not be able to access to other\'s reservation', () => {
+      return request(app)
+      .get(`/api/reservations/${reserve1.reserve_id}/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken2)
+      .expect(400)
+    })
+  })
+
+  describe('# cancel reservation', () => {
     it('UnAuthorized customer should not be able to cancel other reservation', () => {
       return request(app)
       .get(`/api/reservations/${reserve1.reserve_id}/cancel`)
@@ -365,6 +422,66 @@ describe('API tests', () => {
         const employee = await EmployeeModel.findByEmployeeId(employee1.employee_id)
         expect(rating.score).to.equal(3.5)
         expect(rating.score).to.equal(employee.rating)
+      })
+    })
+  })
+
+  // add complaint test
+  describe('# complaint', () => {
+    it('should create a new complaint', () => {
+      return request(app)
+      .post(`/api/complaint/new`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ customer_id: customer1.user_id, service_id: service1.service_id })
+      .expect(200)
+      .then(async res => {
+        expect(res.body.service_id).to.equal(service1.service_id)
+        expect(res.body.customer_id).to.equal(customer1.user_id)
+      })
+    })
+    it('should list all complaints', () => {
+      return request(app)
+      .get(`/api/complaint/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', adminToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.complaint[0].complaint_id).to.equal('match-com-1')
+      })
+    })
+  })
+
+  describe('# add payment', () => {
+    it('should be able to add credit card', () => {
+      return request(app)
+      .post(`/api/users/add-credit-card`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customer1.user_id)
+        const card = await PaymentAccountModel.findByNumber('xxxxxxxxxxxxxxxx')
+        expect(card.user_id).to.equal(customer1.user_id)
+        expect(card.amount).to.equal(5000)
+        expect(user.payment_accounts[0]).to.equal('xxxxxxxxxxxxxxxx')
+      })
+    })
+    it('should be able to add bank account', () => {
+      return request(app)
+      .post(`/api/users/add-bank-account`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customer1.user_id)
+        const account = await PaymentAccountModel.findByNumber('yyyyyyyyyyyyyyyy')
+        expect(account.user_id).to.equal(customer1.user_id)
+        expect(account.company).to.equal('kasikorn')
+        expect(account.amount).to.equal(7000)
+        expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
       })
     })
   })

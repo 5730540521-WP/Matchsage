@@ -1,9 +1,9 @@
 import React from 'react';
 // import {connect} from 'react-redux';
 
-import LoginModal from '../Modal/LoginModal';
-import SignupModal from '../Modal/SignupModal';
-
+import LoginModal from '../Common/Modal/LoginModal';
+import SignupModal from '../Common/Modal/SignupModal';
+import { Button } from 'antd';
 
 export default class GuestNavbar extends React.Component{
 	constructor(props){
@@ -46,10 +46,9 @@ export default class GuestNavbar extends React.Component{
 				<div className="navbar-item">
 					<div className="field is-grouped">
 						<p className="control">
-							<a className="button is-primary modal-button" data-target="SignupModal" 
-								onClick={()=>this.toggleSignupModal(true)}>
+							<Button type="primary" onClick={()=>this.toggleSignupModal(true)}>
 								<span>สมัครสมาชิก</span>
-							</a>	
+							</Button>
 						</p>
 					</div>
 				</div>

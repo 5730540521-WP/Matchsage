@@ -31,6 +31,11 @@ const ServiceSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0
+  },
+  address: {
+    type: String,
+    required: true,
+    default: 'Siam'
   }
 })
 
