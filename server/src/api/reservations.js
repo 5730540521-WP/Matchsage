@@ -47,7 +47,7 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
     const startTime = req.body.start_time || '2500'
     const endTime = req.body.end_time || '2500'
     const paidStatus = req.body.paid_status || 'pending'
-    const body = Object.assign(req.body, { date, start_time: startTime, end_time: endTime, paid_status: paidStatus })
+    const body = Object.assign(req.body, { date, start_time: startTime, end_time: endTime, paid_status: paidStatus, customer_id: req.user.user_id })
     const reserve = await ReserveModel.createReservation(body)
     res.json(reserve)
   } catch (error) {
@@ -58,7 +58,7 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
 router.get('/:id/cancel', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     await ReserveServ.cancelReservation(req.user.user_id, req.params.id)
-    res.send('Cancel reservation success')
+    res.send('Cancel reservation successful')
   } catch (error) {
     next(error)
   }
