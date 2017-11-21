@@ -1,8 +1,8 @@
 import React from 'react';
 // import {connect} from 'react-redux';
 
-import LoginModal from '../Modal/LoginModal';
-import SignupModal from '../Modal/SignupModal';
+import LoginModal from '../Common/Modal/LoginModal';
+import SignupModal from '../Common/Modal/SignupModal';
 
 
 export default class GuestNavbar extends React.Component{

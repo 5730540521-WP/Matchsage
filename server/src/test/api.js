@@ -220,7 +220,7 @@ describe('API tests', () => {
   describe('# update user', () => {
     it('Should update the user data', () => {
       const update = {
-        email: 'update_customer@test.com'
+        email: 'matchsage@outlook.com'
       }
       return request(app)
       .post(`/api/users/${customer1.user_id}/update`)

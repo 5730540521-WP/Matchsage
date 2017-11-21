@@ -19,6 +19,7 @@
     "dotenv": "^4.0.0",
     "express": "^4.13.3",
     "express-session": "^1.15.6",
+    "gmail-send": "^1.2.11",
     "jade": "^1.11.0",
     "jsonwebtoken": "^8.0.1",
     "mongoose": "^4.11.10",

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
 // import {Field, reduxForm} from 'redux-form';
 import Modal from './Modal';
-import {userActions} from '../../actions'
+import {userActions} from 'actions';
 import styled from 'styled-components';
 
 // const renderField = (field)=>(

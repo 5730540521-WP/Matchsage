@@ -62,7 +62,6 @@ class Header extends Component{
 						{/* <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"/> */}
 						<h1>Matchsage</h1>
 					</a>
-
 					{/* <a className="navbar-item is-hidden-desktop" href="https://github.com/jgthms/bulma" target="">
 						<span className="icon">
 							<i className="fa fa-github"></i>
