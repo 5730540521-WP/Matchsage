@@ -50,7 +50,7 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
     const paidStatus = req.body.paid_status || 'pending'
     const body = Object.assign(req.body, { date, start_time: startTime, end_time: endTime, paid_status: paidStatus, customer_id: req.user.user_id })
     const reserve = await ReserveModel.createReservation(body)
-    EmailServ.mailConfirmReservation(reserve.reserve_id)
+    await EmailServ.mailConfirmReservation(reserve.reserve_id)
     res.json(reserve)
   } catch (error) {
     next(error)
