@@ -170,7 +170,7 @@ describe('API tests', () => {
       .send({ email: admin1.email, password: 'test' })
       .expect(200)
       .then(async res => {
-        expect(res.body.token).to.be.equal(adminToken.split(' ')[1])
+        adminToken = `JWT ${res.body.token}`
       })
     })
   })
@@ -458,7 +458,7 @@ describe('API tests', () => {
       .post(`/api/users/add-credit-card`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000 })
+      .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
       .expect(200)
       .then(async res => {
         const user = await UserModel.findByUserId(customer1.user_id)
@@ -473,12 +473,13 @@ describe('API tests', () => {
       .post(`/api/users/add-bank-account`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000 })
+      .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
       .expect(200)
       .then(async res => {
         const user = await UserModel.findByUserId(customer1.user_id)
         const account = await PaymentAccountModel.findByNumber('yyyyyyyyyyyyyyyy')
         expect(account.user_id).to.equal(customer1.user_id)
+        expect(account.company).to.equal('kasikorn')
         expect(account.amount).to.equal(7000)
         expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
       })

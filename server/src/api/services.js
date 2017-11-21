@@ -11,7 +11,7 @@ const UserModel = require('../models/user')
 // Services api
 let router = Router()
 
-const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating']
+const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating', 'location']
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
