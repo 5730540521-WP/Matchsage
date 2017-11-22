@@ -5,40 +5,10 @@ import {bindActionCreators} from 'redux';
 import { Link } from 'react-router-dom';
 import {userActions} from 'actions';
 
-import Modal from './Modal';
-
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete, Modal } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
-
-// const renderField = (field)=>(
-// 	<div className="form-group">
-// 		<label>{field.label}</label>
-// 		<input 
-// 			className="form-control"
-// 			type="text"
-// 			{...field.input}
-// 		/>
-// 		{field.meta.errors}
-// 	</div>
-// )
-
-//({modalState, onCloseSignupModal})=>
-// class SignupModal extends React.Component{
-// 	render(){
-// 		return this.props.modalState ? (
-// 			<Modal classID="SingupModal" onClose={this.props.onCloseSignupModal}>
-// 				{/* <Field/> */}
-// 				<section className="modal-card-body">
-// 					<p>ลงทะเบียน</p>
-// 					{/* <Field/> */}
-// 				</section>
-// 			</Modal>
-// 		) : null;
-// 	}
-	
-// }
 
 const genders = [{
 	value:'male',
@@ -129,7 +99,7 @@ class RegistrationForm extends React.Component{
         },
         sm: {
           span: 14,
-          offset: 6,
+          offset: 9,
         },
       },
 		};
@@ -145,7 +115,6 @@ class RegistrationForm extends React.Component{
 		
 		return(
 			<Form onSubmit={this.onRegisterSubmit}>
-				สมัครสมาชิก
 				<FormItem
           {...formItemLayout}
           label="ชื่อจริง"
@@ -257,13 +226,18 @@ const WrappedRegistrationForm = Form.create()(RegistrationForm);
 
 class SignupModal extends React.Component{
 	render(){
-		return this.props.modalState ? (
-			<Modal classID="SingupModal" onClose={this.props.onCloseSignupModal}>
+		return (
+      <Modal title="สมัครสมาชิก"
+        visible={this.props.modalState}
+        onOk={this.props.onCloseSignupModal}
+        footer={null}
+        onCancel={this.props.onCloseSignupModal}
+        onClose={this.props.onCloseSignupModal}>
 				<section className="modal-card-body">
 					<WrappedRegistrationForm register={this.props.register}/>
 				</section>
 			</Modal>
-		) : null;
+    )
 	}
 };
 
