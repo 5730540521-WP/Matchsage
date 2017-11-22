@@ -16,8 +16,7 @@ const ServiceSchema = new mongoose.Schema({
   },
   owner_id: {
     type: String,
-    required: true,
-    default: '1'
+    required: true
   },
   contact_number: {
     type: String,
@@ -36,6 +35,11 @@ const ServiceSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: 'Siam'
+  },
+  price_per_hour: {
+    type: Number,
+    required: true,
+    default: 500
   }
 })
 

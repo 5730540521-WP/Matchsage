@@ -4,9 +4,9 @@ import { Row, Col,Button } from 'antd';
 import SignupModal from './Common/Modal/SignupModal';
 
 
-const Hero = styled.div.attrs({
+/*const Hero = styled.div.attrs({
 	className:"hero is-medium is-primary is-bold"
-})``;
+})``;*/
 
 
 export default class Home extends React.Component{
@@ -31,11 +31,11 @@ export default class Home extends React.Component{
 		}
 		const imgurl1 = './images/1150.jpg',imgurl2 = './images/1142.jpg';
 		return (
-			<section className="section">
+			<section className="section" style={{padding:'1.5rem',backgroundColor:'#FFF8EB'}}>
 				<Row>
 					
 					<Col span={24}>
-								<img src={imgurl1} style={{display: 'block',margin:'auto',position:'relative',width:'100%',height:'40.1vw'}}/>
+							<img src={imgurl1} style={{display: 'block',margin:'auto',position:'relative',width:'100%',height:'40.1vw'}}/>
 							<div style={{position:'absolute', bottom:'0%', width:'100%', height:'40%', 'backgroundColor':'black', opacity:.2}}></div>
 							<div style={{position:'absolute', bottom:'8%' ,left:'2%',width:'70%',fontSize:'20px',textAlign: 'left'}}>
 								<h1 style={{fontWeight:'bold', color:'white'}}>
@@ -49,11 +49,11 @@ export default class Home extends React.Component{
 					</Col>
 					
 				</Row>
-				<h1 style={{fontSize:'35px', textAlign: 'left'}}>Matchsage คืออะไร...</h1>
-				<Row gutter={16}>
+				<h1 style={{fontSize:'35px', textAlign: 'left',marginTop:'24px',marginBottom:'12px'}}>Matchsage คืออะไร...</h1>
+				<Row gutter={24}>
 					<Col span={12}>
 						<figure>
-							<img src={imgurl2} style={{borderRadius:'2%'}}/>
+							<img src={imgurl2} style={{borderRadius:'4%',padding:'12px'}}/>
 						</figure>
 					</Col>
 					<Col span={12} style={text}>

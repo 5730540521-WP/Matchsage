@@ -6,9 +6,6 @@ import {connect} from 'react-redux';
 import { Input,Slider } from 'antd';
 import ServiceItem from './ServiceItem';
 
-import SearchNavigator from './SearchNavigator';
-import ServiceList from './ServiceList';
-
 import {CustomerActions} from '../../actions';
 
 import _ from 'lodash';
@@ -22,12 +19,27 @@ class Service extends React.Component{
 		this.state = {
 			services: this.props.services,
 			term:'',
-			isServiceLoaded: false
+			isServiceLoaded: false,
+			word:'',
+			ratingMin:0
 		};
+		if(this.props.match.params.filter){
+			const fullFilter = this.props.match.params.filter;
+			if(fullFilter.includes('word=')) {
+				let filter=fullFilter.slice(fullFilter.search('word=')+5);
+				if(filter.includes('&')) filter = filter.slice(0,filter.indexOf('&'));
+				this.state.word = filter;
+			}
+			if(fullFilter.includes('rating>=')) {
+				let filter = fullFilter.slice(fullFilter.search('rating>=')+8);
+				if(filter.includes('&')) filter = filter.slice(0,filter.indexOf('&'));
+				this.state.ratingMin = filter;
+			}
+		}
 
 		this.onInputChange = this.onInputChange.bind(this);
 	}	
-
+	
 	componentDidMount(){
 		const {fetchServices} = this.props;
 		// fetchServices(()=>{
@@ -35,50 +47,63 @@ class Service extends React.Component{
 		// 	this.setState({services:this.props.services});
 		// });
 		fetchServices();
+		//this.state.displayService = this.state.services;
 		// const services = getServices();
 	}
 
-	
 	renderServices(){
 		// this.setState({services:this.props.services});
 		if(!this.state.isServiceLoaded && this.props.services.length > 0) {
-			this.setState({ services: this.props.services, isServiceLoaded: true })
+			this.setState({ services: this.props.services, isServiceLoaded: true},()=>this.onChange(this.state.word,this.state.ratingMin))
 		}
 		return <Row gutter={24}>
 				<Col span={12}>{this.state.services.map( (service,index) =>{
-					return index%2==0?<ServiceItem key={service.service_id} service={service}/>:null})}
+					return index%2===0?<ServiceItem key={service.service_id} service={service}/>:null})}
 				</Col>
 				<Col span={12}>{this.state.services.map( (service,index) =>{
-					return index%2==1?<ServiceItem key={service.service_id} service={service}/>:null})}
+					return index%2===1?<ServiceItem key={service.service_id} service={service}/>:null})}
 				</Col>
 			</Row>
 			
 		;
 	}
 
-	
+	linkWithFilter(){
+		let hasWord = this.state.word,
+		hasRatingMin = this.state.ratingMin>0,
+		newSearchURL = '/service/search',
+		hasPreviousFilter = false;
+		if(hasWord || hasRatingMin) newSearchURL+='/';
+		if(hasWord){
+			if(hasPreviousFilter)	newSearchURL+='&'; else hasPreviousFilter =true;
+			newSearchURL+=`word=${this.state.word}`;
+		}
+		if(hasRatingMin){
+			if(hasPreviousFilter)	newSearchURL+='&'; else hasPreviousFilter =true;
+			newSearchURL+=`rating>=${this.state.ratingMin}`;
+		}
+		this.props.history.push(newSearchURL);
+	}
 
 	onInputChange(e){
-		const term = e.target.value.toLowerCase();
+		this.onChange(e.target.value,this.state.ratingMin);
+	}
+
+	onSilderChange(ratingMin){
+		this.onChange(this.state.word,ratingMin);
+	}
+
+	onChange(word,ratingMin){
+		const term = word.toLowerCase();
 		let newlyDisplayed = _.filter(this.props.services,service =>{
-			console.log(term);
 			return (
 				service.service_name.toLowerCase().includes(term)
 				|| service.contact_number.includes(term)
 			);
 		});
-		this.setState({services:newlyDisplayed});
-
+		newlyDisplayed = newlyDisplayed.filter(service => (service.rating >= ratingMin ) );
+		this.setState({services:newlyDisplayed,word:word,ratingMin:ratingMin},()=>this.linkWithFilter());
 	}
-
-	onSilderChange(ratingMin){
-		// console.log(e.target.value);
-		console.log(ratingMin);
-		let newlyDisplayed = this.props.services.filter(service => (service.rating >= ratingMin ) );
-		console.log(this.props.services);
-		this.setState({services:newlyDisplayed});
-	}
-
 	render(){
 		
 		return(
@@ -102,10 +127,11 @@ class Service extends React.Component{
 						</div> */}
 						<SearchInput
 							placeholder="ค้นหา"
+							defaultValue={this.state.word}
 							onChange={(e)=>this.onInputChange(e)}
 						/>
 						<p>คะแนนความพึงพอใจ</p>
-						<Slider defaultValue={0} max={5}
+						<Slider defaultValue={this.state.ratingMin} max={5}
 							onChange={rate=>this.onSilderChange(rate)}
 						/>
 					</nav>

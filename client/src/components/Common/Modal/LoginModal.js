@@ -2,11 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
 // import {Field, reduxForm} from 'redux-form';
-import Modal from './Modal';
 import {userActions} from 'actions';
 import styled from 'styled-components';
-import { Button } from 'antd';
-
+import { Button, Modal, Input, Form, Icon, Checkbox} from 'antd';
+const FormItem = Form.Item
 // const renderField = (field)=>(
 // 	<div className="form-group">
 // 		<label>{field.label}</label>
@@ -23,7 +22,7 @@ import { Button } from 'antd';
 
 // const loginSubmitButtonLoading = styled.
 // const loginSubmitButton = styl
-class LoginModal extends React.Component{
+class LoginForm extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -40,93 +39,80 @@ class LoginModal extends React.Component{
 	// onPasswordChange(e){
 	// 	this.setState({password: e.target.value});
 	// }
-	onFieldChange(e){
-		// console.log(e.target.name);
-		const {name,value} = e.target;
-		this.setState({[name]:value});
-	}
+	// onFieldChange(e){
+	// 	// console.log(e.target.name);
+	// 	const {name,value} = e.target;
+	// 	this.setState({[name]:value});
+	// }
 
-	onLoginSubmit(){
-		const {email, password} = this.state;
-		this.setState({ submitted:true },()=>{
-			//Check that email and password are submitted
-			if(email && password){
-				this.props.login(
-					email,
-					password
-				);
+	onLoginSubmit = (e) => {
+		e.preventDefault();
+		this.props.form.validateFieldsAndScroll((err, values) => {
+			if (!err) {
+				// console.log('Received values of form: ', values);
+				const { email, password } = values;
+				this.props.login(email, password);
+			} else {
+				console.log(values);
 			}
-		});
+		})
 	}
 	
-	render(){
+	render () {
+		const { getFieldDecorator } = this.props.form;
 		const {isLoggingIn} = this.props;
-		const {email, password, submitted} = this.state;
-		return this.props.modalState ? (
-			<Modal classID="LoginModal" onClose={this.props.onCloseLoginModal}>
-				{/* <Field/> */}
-				<section className="modal-card-body">
-					{/* <!-- Content ... --> */}
-					{/* <button className="delete is-right" aria-label="close"></button> */}
-					
-					{/* <div className="is-divider" data-content="หรือ"></div> */}
-					
-					เข้าสู่ระบบ
-					{/* <Field name="username" component={this.renderField}/> */}
-					{/* <Field name="password" component={this.renderField}/> */}
-					
-					<label className="label level-left">อีเมล์</label>
-
-					<input className="input" name="email" type="email" placeholder=""
-						onChange={ e => this.onFieldChange(e)}
-					/>
-					{/* Check that email os not blank */}
-					{submitted && !email && 
-						<div/>
-					}
-
-					<label className="label level-left">รหัสผ่าน</label>
-					<input className="input" name="password" type="password" placeholder=""
-						onChange={ e => this.onFieldChange(e)}
-					/>
-					{/* Check that email os not blank */}
-					{submitted && !password && 
-						<div/>
-					}
-
-					{isLoggingIn ? (
-						<Button type="primary" loading/>
-					)	: (
-						<Button type="primary"
-							onClick={() => this.onLoginSubmit()}>
+		// const {email, password, submitted} = this.state;
+		return (
+				<Form onSubmit={this.onLoginSubmit} className="login-form" style={{marginLeft:85}}>
+					<FormItem>
+						{getFieldDecorator('email', {
+							rules: [{ required: true, message: 'Please input your username!' }],
+						})(
+							<Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
+							)}
+					</FormItem>
+					<FormItem>
+						{getFieldDecorator('password', {
+							rules: [{ required: true, message: 'Please input your Password!' }],
+						})(
+							<Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
+							)}
+					</FormItem>
+					<FormItem>
+						{getFieldDecorator('remember', {
+							valuePropName: 'checked',
+							initialValue: true,
+						})(
+							<Checkbox>Remember me</Checkbox>
+							)}
+						<a className="login-form-forgot" href="">ลืมรหัสผ่าน</a>
+						<Button type="primary" htmlType="submit" className="login-form-button">
 							เข้าสู่ระบบ
-						</Button>
-					)}
-					
-
-					<div className="columns">
-						<div className="column">สมัครสมาชิก</div>
-						<div className="is-divider-vertical" data-content="หรือ"></div>
-						<div className="column">ลืมรหัสผ่าน</div>
-					</div>
-				</section>
-			
-			</Modal>
-		) : null;
+          	</Button>
+					</FormItem>
+				</Form>
+		)
 	}
 	
 }
 
-// function validate(values){
-// 	const errors = {};
-// 	return errors;
-// }
+const WrappedLoginForm = Form.create()(LoginForm);
 
-// export default reduxForm({
-// 	validate,
-// 	form: 'LoginModal'
-// })(LoginModal);
-// export con
+class LoginModal extends React.Component {
+	render() {
+		return (
+			<Modal title="เข้าสู่ระบบ"
+				visible={this.props.modalState}
+				onOk={this.hideModal}
+				footer={null}
+				onCancel={this.props.onCloseLoginModal}
+				onClose={this.props.onCloseLoginModal}
+			>
+				<WrappedLoginForm login={this.props.login} />
+			</Modal>
+		)
+	}
+}
 
 function mapStateToProps({authentication}){
 	const {isLoggingIn} = authentication;

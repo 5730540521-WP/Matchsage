@@ -24,6 +24,7 @@ async function mailConfirmReservation (reserveId) {
   }, function (err, res) {
     console.log('confirm reserve callback returned: err:', err, '; res:', res, 'send to', cust.email)
     if (err) {
+      err.status = 550
       throw err
     }
   })
@@ -37,6 +38,7 @@ async function mailConfirmSignUp (userId) {
   }, function (err, res) {
     console.log('confirm sign up callback returned: err:', err, '; res:', res, 'send to', user.email)
     if (err) {
+      err.status = 550
       throw err
     }
   })
@@ -50,6 +52,7 @@ async function mailConfirmSignUpAdmin (adminId) {
   , function (err, res) {
     console.log('confirm admin sign up callback returned: err:', err, '; res:', res, 'send to', admin.email)
     if (err) {
+      err.status = 550
       throw err
     }
   })
