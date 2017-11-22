@@ -32,6 +32,10 @@ PaymentAccountSchema.statics = {
 
   createPayment: function (values) {
     return PaymentAccount.create(values)
+  },
+
+  subtractAmountFrom: function (number, amount) {
+    return PaymentAccount.findOneAndUpdate({ number }, { $inc: { amount: -amount } })
   }
 }
 

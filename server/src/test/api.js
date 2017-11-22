@@ -371,6 +371,17 @@ describe('API tests', () => {
       .set('Authorization', ownerToken2)
       .expect(400)
     })
+    it('Authorized should be able to access resservation', () => {
+      return request(app)
+      .get(`/api/reservations/${reserve1.reserve_id}/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async () => {
+        const reserve = await ReserveModel.findByReservationId(reserve1.reserve_id)
+        expect(reserve.customer_id).to.equal(customer1.user_id)
+      })
+    })
   })
 
   describe('# cancel reservation', () => {
@@ -455,7 +466,7 @@ describe('API tests', () => {
   describe('# add payment', () => {
     it('should be able to add credit card', () => {
       return request(app)
-      .post(`/api/users/add-credit-card`)
+      .post(`/api/users/${customer1.user_id}/add-credit-card`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
@@ -470,7 +481,7 @@ describe('API tests', () => {
     })
     it('should be able to add bank account', () => {
       return request(app)
-      .post(`/api/users/add-bank-account`)
+      .post(`/api/users/${customer1.user_id}/add-bank-account`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
