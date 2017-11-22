@@ -5,8 +5,8 @@ const ServiceModel = require('../models/service')
 const AdminModel = require('../models/admin')
 
 var send = mailer({
-  user: process.env.EMAIL || '',
-  pass: process.env.EMAIL_PASS || '',
+  user: /* process.env.EMAIL || */ '',
+  pass: /* process.env.EMAIL_PASS || */ '',
   to: [],
   subject: 'template',
   text: ''

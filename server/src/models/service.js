@@ -63,6 +63,10 @@ ServiceSchema.statics = {
 
   updateService: async function (serviceId, values) {
     return Service.findOneAndUpdate({ service_id: serviceId }, values)
+  },
+
+  removeService: async function (serviceId) {
+    return Service.findOneAndRemove({ service_id: serviceId })
   }
 }
 

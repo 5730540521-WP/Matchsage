@@ -6,7 +6,6 @@ const ServiceServ = require('../services/service')
 const RatingServ = require('../services/rating')
 const ServiceModel = require('../models/service')
 const EmployeeModel = require('../models/employee')
-const UserModel = require('../models/user')
 
 // Services api
 let router = Router()
@@ -78,6 +77,15 @@ router.post('/:id/rate', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const opts = Object.assign(req.body, { service_id: req.params.id, customer_id: req.user.user_id })
     await RatingServ.rate(opts)
+    res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/:id/remove', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    await ServiceModel.removeService(req.params.id)
     res.json({ success: true })
   } catch (error) {
     next(error)
