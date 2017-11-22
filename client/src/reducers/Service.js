@@ -9,7 +9,9 @@ export function service(state=initialState,action){
 			return {...state,services};
 		case(customerConstants.CUSTOMER_FETCH_SERVICE):
 			const service = action.payload.data;
-			return {...state,service};
+			const ownerDetail = action.payload2.data;
+			const employees = action.payload3.data;
+			return {...state,service,ownerDetail,employees};
 		case(customerConstants.CUSTOMER_SEARCH_SERVICE):
 			const updatedServices = action.payload.keyword;	
 			// return {...state,services:updatedServices}

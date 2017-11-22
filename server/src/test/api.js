@@ -455,7 +455,7 @@ describe('API tests', () => {
   describe('# add payment', () => {
     it('should be able to add credit card', () => {
       return request(app)
-      .post(`/api/users/add-credit-card`)
+      .post(`/api/users/${customer1.user_id}/add-credit-card`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
@@ -470,7 +470,7 @@ describe('API tests', () => {
     })
     it('should be able to add bank account', () => {
       return request(app)
-      .post(`/api/users/add-bank-account`)
+      .post(`/api/users/${customer1.user_id}/add-bank-account`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
