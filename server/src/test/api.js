@@ -208,13 +208,28 @@ describe('API tests', () => {
   describe('# see user', () => {
     it('Should return user detail', () => {
       return request(app)
-      .get('/api/users/match-user-1')
+      .get(`/api/users/${customer1.user_id}`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
         expect(res.body).to.be.an('object')
-        expect(res.body.user_id).to.equal('match-user-1')
+        expect(res.body.user_id).to.equal(`${customer1.user_id}`)
+      })
+    })
+  })
+
+  describe('# see user\'s reservation list', () => {
+    it('Should return user reservation list', () => {
+      return request(app)
+      .get(`/api/users/${customer1.user_id}/reserve-list`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body).to.be.an('object')
+        console.log(res.body)
+        expect(res.body.reservations[0].customer_id).to.equal(`${customer1.user_id}`)
       })
     })
   })
@@ -316,7 +331,7 @@ describe('API tests', () => {
       .get(`/api/services/${serviceTestRemove.service_id}/delete`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
-      .send(owner1.user_id,serviceTestRemove.service_id)
+      .send(owner1.user_id, serviceTestRemove.service_id)
       .expect(200)
       .then(async res => {
         const serv = await ServiceModel.findByServiceId(tmpId)

@@ -68,4 +68,24 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
+router.get('/:id/reserve-list', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    const user = await UserModel.findByUserId(req.user.user_id)
+    if (user.user_id !== req.params.id) {
+      const error = new Error('Unauthorized')
+      error.status = 401
+      throw error
+    }
+    if (user.user_type !== 'customer') {
+      const error = new Error('Invalid user type.')
+      error.status = 401
+      throw error
+    }
+    const reserveList = await UserServ.getReserveListByCustomer(user.user_id)
+    res.json({reservations: reserveList})
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = router
