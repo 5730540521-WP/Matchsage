@@ -22,3 +22,8 @@ async function downloadReceipt (userId, reserveId) {
 
     // Start Download File
 }
+
+module.exports = {
+    viewReceipt,
+    downloadReceipt,
+}

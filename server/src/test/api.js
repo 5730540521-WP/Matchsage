@@ -71,6 +71,7 @@ describe('API tests', () => {
   let service1 = {}
   let reserve1 = {}
   let complaint1 = {}
+  let receipt1 = {}
 
   let cusToken = ''
   let ownerToken = ''
@@ -441,7 +442,7 @@ describe('API tests', () => {
   describe('# complaint', () => {
     it('should create a new complaint', () => {
       return request(app)
-      .post(`/api/complaint/new`)
+      .post(`/api/complaints/new`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .send({ customer_id: customer1.user_id, service_id: service1.service_id })
@@ -453,7 +454,7 @@ describe('API tests', () => {
     })
     it('should list all complaints', () => {
       return request(app)
-      .get(`/api/complaint/`)
+      .get(`/api/complaints/`)
       .set('Accept', 'application/json')
       .set('Authorization', adminToken)
       .expect(200)
@@ -493,6 +494,22 @@ describe('API tests', () => {
         expect(account.company).to.equal('kasikorn')
         expect(account.amount).to.equal(7000)
         expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
+      })
+    })
+  })
+
+  // add receipt test
+  describe('# receipt', () => {
+    it('should be able to create new receipt', () => {
+      return request(app)
+      .post(`/api/receipts/new`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ customer_id: customer1.user_id, reservaion_id: reserve1.reserve_id })
+      .expect(200)
+      .then(async res => {
+        expect(res.body.receipt_id).to.equal(receipt1.receipt_id)
+        expect(res.body.reservation_id).to.equal(receipt1.reserve_id)
       })
     })
   })

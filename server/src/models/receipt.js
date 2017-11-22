@@ -2,9 +2,14 @@ const mongoose = require('mongoose')
 const promise = require('bluebird')
 
 const ReceiptSchema = new mongoose.Schema({
-    user_id: {
+    receipt_id: {
         type: String,
-        requireed: true
+        required: true
+    },
+
+    customer_id: {
+        type: String,
+        required: true
     },
 
     reservation_id: {
@@ -14,12 +19,15 @@ const ReceiptSchema = new mongoose.Schema({
 
     price: {
         type: Number,
-        required: true
+        required: true,
+        default: 1000
+        
     },
 
     payment_date: {
         type: String,
-        required: true
+        required: true,
+        default: 'TEMP DATE'
     }
 })
 
