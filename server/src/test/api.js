@@ -525,7 +525,7 @@ describe('API tests', () => {
       .post(`/api/receipts/new`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ customer_id: customer1.user_id, reservaion_id: reserve1.reserve_id })
+      .send({ customer_id: customer1.user_id, reservation_id: reserve1.reserve_id })
       .expect(200)
       .then(async res => {
         expect(res.body.receipt_id).to.equal(receipt1.receipt_id)
