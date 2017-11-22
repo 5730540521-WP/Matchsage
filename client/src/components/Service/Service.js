@@ -107,7 +107,7 @@ class Service extends React.Component{
 	render(){
 		
 		return(
-			<div className="columns">
+			<div className="columns" style={{backgroundColor:'#FFF8EB',color:'#402900',paddingTop:'24px',minHeight:'100vh'}}>
 				{/* <SearchBox/> */}
 
 				{/* <SearchNavigator/> */}
@@ -130,7 +130,7 @@ class Service extends React.Component{
 							defaultValue={this.state.word}
 							onChange={(e)=>this.onInputChange(e)}
 						/>
-						<p>คะแนนความพึงพอใจ</p>
+						<p style={{marginTop:'16px'}}>คะแนนความพึงพอใจ</p>
 						<Slider defaultValue={this.state.ratingMin} max={5}
 							onChange={rate=>this.onSilderChange(rate)}
 						/>
