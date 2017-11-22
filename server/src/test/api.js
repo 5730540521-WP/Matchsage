@@ -70,7 +70,7 @@ describe('API tests', () => {
 
   let service1 = {}
   let reserve1 = {}
-  let complaint1 = {}
+  let serviceTestRemove = {service_name: 'service-test-remove'}
 
   let cusToken = ''
   let ownerToken = ''
@@ -88,6 +88,8 @@ describe('API tests', () => {
     customer2 = await UserModel.createUser(customer2)
     cusToken2 = jwt.sign({user_id: customer2.user_id, user_type: customer2.user_type}, 'MATCHSAGE_USER')
     cusToken2 = `JWT ${cusToken2}`
+    serviceTestRemove.owner_id = owner1.user_id
+    serviceTestRemove = await ServiceModel.createService(serviceTestRemove)
   })
 
   after(() => {
@@ -279,12 +281,12 @@ describe('API tests', () => {
   describe('# see service', () => {
     it('should get service detail', () => {
       return request(app)
-      .get(`/api/services/match-ser-1`)
+      .get(`/api/services/${service1.service_id}`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
-        expect(res.body.service_id).to.equal('match-ser-1')
+        expect(res.body.service_id).to.equal(service1.service_id)
       })
     })
   })
@@ -307,20 +309,21 @@ describe('API tests', () => {
     })
   })
 
-  // describe('# delete service', () => {
-  //   it('Should delete the service', () => {
-  //     return request(app)
-  //       .post(`/api/services/${service1.service_id}/update`)
-  //       .set('Accept', 'application/json')
-  //       .set('Authorization', ownerToken)
-  //       .send(update)
-  //       .expect(200)
-  //       .then(async () => {
-  //         const service = await ServiceModel.findByServiceId(service1.service_id)
-  //         expect(service.service_name).to.be.equal('service_new')
-  //       })
-  //   })
-  // })
+  describe('# remove service', () => {
+    it('Should remove the specified service', () => {
+      const tmpId = serviceTestRemove.service_id
+      return request(app)
+      .get(`/api/services/${serviceTestRemove.service_id}/delete`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .send(owner1.user_id,serviceTestRemove.service_id)
+      .expect(200)
+      .then(async res => {
+        const serv = await ServiceModel.findByServiceId(tmpId)
+        expect(serv).to.equal(null)
+      })
+    })
+  })
 
   describe('# add employee', () => {
     it('Should add an employee to the service', () => {

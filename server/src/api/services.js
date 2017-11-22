@@ -6,7 +6,6 @@ const ServiceServ = require('../services/service')
 const RatingServ = require('../services/rating')
 const ServiceModel = require('../models/service')
 const EmployeeModel = require('../models/employee')
-const UserModel = require('../models/user')
 
 // Services api
 let router = Router()
