@@ -1,11 +1,15 @@
 import {customerConstants} from '../constants/CustomerConstants';
+import {ownerConstants} from '../constants/OwnerConstants';
 const initialState = {
 	services:[]
 }
 export function service(state=initialState,action){
 	switch(action.type){
 		case(customerConstants.CUSTOMER_FETCH_SERVICES):
-			const services = action.payload.data.services;
+			let services = action.payload.data.services;
+			return {...state,services};
+		case(ownerConstants.OWNER_FETCH_SERVICES):
+			services = action.payload.data.services;			
 			return {...state,services};
 		case(customerConstants.CUSTOMER_FETCH_SERVICE):
 			const service = action.payload.data;

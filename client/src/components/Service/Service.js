@@ -128,7 +128,7 @@ class Service extends React.Component{
 		);
 	}
 }
-function mapStateToProps({service}){
+function mapStateToProps({service}){	
 	const {services} = service;
 	return {services};
 }
