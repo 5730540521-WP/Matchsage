@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux';
 import Modal from './Modal';
 import {userActions} from 'actions';
 import styled from 'styled-components';
+import { Button } from 'antd';
 
 // const renderField = (field)=>(
 // 	<div className="form-group">
@@ -94,12 +95,12 @@ class LoginModal extends React.Component{
 					}
 
 					{isLoggingIn ? (
-						<a className="button is-primary is-loading"/>
+						<Button type="primary" loading/>
 					)	: (
-						<a className="button is-primary"
+						<Button type="primary"
 							onClick={() => this.onLoginSubmit()}>
 							เข้าสู่ระบบ
-						</a>
+						</Button>
 					)}
 					
 

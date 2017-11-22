@@ -14,6 +14,7 @@ import AdminSearch from './components/Admin/AdminSearch';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
 import NotFound from './components/NotFound';
+import './theme.css';
 import './App.css';
 
 const GuestRoute = ()=>(
@@ -76,7 +77,7 @@ class App extends Component {
 	}
   render() {
     return (
-      <div className="App">
+      <div className="App" style={{fontFamily:'Kanit'}}>
 				{/* <Helmet title="Matchsage"/> */}
 				<Header/>
 				<Body userType={{}}/>
