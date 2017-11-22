@@ -43,7 +43,7 @@ const Body = ({userType})=>{
 	return(
 		<Router history={browserHistory}>
 			<Switch>
-				<Route exact path="/" component={user ? Service : Home }/>
+				<Route exact path="/" component={user ? ()=>{return <Redirect to="/service/search"/>} : Home }/>
 				<Route exact path='/admin/login' render={() => {
 					if (localStorage.admin) {
 						return (<Redirect to='/admin/users/search' />)
@@ -60,8 +60,9 @@ const Body = ({userType})=>{
 				}}/>
 				<Route exact path="/team" component={Team}/>
 				
-				
+				<Route exact path="/service/search/:filter?" component={user?Service:()=>{return <Redirect to="/"/>}}/>
 				<Route exact path="/service/:id" component={user?ServiceDetail:()=>{return <Redirect to='/'/>}}/>
+				<Route exact path="/service/:id/reserve" component={user?(props)=>{return <h1>{props.match.params.id}</h1>}:()=>{return <Redirect to='/'/>}}/>
 				
 				{/* <Route path="/posts/:id" component={}/> */}
 				<Route component={NotFound}/>

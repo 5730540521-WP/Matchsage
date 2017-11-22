@@ -25,8 +25,13 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/add-credit-card', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/:id/add-credit-card', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
+    if (req.user.user_id !== req.params.id) {
+      const error = new Error('Unauthorized')
+      error.status = 401
+      throw error
+    }
     await UserServ.addCreditCard(req.user.user_id, req.body)
     res.json({ success: true })
   } catch (error) {
@@ -34,8 +39,13 @@ router.post('/add-credit-card', AuthServ.isAuthenticated, async (req, res, next)
   }
 })
 
-router.post('/add-bank-account', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/:id/add-bank-account', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
+    if (req.user.user_id !== req.params.id) {
+      const error = new Error('Unauthorized')
+      error.status = 401
+      throw error
+    }
     await UserServ.addBankAccount(req.user.user_id, req.body)
     res.json({ success: true })
   } catch (error) {

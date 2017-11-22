@@ -11,10 +11,15 @@ const UserModel = require('../models/user')
 // Services api
 let router = Router()
 
-const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating', 'location']
+const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating', 'location', 'price_per_hour']
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
+  const services = await ServiceModel.find(req.query)
+  res.json({ services: _.map(services, service => _.pick(service, filteredServiceKeys)) })
+})
+
+router.get('/search', AuthServ.isAuthenticated, async (req, res) => {
   const rating = parseFloat(req.query.rating) || 0
   const services = await ServiceModel.findWithRegexp({ service_name: req.query.service_name, rating })
   res.json({ services: _.map(services, service => _.pick(service, filteredServiceKeys)) })
@@ -78,6 +83,15 @@ router.post('/:id/rate', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const opts = Object.assign(req.body, { service_id: req.params.id, customer_id: req.user.user_id })
     await RatingServ.rate(opts)
+    res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/:id/delete', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    await ServiceServ.deleteService(req.user.user_id, req.params.id)
     res.json({ success: true })
   } catch (error) {
     next(error)

@@ -71,7 +71,6 @@ function mapStateToProps({service}){
 
 function mapDispatchToProps(dispatch){
 	const fetchServices = CustomerActions.fetchServices;
-	const fetchService = CustomerActions.fetchService;
 	return bindActionCreators({
 		fetchServices
 	},dispatch);

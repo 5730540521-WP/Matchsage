@@ -38,7 +38,12 @@ const ReservationSchema = new mongoose.Schema({
   paid_status: {
     type: String,
     required: true,
-    default: 'pending'
+    default: 'deposit-paid'
+  },
+  price: {
+    type: Number,
+    required: true,
+    default: 500
   }
 })
 

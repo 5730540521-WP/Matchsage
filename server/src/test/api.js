@@ -266,7 +266,7 @@ describe('API tests', () => {
     })
     it('Should list services containing input string', () => {
       return request(app)
-      .get('/api/services?service_name=ser&rating=1.5')
+      .get('/api/services/search?service_name=ser&rating=1.5')
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
@@ -306,6 +306,21 @@ describe('API tests', () => {
       })
     })
   })
+
+  // describe('# delete service', () => {
+  //   it('Should delete the service', () => {
+  //     return request(app)
+  //       .post(`/api/services/${service1.service_id}/update`)
+  //       .set('Accept', 'application/json')
+  //       .set('Authorization', ownerToken)
+  //       .send(update)
+  //       .expect(200)
+  //       .then(async () => {
+  //         const service = await ServiceModel.findByServiceId(service1.service_id)
+  //         expect(service.service_name).to.be.equal('service_new')
+  //       })
+  //   })
+  // })
 
   describe('# add employee', () => {
     it('Should add an employee to the service', () => {
@@ -370,6 +385,17 @@ describe('API tests', () => {
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken2)
       .expect(400)
+    })
+    it('Authorized should be able to access resservation', () => {
+      return request(app)
+      .get(`/api/reservations/${reserve1.reserve_id}/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async () => {
+        const reserve = await ReserveModel.findByReservationId(reserve1.reserve_id)
+        expect(reserve.customer_id).to.equal(customer1.user_id)
+      })
     })
   })
 
@@ -455,7 +481,7 @@ describe('API tests', () => {
   describe('# add payment', () => {
     it('should be able to add credit card', () => {
       return request(app)
-      .post(`/api/users/add-credit-card`)
+      .post(`/api/users/${customer1.user_id}/add-credit-card`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
@@ -470,7 +496,7 @@ describe('API tests', () => {
     })
     it('should be able to add bank account', () => {
       return request(app)
-      .post(`/api/users/add-bank-account`)
+      .post(`/api/users/${customer1.user_id}/add-bank-account`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
