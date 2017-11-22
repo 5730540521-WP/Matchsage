@@ -31,7 +31,7 @@ export default class Home extends React.Component{
 		}
 		const imgurl1 = './images/1150.jpg',imgurl2 = './images/1142.jpg';
 		return (
-			<section className="section">
+			<section className="section" style={{padding:'1.5rem',backgroundColor:'#FFF8EB'}}>
 				<Row>
 					
 					<Col span={24}>
@@ -49,11 +49,11 @@ export default class Home extends React.Component{
 					</Col>
 					
 				</Row>
-				<h1 style={{fontSize:'35px', textAlign: 'left'}}>Matchsage คืออะไร...</h1>
-				<Row gutter={16}>
+				<h1 style={{fontSize:'35px', textAlign: 'left',marginTop:'24px',marginBottom:'12px'}}>Matchsage คืออะไร...</h1>
+				<Row gutter={24}>
 					<Col span={12}>
 						<figure>
-							<img src={imgurl2} style={{borderRadius:'2%'}}/>
+							<img src={imgurl2} style={{borderRadius:'4%',padding:'12px'}}/>
 						</figure>
 					</Col>
 					<Col span={12} style={text}>

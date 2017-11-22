@@ -43,8 +43,8 @@ class ServiceDetail extends React.Component{
 		return (
 			loaded?this.props.serviceReducer.service.service_id?
 			<div>
-				<figure>
-					<img src="image.jpg" style={{minHeight:'200px',maxHeight:'200px'}}/>
+				<figure style={{backgroundColor:'#FFF8EB'}}>
+					<img src="../images/banner.jpg" style={{maxHeight:'200px'}}/>
 				</figure>
 				<Row style={{marginBottom:'20px',marginTop:'20px'}}>
 					<Col span={4} offset={1} style={{border:'1px solid',padding:'10px'}}>
