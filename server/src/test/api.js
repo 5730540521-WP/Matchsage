@@ -219,21 +219,6 @@ describe('API tests', () => {
     })
   })
 
-  describe('# see user\'s reservation list', () => {
-    it('Should return user reservation list', () => {
-      return request(app)
-      .get(`/api/users/${customer1.user_id}/reserve-list`)
-      .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
-      .expect(200)
-      .then(async res => {
-        expect(res.body).to.be.an('object')
-        console.log(res.body)
-        expect(res.body.reservations[0].customer_id).to.equal(`${customer1.user_id}`)
-      })
-    })
-  })
-
   describe('# update user', () => {
     it('Should update the user data', () => {
       const update = {
@@ -385,6 +370,21 @@ describe('API tests', () => {
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
         expect(res.body.employee_id).to.equal(employee1.employee_id)
+      })
+    })
+  })
+
+  describe('# see user\'s reservation list', () => {
+    it('Should return user reservation list', () => {
+      return request(app)
+      .get(`/api/users/${customer1.user_id}/reserve-list`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body).to.be.an('object')
+        console.log(res.body)
+        expect(res.body.reservations[0].customer_id).to.equal(`${customer1.user_id}`)
       })
     })
   })
