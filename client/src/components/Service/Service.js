@@ -107,13 +107,13 @@ class Service extends React.Component{
 	render(){
 		
 		return(
-			<div className="columns">
+			<div className="columns" style={{backgroundColor:'#FFF8EB',paddingTop:'24px',minHeight:'100vh'}}>
 				{/* <SearchBox/> */}
 
 				{/* <SearchNavigator/> */}
 				{/* Mock Search Nav */}
 				<div className="column is-one-quarter">
-					<nav className="panel"  style={{paddingLeft:'24px',paddingRight:'24px'}}>
+					<nav className="panel"  style={{paddingLeft:'24px',paddingRight:'24px',color:'#402900'}}>
 						<p className="panel-heading">
 							ค้นหาบริการ
 						</p>
@@ -130,7 +130,7 @@ class Service extends React.Component{
 							defaultValue={this.state.word}
 							onChange={(e)=>this.onInputChange(e)}
 						/>
-						<p>คะแนนความพึงพอใจ</p>
+						<p style={{marginTop:'16px'}}>คะแนนความพึงพอใจ</p>
 						<Slider defaultValue={this.state.ratingMin} max={5}
 							onChange={rate=>this.onSilderChange(rate)}
 						/>

@@ -5,7 +5,7 @@ export default withRouter((props)=>{
 	const {service} = props;
 	return(
 		
-		<div className="box" onClick={()=>props.history.push(`/service/${service.service_id}`)}>
+		<div className="box" style={{color:'#402900'}} onClick={()=>props.history.push(`/service/${service.service_id}`)}>
 			<article className="media">
 			  <div className="media-left">
 					<figure className="image is-64x64">
@@ -15,7 +15,7 @@ export default withRouter((props)=>{
 				<div className="media-content">
 					<div className="content">
 						<p>
-							<strong>{service.service_name}</strong> Rating: <small>{service.rating}</small>
+							<strong style={{color:'#402900'}}>{service.service_name}</strong> Rating: <small>{service.rating}</small>
 							<br/>
 							{service.contact_number}
 						</p>

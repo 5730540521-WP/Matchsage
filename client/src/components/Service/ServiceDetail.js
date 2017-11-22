@@ -9,12 +9,14 @@ import MapComponent from './MapComponent';
 import { Avatar } from 'antd';
 
 const H1 = styled.h1`
-	text-align:left
+	text-align:left;
+	color:#402900
 `
 
 const P = styled.p`
 	text-align:left;
-	text-indent:30px
+	text-indent:30px;
+	color:#402900
 `
 
 class ServiceDetail extends React.Component{
@@ -42,16 +44,15 @@ class ServiceDetail extends React.Component{
 		let loaded = this.props.serviceReducer.service;
 		return (
 			loaded?this.props.serviceReducer.service.service_id?
-			<div>
-				<figure style={{backgroundColor:'#FFF8EB'}}>
-					<img src="../images/banner.jpg" style={{maxHeight:'200px'}}/>
-				</figure>
-				<Row style={{marginBottom:'20px',marginTop:'20px'}}>
-					<Col span={4} offset={1} style={{border:'1px solid',padding:'10px'}}>
+			<div style={{color:'#402900'}}>
+				<img src="../images/banner.jpg" style={{width:'100%',height:'12vw'}}/>
+				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
+					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu
 							onClick={this.handleClick}
 							selectedKeys={[this.state.current]}
 							mode="inline"
+							style={{color:'#402900'}}
 						>
 							<Menu.Item key="detail">
 								ข้อมูลของร้าน
@@ -62,8 +63,9 @@ class ServiceDetail extends React.Component{
 						</Menu>
 						<Button type="primary" style={{'marginTop':'10px'}}>จองบริการ</Button>
 					</Col>
-					<Col span={17} offset={1} style={{border:'1px solid',padding:'20px'}}>
+					<Col span={19} style={{backgroundColor:'#FFF8EB',padding:'20px'}}>
 						{this.state.current==='detail'?<div>
+							<H1>ชื่อร้าน {this.props.serviceReducer.service.service_name}</H1>
 							<Row gutter={16} style={{marginBottom:'10px'}}>
 								<Col span={12}>
 									<Carousel autoplay>
@@ -79,20 +81,22 @@ class ServiceDetail extends React.Component{
 								</Col>
 							
 							</Row>
-							<H1>ร้าน {this.props.serviceReducer.service.service_name}</H1>
+							
+							<Row>
 							<Menu
 								onClick={this.handleClick}
 								selectedKeys={[this.state.current2]}
 								mode="horizontal"
-								style={{marginBottom:'10px'}}
+								style={{marginBottom:'10px',display:'inline-block',float:'left',color:'#402900'}}
 							>
 								<Menu.Item key="overall">
 									ข้อมูลทั่วไป
 								</Menu.Item>
-								<Menu.Item key="employee">
+								<Menu.Item key="employee" style={{}}>
 									พนักงาน
 								</Menu.Item>
 							</Menu>
+							</Row>
 							{this.state.current2==='overall'?<div>
 								<H1>คำอธิบายร้าน</H1>
 								<P>บลา บลา บลา</P>

@@ -25,6 +25,17 @@ async function createService (values) {
   return newService
 }
 
+async function deleteService (userId, serviceId) {
+  const service = await ServiceModel.findByServiceId(serviceId)
+  if (service.owner_id !== userId) {
+    const error = new Error('Unauthorized.')
+    error.status = 400
+    throw error
+  }
+
+  await ServiceModel.findOneAndRemove({ service_id: serviceId })
+}
+
 async function getAvailableEmployees ({ date, start_time, end_time, serviceId }) {
   const employees = await EmployeeModel.find({ work_for: serviceId })
   const avaiEmployees = await Promise.map(employees, async (employee) => {
@@ -59,5 +70,6 @@ async function addEmployee (serviceId, values) {
 module.exports = {
   createService,
   getAvailableEmployees,
-  addEmployee
+  addEmployee,
+  deleteService
 }

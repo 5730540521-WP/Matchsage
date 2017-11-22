@@ -268,7 +268,7 @@ describe('API tests', () => {
     })
     it('Should list services containing input string', () => {
       return request(app)
-      .get('/api/services?service_name=ser&rating=1.5')
+      .get('/api/services/search?service_name=ser&rating=1.5')
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
@@ -313,7 +313,7 @@ describe('API tests', () => {
     it('Should remove the specified service', () => {
       const tmpId = serviceTestRemove.service_id
       return request(app)
-      .get(`/api/services/${serviceTestRemove.service_id}/remove`)
+      .get(`/api/services/${serviceTestRemove.service_id}/delete`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
       .send(serviceTestRemove.service_id)
