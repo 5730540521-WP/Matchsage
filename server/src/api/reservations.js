@@ -60,7 +60,16 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
 router.get('/:id/cancel', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     await ReserveServ.cancelReservation(req.user.user_id, req.params.id)
-    res.send('Cancel reservation successful')
+    res.send({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.post('/:id/make-full-payment', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    await ReserveServ.makeFullPayment(req.user.user_id, req.params.id, req.body.payment_number)
+    res.json({ success: true })
   } catch (error) {
     next(error)
   }
