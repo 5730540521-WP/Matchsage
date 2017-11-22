@@ -4,9 +4,9 @@ import { Row, Col,Button } from 'antd';
 import SignupModal from './Common/Modal/SignupModal';
 
 
-const Hero = styled.div.attrs({
+/*const Hero = styled.div.attrs({
 	className:"hero is-medium is-primary is-bold"
-})``;
+})``;*/
 
 
 export default class Home extends React.Component{
