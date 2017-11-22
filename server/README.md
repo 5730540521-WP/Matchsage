@@ -39,8 +39,7 @@ npm run test
 
 ```
 ## for Windows ##
-set ENV_NODE=test
-mocha src/test --timeout 10000
+npm run testwindows
 ```
 
 ## Deployment
