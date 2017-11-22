@@ -15,41 +15,45 @@ class EditProfile extends React.Component{
                     </div>
                 </div>
                 <div>
-                    <Row>
-                        <Col span={4}>ชื่อ</Col>
-                        <input size="100"/> 
-                    </Row>
-                    <Row>
-                        <Col span={4}>นามสกุล</Col>
-                        <input size="100"/>
-                    </Row> 
-                    <Row>
-                        <Col span={4}>ที่อยู่</Col>
-                        <input size="100"/>
-                    </Row>
-                    <Row>
-                        <Col span={4}>เบอร์โทรศัพท์</Col>
-                        <input size="100"/>
-                    </Row> 
-                    <Row>
-                        <Col span={4}>เลขบัญชี</Col>
-                        <input size="100"/>
-                    </Row>
-                    <Row>
-                        <Col span={4}>อีเมล์</Col>
-                        <input size="100"/>
-                    </Row> 
-                    <Row>
-                        <Col span={4}>รหัสผ่าน</Col>
-                        <input size="100"/>
-                    </Row>  
-                    <Row>
-                        <Col span={4}> ประเภทสมาชิก </Col>
-                        <Col span={16}> ผู้รับบริการ </Col>
-                    </Row>
-                </div>
-            
-                <button type="button" >บันทึกข้อมูล</button>
+                <Row>
+                    <Col span={4}>ชื่อ</Col>
+                    <input size="100" value={user.first_name}/> 
+                </Row>
+                <Row>
+                    <Col span={4}>นามสกุล</Col>
+                    <input size="100" value={user.last_name}/>
+                </Row> 
+                <Row>
+                    <Col span={4}>ที่อยู่</Col>
+                    <input size="100" value={user.address}/>
+                </Row>
+                <Row>
+                    <Col span={4}>เบอร์โทรศัพท์</Col>
+                    <input size="100" value={user.contract}/>
+                </Row>
+                <Row>
+                    <Col span={4}>อีเมล์</Col>
+                    <input size="100" disabled value={user.email}/>
+                </Row> 
+                <Row>
+                    <Col span={4}>รหัสผ่านเดิม</Col>
+                    <input size="100" id=""type="password" value=""/>
+                </Row>
+                <Row>
+                    <Col span={4}>รหัสผ่านใหม่</Col>
+                    <input size="100" type="password" value=""/>
+                </Row>
+                <Row>
+                    <Col span={4}>ยืนยันรหัส</Col>
+                    <input size="100" type="password" value=""/>
+                </Row>
+                <Row>
+                    <Col span={4}> ประเภทสมาชิก </Col>
+                    <Col span={16}> ผู้รับบริการ </Col>
+                </Row>
+            </div>
+        
+            <button type="button">บันทึกข้อมูล</button>
 
             </div>
 			
