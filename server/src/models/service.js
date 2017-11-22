@@ -36,6 +36,11 @@ const ServiceSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: 'Siam'
+  },
+  price_per_hour: {
+    type: Number,
+    required: true,
+    default: 500
   }
 })
 

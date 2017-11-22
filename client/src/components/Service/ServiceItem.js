@@ -1,9 +1,7 @@
 import React from 'react';
-import { Redirect } from 'react-router';
-import { Link,withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 export default withRouter((props)=>{
-	console.log(props);
 	const {service} = props;
 	return(
 		

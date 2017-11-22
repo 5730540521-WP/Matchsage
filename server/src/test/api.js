@@ -389,6 +389,17 @@ describe('API tests', () => {
       .set('Authorization', ownerToken2)
       .expect(400)
     })
+    it('Authorized should be able to access resservation', () => {
+      return request(app)
+      .get(`/api/reservations/${reserve1.reserve_id}/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async () => {
+        const reserve = await ReserveModel.findByReservationId(reserve1.reserve_id)
+        expect(reserve.customer_id).to.equal(customer1.user_id)
+      })
+    })
   })
 
   describe('# cancel reservation', () => {

@@ -6,7 +6,7 @@ import Modal from './Modal';
 import {userActions} from 'actions';
 import styled from 'styled-components';
 import { Button } from 'antd';
-
+import { Input } from 'antd';
 // const renderField = (field)=>(
 // 	<div className="form-group">
 // 		<label>{field.label}</label>
@@ -76,9 +76,10 @@ class LoginModal extends React.Component{
 					{/* <Field name="password" component={this.renderField}/> */}
 					
 					<label className="label level-left">อีเมล์</label>
-
-					<input className="input" name="email" type="email" placeholder=""
+					<Input
+						name="email"
 						onChange={ e => this.onFieldChange(e)}
+						style={{marginBottom:'.5em'}}
 					/>
 					{/* Check that email os not blank */}
 					{submitted && !email && 
@@ -86,8 +87,10 @@ class LoginModal extends React.Component{
 					}
 
 					<label className="label level-left">รหัสผ่าน</label>
-					<input className="input" name="password" type="password" placeholder=""
+					<Input
+						name="password"
 						onChange={ e => this.onFieldChange(e)}
+						style={{marginBottom:'1em'}}
 					/>
 					{/* Check that email os not blank */}
 					{submitted && !password && 

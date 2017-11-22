@@ -10,7 +10,7 @@ const EmployeeModel = require('../models/employee')
 // Services api
 let router = Router()
 
-const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating', 'location']
+const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating', 'location', 'price_per_hour']
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {

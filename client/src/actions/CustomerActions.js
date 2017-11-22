@@ -22,25 +22,23 @@ export const CustomerActions = {
 
 async function fetchServices(){
 	const headers = authHeader();
-	const res = await axios.get(API_URL + '/api/services', {headers});
-	//console.log(res.data);
+	const services = await axios.get(API_URL + '/api/services', {headers});
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICES,
-		payload: res
+		services: services
 	}
 }
 
 async function fetchService(id){
 	const headers = authHeader();
-	const res = await axios.get(API_URL + `/api/services/${id}`, {headers});
-	const res2 = await axios.get(API_URL + `/api/users/${res.data.owner_id}`,{headers});
-	const res3 = await axios.get(API_URL + `/api/services/${id}/employees` , {headers});
-	console.log(res3.data);
+	const service = await axios.get(API_URL + `/api/services/${id}`, {headers});
+	const ownerDetail = await axios.get(API_URL + `/api/users/${service.data.owner_id}`,{headers});
+	const employees = await axios.get(API_URL + `/api/services/${id}/employees` , {headers});
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICE,
-		payload: res,
-		payload2: res2,
-		payload3: res3
+		service: service,
+		ownerDetail: ownerDetail,
+		employees: employees
 	}
 }
 
