@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import Team from './components/Team';
 import AdminLogin from './components/Admin/AdminLogin';
+import Owner from './components/Owner/Owner';
 import AdminSearch from './components/Admin/AdminSearch';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
@@ -43,7 +44,9 @@ const Body = ({userType})=>{
 	return(
 		<Router history={browserHistory}>
 			<Switch>
+						
 				<Route exact path="/" component={user ? ()=>{return <Redirect to="/service/search"/>} : Home }/>
+				<Route exact path="/owner" component={Owner}/>
 				<Route exact path='/admin/login' render={() => {
 					if (localStorage.admin) {
 						return (<Redirect to='/admin/users/search' />)

@@ -101,6 +101,7 @@ class AdminSearch extends Component {
   
     
   render() {
+    console.log(this.state.users)
 
     const columns = [{
         title: 'First Name',
