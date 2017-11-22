@@ -7,7 +7,7 @@ const userRoute = require('./users')
 const serviceRoute = require('./services')
 const reserveRoute = require('./reservations')
 const employeeRoute = require('./employees')
-const complaintRouter = require('./complaint')
+const complaintRouter = require('./complaints')
 
 const _ = require('lodash')
 

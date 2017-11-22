@@ -7,6 +7,8 @@ const ComplaintServ = require('../services/complaint')
 // Complaint api
 let router = Router()
 
+const filteredComplaintKeys = ['complaint_id', 'customer_id', 'service_id']
+
 //get list of complains (admin)
 router.get('/', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
     try {
@@ -19,10 +21,17 @@ router.get('/', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
 })
 
 //Search complain list by service id (admin)
-router.get('/:serviceid', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
+router.get('/:id', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
     try {
-        const complain = await ComplaintModel.findByServiceId(req.params.serviceid)
-        res.json(_.pick(complain, []))
+        const complaint = await ComplaintModel.findByComplaintId(req.params.id)
+        const user = await UserModel.findByUserId(req.user.user_id)
+        if(user.user_type === 'admin'){
+            res.json(_.pick(complaint, filteredComplaintKeys))
+        } else {
+            const error = new Error('Your user does not have the authorities, Only admin can view complaints')
+            error.status = 400
+            throw error
+        }
     } catch (error) {
         next(error)
     }
@@ -39,5 +48,4 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
 })
 
 module.exports = router
-
 //Done??

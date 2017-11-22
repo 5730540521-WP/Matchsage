@@ -29,6 +29,10 @@ ComplaintSchema.statics = {
     return Complaint.findOne({ complaint_id: complaintId })
   },
 
+  findByServiceId: function (serviceId) {
+    return Complaint.findOne({ service_id: serviceId })
+  },
+
   createComplaint: async function (values) {
     const complaintCount = await Complaint.find().count()
     values.complaint_id = 'match-com-' + (complaintCount + 1).toString()
