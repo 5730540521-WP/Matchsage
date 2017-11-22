@@ -31,12 +31,12 @@ export default class Home extends React.Component{
 		}
 		const imgurl1 = './images/1150.jpg',imgurl2 = './images/1142.jpg';
 		return (
-			<section className="section" style={{padding:'1.5rem',backgroundColor:'#FFF8EB'}}>
+			<section className="section" style={{padding:'0px',backgroundColor:'#FFF8EB'}}>
 				<Row>
 					
 					<Col span={24}>
-							<img src={imgurl1} style={{display: 'block',margin:'auto',position:'relative',width:'100%',height:'40.1vw'}}/>
-							<div style={{position:'absolute', bottom:'0%', width:'100%', height:'40%', 'backgroundColor':'black', opacity:.2}}></div>
+							<img src={imgurl1} style={{display: 'block',margin:'auto',position:'relative',width:'100%',height:'40.1vw',opacity:.9}}/>
+							<div style={{position:'absolute', bottom:'0%', width:'100%', height:'40%', 'backgroundColor':'black', opacity:.4}}></div>
 							<div style={{position:'absolute', bottom:'8%' ,left:'2%',width:'70%',fontSize:'20px',textAlign: 'left'}}>
 								<h1 style={{fontWeight:'bold', color:'white'}}>
 									Matchsage
@@ -49,11 +49,12 @@ export default class Home extends React.Component{
 					</Col>
 					
 				</Row>
-				<h1 style={{fontSize:'35px', textAlign: 'left',marginTop:'24px',marginBottom:'12px'}}>Matchsage คืออะไร...</h1>
+				<div style={{padding:'1.5rem',color:'#402900'}}>
+				<h1 style={{fontSize:'35px', textAlign: 'left'}}>Matchsage คืออะไร...</h1>
 				<Row gutter={24}>
 					<Col span={12}>
 						<figure>
-							<img src={imgurl2} style={{borderRadius:'4%',padding:'12px'}}/>
+							<img src={imgurl2} style={{borderRadius:'2%',padding:'12px'}}/>
 						</figure>
 					</Col>
 					<Col span={12} style={text}>
@@ -64,6 +65,7 @@ export default class Home extends React.Component{
 						</p>
 					</Col>
 				</Row>
+				</div>
 				{/* <div className="">
 					<h1> Welcome to Matchsage </h1>
 					<img src="https://img.grouponcdn.com/deal/jDKWx7dTfeSfvVypXRgF/mw-700x420/v1/c700x420.jpg"/>
