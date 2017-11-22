@@ -88,8 +88,8 @@ describe('API tests', () => {
     customer2 = await UserModel.createUser(customer2)
     cusToken2 = jwt.sign({user_id: customer2.user_id, user_type: customer2.user_type}, 'MATCHSAGE_USER')
     cusToken2 = `JWT ${cusToken2}`
+    serviceTestRemove.owner_id = owner1.user_id
     serviceTestRemove = await ServiceModel.createService(serviceTestRemove)
-    console.log(serviceTestRemove)
   })
 
   after(() => {
@@ -316,7 +316,7 @@ describe('API tests', () => {
       .get(`/api/services/${serviceTestRemove.service_id}/delete`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
-      .send(serviceTestRemove.service_id)
+      .send(owner1.user_id,serviceTestRemove.service_id)
       .expect(200)
       .then(async res => {
         const serv = await ServiceModel.findByServiceId(tmpId)
