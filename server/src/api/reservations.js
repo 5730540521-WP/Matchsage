@@ -11,7 +11,7 @@ const EmailServ = require('../services/email')
 let router = Router()
 
 const filteredReserveKeys = ['reserve_id', 'service_id', 'customer_id', 'employee_id', 'start_time',
-  'end_time', 'date', 'is_cancel', 'paid_status']
+  'end_time', 'date', 'is_cancel', 'paid_status', 'price']
 
 router.get('/', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
