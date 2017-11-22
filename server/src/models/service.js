@@ -16,8 +16,7 @@ const ServiceSchema = new mongoose.Schema({
   },
   owner_id: {
     type: String,
-    required: true,
-    default: '1'
+    required: true
   },
   contact_number: {
     type: String,

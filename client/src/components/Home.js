@@ -35,7 +35,7 @@ export default class Home extends React.Component{
 				<Row>
 					
 					<Col span={24}>
-								<img src={imgurl1} style={{display: 'block',margin:'auto',position:'relative',width:'100%',height:'40.1vw'}}/>
+							<img src={imgurl1} style={{display: 'block',margin:'auto',position:'relative',width:'100%',height:'40.1vw'}}/>
 							<div style={{position:'absolute', bottom:'0%', width:'100%', height:'40%', 'backgroundColor':'black', opacity:.2}}></div>
 							<div style={{position:'absolute', bottom:'8%' ,left:'2%',width:'70%',fontSize:'20px',textAlign: 'left'}}>
 								<h1 style={{fontWeight:'bold', color:'white'}}>
