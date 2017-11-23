@@ -210,13 +210,13 @@ describe('API tests', () => {
   describe('# see user', () => {
     it('Should return user detail', () => {
       return request(app)
-      .get('/api/users/match-user-1')
+      .get(`/api/users/${customer1.user_id}`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
         expect(res.body).to.be.an('object')
-        expect(res.body.user_id).to.equal('match-user-1')
+        expect(res.body.user_id).to.equal(`${customer1.user_id}`)
       })
     })
   })
@@ -315,7 +315,7 @@ describe('API tests', () => {
     it('Should remove the specified service', () => {
       const tmpId = serviceTestRemove.service_id
       return request(app)
-      .get(`/api/services/${serviceTestRemove.service_id}/remove`)
+      .get(`/api/services/${serviceTestRemove.service_id}/delete`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
       .send(owner1.user_id, serviceTestRemove.service_id)
@@ -372,6 +372,36 @@ describe('API tests', () => {
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
         expect(res.body.employee_id).to.equal(employee1.employee_id)
+      })
+    })
+  })
+
+  // should move up to group with user api if possible
+  describe('# see customer\'s reservation list', () => {
+    it('Should return customer reservation list', () => {
+      return request(app)
+      .get(`/api/users/${customer1.user_id}/reservations`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body).to.be.an('object')
+        expect(res.body.reservations[0].reserve_id).to.equal(reserve1.reserve_id)
+      })
+    })
+  })
+
+  // should move up to group with service api if possible
+  describe('# see service\'s reservation list by service\'s owner', () => {
+    it('Should return owner\'s service reservation list', () => {
+      return request(app)
+      .get(`/api/services/${service1.service_id}/reservations`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body).to.be.an('object')
+        expect(res.body.reservations[0].reserve_id).to.equal(reserve1.reserve_id)
       })
     })
   })

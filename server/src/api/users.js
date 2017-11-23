@@ -5,7 +5,7 @@ const UserModel = require('../models/user')
 const _ = require('lodash')
 
 let router = Router()
-const filteredUserKeys = ['user_id', 'email', 'first_name', 'last_name', 'gender', 'user_type', 'address', 'contact']
+const filteredUserKeys = require('../config/filter').filteredUserKeys
 
 // search users admin purpose
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
@@ -63,6 +63,26 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
     }
     await UserModel.findOneAndUpdate({ user_id: req.params.id }, req.body)
     res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    const user = await UserModel.findByUserId(req.user.user_id)
+    if (user.user_id !== req.params.id) {
+      const error = new Error('Unauthorized')
+      error.status = 401
+      throw error
+    }
+    if (user.user_type !== 'customer') {
+      const error = new Error(`Invalid user type. expected 'customer' but get ${user.user_type}.`)
+      error.status = 401
+      throw error
+    }
+    const reserveList = await UserServ.getReserveListByCustomer(user.user_id)
+    res.json({reservations: reserveList})
   } catch (error) {
     next(error)
   }

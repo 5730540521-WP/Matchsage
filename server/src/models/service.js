@@ -16,8 +16,7 @@ const ServiceSchema = new mongoose.Schema({
   },
   owner_id: {
     type: String,
-    required: true,
-    default: '1'
+    required: true
   },
   contact_number: {
     type: String,
@@ -68,10 +67,6 @@ ServiceSchema.statics = {
 
   updateService: async function (serviceId, values) {
     return Service.findOneAndUpdate({ service_id: serviceId }, values)
-  },
-
-  removeService: async function (serviceId) {
-    return Service.findOneAndRemove({ service_id: serviceId })
   }
 }
 
