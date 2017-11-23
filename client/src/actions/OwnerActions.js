@@ -36,7 +36,7 @@ async function createService(service_name, price_per_hour){
 async function deleteService(service_id){
 	const headers = authHeader();	
 	console.log(service_id)
-	const res = await axios.post(API_URL + '/api/services/'+service_id+'/delete',null,{headers})
+	const res = await axios.get(API_URL + '/api/services/'+service_id+'/delete',null,{headers})
 	.catch(err => {
 		console.log(err);		
 	});	

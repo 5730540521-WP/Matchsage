@@ -316,7 +316,6 @@ describe('API tests', () => {
       .get(`/api/services/${serviceTestRemove.service_id}/delete`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
-      .send(owner1.user_id,serviceTestRemove.service_id)
       .expect(200)
       .then(async res => {
         const serv = await ServiceModel.findByServiceId(tmpId)
