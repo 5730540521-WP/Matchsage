@@ -57,7 +57,13 @@ const Body = () =>{
 								return <Redirect to="/service/search"/>
 						} : Home }
 				/>
-				<Route exact path="/owner" component={Owner}/>
+				<Route exact path="/owner" render={() => {
+					if(!user) {
+						return (<Redirect to="/" />)
+					} else {
+						return <Owner />
+					}
+				}}/>
 				<Route exact path='/admin/login' render={() => {
 					if (localStorage.admin) {
 						return (<Redirect to='/admin/users/search' />)

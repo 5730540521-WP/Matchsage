@@ -5,8 +5,8 @@ import {connect} from 'react-redux';
 //Mock
 import { Input,Slider } from 'antd';
 import ServiceOwnerItem from './ServiceOwnerItem';
-import CreateServiceMedal from '../Common/Modal/CreateServiceMedal';
-import EditServiceMedal from '../Common/Modal/EditServiceMedal';
+import CreateServiceModal from '../Common/Modal/CreateServiceModal';
+import EditServiceModal from '../Common/Modal/EditServiceModal';
 import {OwnerActions} from '../../actions';
 
 import {Row,Col, Button} from 'antd';
@@ -104,13 +104,13 @@ class Owner extends React.Component{
 					</div>
 				</div>
 
-				<CreateServiceMedal 
+				<CreateServiceModal 
 					modalState={this.state.isCreateServiceModalActive} 
 					onCloseModal={()=>this.toggleCreateServiceModal(false)}					
 					aftersubmit = {this.aftersubmit}
 				/>
 
-				<EditServiceMedal 
+				<EditServiceModal 
 					modalState={this.state.isEditServiceModalActive} 
 					onCloseModal={()=>this.toggleEditServiceModal(false)}	
 					editService = {this.state.editService}									
