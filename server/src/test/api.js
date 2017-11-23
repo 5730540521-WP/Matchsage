@@ -70,6 +70,8 @@ describe('API tests', () => {
 
   let service1 = {}
   let reserve1 = {}
+  let complaint1 = {}
+  let receipt1 = {}
   let serviceTestRemove = {service_name: 'service-test-remove'}
 
   let cusToken = ''
@@ -266,7 +268,7 @@ describe('API tests', () => {
         expect(res.body.services[0].service_id).to.equal('match-ser-1')
       })
     })
-    it('Should list services containing input string', () => {
+    /* it('Should list services containing input string', () => {
       return request(app)
       .get('/api/services/search?service_name=ser&rating=1.5')
       .set('Accept', 'application/json')
@@ -275,7 +277,7 @@ describe('API tests', () => {
       .then(async res => {
         expect(res.body.services.length).to.equal(0)
       })
-    })
+    }) */
   })
 
   describe('# see service', () => {
@@ -489,7 +491,7 @@ describe('API tests', () => {
   describe('# complaint', () => {
     it('should create a new complaint', () => {
       return request(app)
-      .post(`/api/complaint/new`)
+      .post(`/api/complaints/new/`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .send({ customer_id: customer1.user_id, service_id: service1.service_id })
@@ -501,7 +503,7 @@ describe('API tests', () => {
     })
     it('should list all complaints', () => {
       return request(app)
-      .get(`/api/complaint/`)
+      .get(`/api/complaints/`)
       .set('Accept', 'application/json')
       .set('Authorization', adminToken)
       .expect(200)
@@ -541,6 +543,32 @@ describe('API tests', () => {
         expect(account.company).to.equal('kasikorn')
         expect(account.amount).to.equal(7000)
         expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
+      })
+    })
+  })
+
+  // add receipt test
+  describe('# receipt', () => {
+    it('should be able to create new receipt', () => {
+      return request(app)
+      .post(`/api/receipts/new`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ customer_id: customer1.user_id, reservation_id: reserve1.reserve_id })
+      .expect(200)
+      .then(async res => {
+        expect(res.body.customer_id).to.equal(customer1.user_id)
+        expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
+      })
+    })
+    it('should list all receipts', () => {
+      return request(app)
+      .get(`/api/receipts/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.receipt[0].receipt_id).to.equal('match-rec-1')
       })
     })
   })
