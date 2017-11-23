@@ -374,16 +374,31 @@ describe('API tests', () => {
     })
   })
 
-  describe('# see user\'s reservation list', () => {
-    it('Should return user reservation list', () => {
+  // should move up to group with user api if possible
+  describe('# see customer\'s reservation list', () => {
+    it('Should return customer reservation list', () => {
       return request(app)
-      .get(`/api/users/${customer1.user_id}/reserve-list`)
+      .get(`/api/users/${customer1.user_id}/reservations`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
         expect(res.body).to.be.an('object')
-        expect(res.body.reservations[0].customer_id).to.equal(`${customer1.user_id}`)
+        expect(res.body.reservations[0].reserve_id).to.equal(reserve1.reserve_id)
+      })
+    })
+  })
+
+  describe('# see service\'s reservation list by service\'s owner', () => {
+    it('Should return owner\'s service reservation list', () => {
+      return request(app)
+      .get(`/api/services/${service1.service_id}/reservations`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body).to.be.an('object')
+        expect(res.body.reservations[0].reserve_id).to.equal(reserve1.reserve_id)
       })
     })
   })
