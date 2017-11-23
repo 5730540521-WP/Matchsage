@@ -37,7 +37,7 @@ class ServiceDetail extends React.Component{
 		}
   }
 	componentDidMount(){
-		this.props.loadService(this.props.match.params.id)
+		this.props.loadService(this.props.match.params.id);
 	}
 
 	render(props){
