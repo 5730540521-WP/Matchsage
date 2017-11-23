@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const promise = require('bluebird')
+const Promise = require('bluebird')
 
 const ReceiptSchema = new mongoose.Schema({
   receipt_id: {
@@ -39,6 +39,6 @@ ReceiptSchema.statics = {
 }
 
 const Receipt = mongoose.model('receipt', ReceiptSchema)
-promise.promisifyAll(Receipt)
+Promise.promisifyAll(Receipt)
 
 module.exports = Receipt

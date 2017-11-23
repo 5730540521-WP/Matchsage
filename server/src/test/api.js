@@ -460,7 +460,6 @@ describe('API tests', () => {
   // add complaint test
   describe('# complaint', () => {
     it('should create a new complaint', () => {
-      console.log({ customer_id: customer1.user_id, service_id: service1.service_id })
       return request(app)
       .post(`/api/complaints/new/`)
       .set('Accept', 'application/json')
@@ -528,8 +527,18 @@ describe('API tests', () => {
       .send({ customer_id: customer1.user_id, reservation_id: reserve1.reserve_id })
       .expect(200)
       .then(async res => {
-        expect(res.body.receipt_id).to.equal(receipt1.receipt_id)
-        expect(res.body.reservation_id).to.equal(receipt1.reserve_id)
+        expect(res.body.customer_id).to.equal(customer1.user_id)
+        expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
+      })
+    })
+    it('should list all receipts', () => {
+      return request(app)
+      .get(`/api/receipts/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.receipt[0].receipt_id).to.equal('match-rec-1')
       })
     })
   })

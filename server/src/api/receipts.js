@@ -38,7 +38,6 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     // console.log(req)
     const receipt = await ReceiptModel.createReceipt(req.body)
-    console.log('here', receipt)
     res.json(receipt)
   } catch (error) {
     next(error)
