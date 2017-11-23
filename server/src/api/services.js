@@ -6,12 +6,11 @@ const ServiceServ = require('../services/service')
 const RatingServ = require('../services/rating')
 const ServiceModel = require('../models/service')
 const EmployeeModel = require('../models/employee')
-const UserModel = require('../models/user')
 
 // Services api
 let router = Router()
 
-const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating', 'address', 'price_per_hour']
+const filteredServiceKeys = require('../config/filter').filteredServiceKeys
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {

@@ -10,8 +10,7 @@ const EmailServ = require('../services/email')
 // Reservations api
 let router = Router()
 
-const filteredReserveKeys = ['reserve_id', 'service_id', 'customer_id', 'employee_id', 'start_time',
-  'end_time', 'date', 'is_cancel', 'paid_status', 'price']
+const filteredReserveKeys = require('../config/filter').filteredReserveKeys
 
 router.get('/', AuthServ.isAuthenticated, async (req, res, next) => {
   try {

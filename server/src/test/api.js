@@ -389,6 +389,7 @@ describe('API tests', () => {
     })
   })
 
+  // should move up to group with service api if possible
   describe('# see service\'s reservation list by service\'s owner', () => {
     it('Should return owner\'s service reservation list', () => {
       return request(app)
