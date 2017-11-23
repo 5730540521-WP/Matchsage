@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {userActions} from '../../actions';
+import {history} from '../../helpers';
 
 class CustomerNavbar extends React.Component{
 	constructor(){
@@ -44,7 +45,8 @@ class CustomerNavbar extends React.Component{
 							<a href="#" className="dropdown-item">
 								ประวัติการจอง
 							</a>
-							<a href="#" className="dropdown-item">
+							<a href="#" className="dropdown-item"
+								onClick={()=> history.push('/userProfile')}>
 								แก้ไขข้อมูลส่วนตัว
 							</a>
 							<hr className="dropdown-divider"/>

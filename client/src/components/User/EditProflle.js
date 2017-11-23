@@ -1,59 +1,128 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import { Row, Col } from 'antd';
+import {userActions} from '../../actions';
+import { Row, Col, Input } from 'antd';
+import * as JWT from 'jwt-decode';
+
+
 
 class EditProfile extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            user: this.props.user
+            
+		};
+
+    }
+
+    async componentDidMount(){
+        
+        const {user} = await userActions.fetchUserProfile(JWT(localStorage.getItem('user')).user_id);
+        this.setState({user});
+        console.log(userActions.fetchUserProfile(JWT(localStorage.getItem('user')).user_id));
+	}
+
+
 	render(){
 		return(
             <div className="columns">    
-                <div className="row">
+                {/* <div className="row">
                     <div>
                         <figure class="image is-64x64">
                             <img src="" alt="Image"/>
                         </figure>
                     </div>
-                </div>
+                </div> */}
                 <div>
                 <Row>
+                </Row>
+                <Row>
+                </Row>
+                <Row>
+                </Row>
+                <Row>
+                    <Col span={8}>
+                    </Col>
                     <Col span={4}>ชื่อ</Col>
-                    <input size="100" value={user.first_name}/> 
+                    <Col span={8}>
+                    <input size="80" value={this.state.user ? this.state.user.first_name:false} />
+                    </Col> 
                 </Row>
                 <Row>
+                    <Col span={8}>
+                    </Col>
                     <Col span={4}>นามสกุล</Col>
-                    <input size="100" value={user.last_name}/>
+                    <Col span={8}>
+                    <input size="80" value={this.state.user ? this.state.user.last_name:false}/>
+                    </Col>
                 </Row> 
                 <Row>
+                    <Col span={8}>
+                    </Col>
                     <Col span={4}>ที่อยู่</Col>
-                    <input size="100" value={user.address}/>
+                    <Col span={8}>
+                    <input size="80" value={this.state.user ? this.state.user.address:false}/>
+                    </Col>
                 </Row>
                 <Row>
+                    <Col span={8}>
+                    </Col>
                     <Col span={4}>เบอร์โทรศัพท์</Col>
-                    <input size="100" value={user.contract}/>
+                    <Col span={8}>
+                    <input size="80" value={this.state.user ? this.state.user.contact:false}/>
+                    </Col>
                 </Row>
                 <Row>
+                <Col span={8}>
+                    </Col>
                     <Col span={4}>อีเมล์</Col>
-                    <input size="100" disabled value={user.email}/>
+                    <Col span={8}>
+                    <input size="80" disabled value={this.state.user ? this.state.user.email:false}/>
+                    </Col>
                 </Row> 
                 <Row>
+                    <Col span={8}>
+                    </Col>
                     <Col span={4}>รหัสผ่านเดิม</Col>
-                    <input size="100" id=""type="password" value=""/>
+                    <Col span={8}>
+                    <input size="80" type="password" value=""/>
+                    </Col>
                 </Row>
                 <Row>
+                <Col span={8}>
+                    </Col>
                     <Col span={4}>รหัสผ่านใหม่</Col>
-                    <input size="100" type="password" value=""/>
+                    <Col span={8}>
+                    <input size="80" type="password" value=""/>
+                    </Col>
                 </Row>
                 <Row>
+                <Col span={8}>
+                    </Col>
                     <Col span={4}>ยืนยันรหัส</Col>
-                    <input size="100" type="password" value=""/>
+                    <Col span={10}>
+                    <Input size="80" type="password" value=""/>
+                    </Col>
                 </Row>
                 <Row>
+                <Col span={8}>
+                    </Col>
                     <Col span={4}> ประเภทสมาชิก </Col>
-                    <Col span={16}> ผู้รับบริการ </Col>
+                    <label> : ผู้รับบริการ </label>
+                </Row>
+                <Row>
+                </Row>
+                <Row>
+                </Row>
+                <Row>
+                <Col span={8}>
+                    </Col>
+                <button type="button">บันทึกข้อมูล</button>
                 </Row>
             </div>
         
-            <button type="button">บันทึกข้อมูล</button>
 
             </div>
 			

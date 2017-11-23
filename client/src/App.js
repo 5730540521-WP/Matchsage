@@ -13,6 +13,7 @@ import AdminLogin from './components/Admin/AdminLogin';
 import AdminSearch from './components/Admin/AdminSearch';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
+import EditProfile from './components/User/EditProflle';
 import NotFound from './components/NotFound';
 import './theme.css';
 import './App.css';
@@ -63,7 +64,7 @@ const Body = ({userType})=>{
 				<Route exact path="/service/search/:filter?" component={user?Service:()=>{return <Redirect to="/"/>}}/>
 				<Route exact path="/service/:id" component={user?ServiceDetail:()=>{return <Redirect to='/'/>}}/>
 				<Route exact path="/service/:id/reserve" component={user?(props)=>{return <h1>{props.match.params.id}</h1>}:()=>{return <Redirect to='/'/>}}/>
-				
+				<Route exact path="/userProfile" component={user?EditProfile:()=>{return <Redirect to="/"/>}}/>
 				{/* <Route path="/posts/:id" component={}/> */}
 				<Route component={NotFound}/>
 				
