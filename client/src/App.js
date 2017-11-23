@@ -10,11 +10,14 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import Team from './components/Team';
 import AdminLogin from './components/Admin/AdminLogin';
+import Owner from './components/Owner/Owner';
 import AdminSearch from './components/Admin/AdminSearch';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
+import ServiceReservation from 'components/Service/ServiceReservation';
 import EditProfile from './components/User/EditProflle';
 import NotFound from './components/NotFound';
+import * as JWT from 'jwt-decode';
 import './theme.css';
 import './App.css';
 
@@ -38,13 +41,31 @@ const AdminRoute = ()=>(
 	</Switch>
 )
 
-const Body = ({userType})=>{
+const Body = () =>{
 	const user = localStorage.getItem('user');	
-	const admin = localStorage.getItem('admin');
+	const admin = localStorage.getItem('admin');	
 	return(
 		<Router history={browserHistory}>
 			<Switch>
-				<Route exact path="/" component={user ? ()=>{return <Redirect to="/service/search"/>} : Home }/>
+						
+				<Route exact path="/" 
+					component={user ? ()=>
+						{
+							const user_type = JWT(localStorage.getItem('user')).user_type;
+							console.log(user_type)
+							if(user_type == 'owner')
+								return <Redirect to="/owner"/>
+							else 
+								return <Redirect to="/service/search"/>
+						} : Home }
+				/>
+				<Route exact path="/owner" render={() => {
+					if(!user) {
+						return (<Redirect to="/" />)
+					} else {
+						return <Owner />
+					}
+				}}/>
 				<Route exact path='/admin/login' render={() => {
 					if (localStorage.admin) {
 						return (<Redirect to='/admin/users/search' />)
@@ -63,8 +84,9 @@ const Body = ({userType})=>{
 				
 				<Route exact path="/service/search/:filter?" component={user?Service:()=>{return <Redirect to="/"/>}}/>
 				<Route exact path="/service/:id" component={user?ServiceDetail:()=>{return <Redirect to='/'/>}}/>
-				<Route exact path="/service/:id/reserve" component={user?(props)=>{return <h1>{props.match.params.id}</h1>}:()=>{return <Redirect to='/'/>}}/>
 				<Route exact path="/userProfile" component={user?EditProfile:()=>{return <Redirect to="/"/>}}/>
+				{/* <Route exact path="/service/:id/reserve" component={user?ServiceReservation:()=>(<Redirect to='/'/>)}/> */}
+				
 				{/* <Route path="/posts/:id" component={}/> */}
 				<Route component={NotFound}/>
 				
@@ -82,7 +104,7 @@ class App extends Component {
       <div className="App" style={{fontFamily:'Kanit'}}>
 				{/* <Helmet title="Matchsage"/> */}
 				<Header/>
-				<Body userType={{}}/>
+				<Body/>
 				{/* <Footer/> */}
       </div>
     );

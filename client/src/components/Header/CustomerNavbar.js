@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {userActions} from '../../actions';
 import {history} from '../../helpers';
+import {Icon} from 'antd';
+
 
 class CustomerNavbar extends React.Component{
 	constructor(){
@@ -37,21 +39,27 @@ class CustomerNavbar extends React.Component{
 							</span>
 						</button>
 					</div>
-					<div className="dropdown-menu" id="dropdown-menu" role="menu">
-						<div className="dropdown-content">
-							<a className="dropdown-item">
-								บริการที่จองไว้
+					<div className="dropdown-menu" id="dropdown-menu" role="menu" style={{minWidth:'11rem'}}>
+						<div className="dropdown-content" style={{textAlign:'left'}}>
+							<a className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}>
+								<Icon type="exclamation-circle-o" style={{marginRight:'20px'}}/>
+								   บริการที่จองไว้
 							</a>
-							<a href="#" className="dropdown-item">
-								ประวัติการจอง
+							<a href="#" className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}>
+								<Icon type="clock-circle-o" style={{marginRight:'20px'}}/>
+								   ประวัติการจอง
 							</a>
-							<a href="#" className="dropdown-item"
+
+							<a href="#" className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}
 								onClick={()=> history.push('/userProfile')}>
-								แก้ไขข้อมูลส่วนตัว
+								<Icon type="user" style={{marginRight:'20px'}}/>
+								   แก้ไขข้อมูลส่วนตัว
+
 							</a>
 							<hr className="dropdown-divider"/>
-							<a href="#" className="dropdown-item"
+							<a href="#" className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}
 								onClick={()=> this.onLogout()}>
+								<Icon type="logout" style={{marginRight:'20px'}}/>
 								ออกจากระบบ
 							</a>
 						</div>
