@@ -19,7 +19,6 @@ async function addBankAccount (userId, values) {
 }
 
 async function getReserveListByCustomer (userId) {
-  console.log(userId)
   const reserveList = await ReserveModel.find({customer_id: userId})
   return _.map(reserveList, reserve => _.pick(reserve, filteredReserveKeys))
 }

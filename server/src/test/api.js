@@ -383,7 +383,6 @@ describe('API tests', () => {
       .expect(200)
       .then(async res => {
         expect(res.body).to.be.an('object')
-        console.log(res.body)
         expect(res.body.reservations[0].customer_id).to.equal(`${customer1.user_id}`)
       })
     })
