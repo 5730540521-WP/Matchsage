@@ -57,7 +57,7 @@ class ServiceForm extends React.Component{
 
 const WrappedServiceForm = Form.create()(ServiceForm);
 
-class EditServiceMedal extends React.Component {
+class EditServiceModal extends React.Component {
 	render() {
 		return (
 			<Modal title="แก้ไขบริการ"
@@ -80,5 +80,5 @@ function mapDispacthToProps(dispatch){
 	const updateService = OwnerActions.updateService;
 	return bindActionCreators( {updateService}, dispatch)
 }
-export default connect(null, mapDispacthToProps)(EditServiceMedal);
+export default connect(null, mapDispacthToProps)(EditServiceModal);
 
