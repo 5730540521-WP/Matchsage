@@ -1,5 +1,6 @@
 import React from 'react';
 import { Steps, Icon,Button,message } from 'antd';
+import styled from 'styled-components';
 
 const Step = Steps.Step;
 
@@ -8,6 +9,24 @@ const test = ()=>(
 		hahadhsfdsjfhd
 	</div>
 )
+
+const StepsContent = styled.div.attrs({
+	className: 'steps-content'
+})`
+	margin-top: 16px;
+  border: 1px dashed #e9e9e9;
+  border-radius: 6px;
+  background-color: #fafafa;
+  min-height: 200px;
+  text-align: center;
+  padding-top: 80px;
+`;
+
+const StepsAction = styled.div.attrs({
+	className: 'steps-action'
+})`
+	margin-top: 24px;
+`;
 
 const steps = [{
   title: 'เลือกวันเวลา',
@@ -48,8 +67,12 @@ class ServiceReservation extends React.Component{
 					<Step status="wait" title="เสร็จสิ้นการจอง" icon={<Icon type="smile-o" />} /> */}
 					{steps.map(item => <Step key={item.title} title={item.title} />)}
 				</Steps>
-				<div className="steps-content">{steps[this.state.current].content}</div>
-				<div className="steps-action">
+				{/* <div className="steps-content"></div> */}
+				<StepsContent>
+					{steps[this.state.current].content}
+				</StepsContent>
+				{/* <div className="steps-action"> */}
+				<StepsAction>
           {
             this.state.current < steps.length - 1
             &&
@@ -58,16 +81,16 @@ class ServiceReservation extends React.Component{
           {
             this.state.current === steps.length - 1
             &&
-            <Button type="primary" onClick={() => message.success('Processing complete!')}>Done</Button>
+            <Button type="primary" onClick={() => message.success('การจองบริการสำเร็จ')}>Done</Button>
           }
-          {
+          {	
             this.state.current > 0
             &&
             <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
               Previous
             </Button>
           }
-        </div>
+				</StepsAction>
 			</div>
 		);
 	}
