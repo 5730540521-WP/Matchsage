@@ -36,7 +36,7 @@ async function deleteService (userId, serviceId) {
   }
 
   await UserModel.findOneAndUpdate({user_id: service.owner_id}, {$pull: {own_services: service.service_id}})
-
+  await ReserveModel.update({service_id: service.service_id}, {is_delete: true}, {multi: true})
   await ServiceModel.deleteService(serviceId)
 }
 
@@ -69,6 +69,7 @@ async function addEmployee (serviceId, values) {
   values.work_for = serviceId
   const newEmployee = await EmployeeModel.createEmployee(values)
   await ServiceModel.findOneAndUpdate({ service_id: serviceId, is_delete: false }, { $push: { employees: newEmployee.employee_id } })
+  return newEmployee
 }
 
 async function getReservations (serviceId) {

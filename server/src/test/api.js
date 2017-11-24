@@ -73,6 +73,16 @@ describe('API tests', () => {
   let service1 = {}
   let service2 = {}
   let reserve1 = {}
+  let reserve2 = {}
+  let reserve3 = {}
+  let employee2 = {
+    email: 'employee2@test.com',
+    user_type: 'employee',
+    first_name: 'Jack',
+    last_name: 'the ripper',
+    work_for: 'match-ser-4',
+    gender: 'female'
+  }
 
   let serviceTestRemove = {service_name: 'service-test-remove'}
   let serviceTestRemove2 = {service_name: 'service-test-remove2'}
@@ -110,6 +120,23 @@ describe('API tests', () => {
     customerTestDel = await UserModel.createUser(customerTestDel)
     cusTokenTestDel = jwt.sign({user_id: customerTestDel.user_id, user_type: customerTestDel.user_type}, 'MATCHSAGE_USER')
     cusTokenTestDel = `JWT ${cusTokenTestDel}`
+    employee2 = await EmployeeModel.createEmployee(employee2)
+    reserve2 = await ReserveModel.createReservation({
+      customer_id: customer2.user_id,
+      service_id: serviceTestRemove.service_id,
+      employee_id: employee2.employee_id,
+      start_time: '0000',
+      end_time: '0300',
+      date: '2048-13-32'
+    })
+    reserve3 = await ReserveModel.createReservation({
+      customer_id: customer2.user_id,
+      service_id: serviceTestRemove.service_id,
+      employee_id: employee2.employee_id,
+      start_time: '0000',
+      end_time: '0300',
+      date: '2048-13-32'
+    })
   })
 
   after(() => {
@@ -373,6 +400,8 @@ describe('API tests', () => {
   describe('# remove service', () => {
     it('Owner should able to remove the specified service', () => {
       const tmpId = serviceTestRemove.service_id
+      const tmpReserveId2 = reserve2.reserve_id
+      const tmpReserveId3 = reserve3.reserve_id
       return request(app)
       .get(`/api/services/${serviceTestRemove.service_id}/delete`)
       .set('Accept', 'application/json')
@@ -381,6 +410,10 @@ describe('API tests', () => {
       .then(async res => {
         const serv = await ServiceModel.findByServiceId(tmpId)
         expect(serv).to.equal(null)
+        let tmpRes = await ReserveModel.findByReservationId(tmpReserveId2)
+        expect(tmpRes).to.equal(null)
+        tmpRes = await ReserveModel.findByReservationId(tmpReserveId3)
+        //expect(tmpRes).to.equal(null)
       })
     })
 
@@ -421,9 +454,9 @@ describe('API tests', () => {
       .set('Authorization', ownerToken)
       .send(employee1)
       .expect(200)
-      .then(async () => {
+      .then(async res => {
         const service = await ServiceModel.findByServiceId(service1.service_id)
-        const employee = await EmployeeModel.findOne()
+        const employee = await EmployeeModel.findByEmployeeId(res.body.employee_id)
         employee1 = employee
         expect(_.includes(service.employees, employee.employee_id)).to.equal(true)
         expect(employee.work_for).to.equal(service.service_id)
@@ -440,7 +473,7 @@ describe('API tests', () => {
       .expect(200)
       .then(async res => {
         expect(res.body.length).to.equal(1)
-        expect(res.body[0].employee_id).to.equal('match-em-1')
+        expect(res.body[0].employee_id).to.equal(employee1.employee_id)
       })
     })
   })

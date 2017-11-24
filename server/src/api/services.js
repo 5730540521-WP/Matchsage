@@ -70,8 +70,8 @@ router.get('/:id/employees', AuthServ.isAuthenticated, async(req, res) => {
 
 router.post('/:id/add_employee', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    await ServiceServ.addEmployee(req.params.id, req.body)
-    res.json({ success: true })
+    const emp = await ServiceServ.addEmployee(req.params.id, req.body)
+    res.json({ employee_id: emp.employee_id, success: true })
   } catch (error) {
     next(error)
   }
