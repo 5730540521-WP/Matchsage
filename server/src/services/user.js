@@ -2,7 +2,7 @@ const PaymentAccountModel = require('../models/payment-account')
 const UserModel = require('../models/user')
 const ReserveModel = require('../models/reservation')
 const _ = require('lodash')
-const filteredReserveKeys = require('../config/filter').filteredReserveKeys
+const filteredReserveKeys = require('../config/filter').reservation
 
 async function addCreditCard (userId, values) {
   const opts = Object.assign({}, values, { user_id: userId, method: 'credit-card' })

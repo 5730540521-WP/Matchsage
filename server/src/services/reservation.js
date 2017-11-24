@@ -11,7 +11,6 @@ async function cancelReservation (userId, reserveId) {
     error.status = 400
     throw error
   }
-
   await ReserveModel.cancelReservation(reserveId)
 }
 
