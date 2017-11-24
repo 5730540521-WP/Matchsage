@@ -9,10 +9,12 @@ const EmployeeSchema = new mongoose.Schema({
   },
   first_name: {
     type: String,
+    required: true,
     index: true
   },
   last_name: {
     type: String,
+    required: true,
     index: true
   },
   gender: {
