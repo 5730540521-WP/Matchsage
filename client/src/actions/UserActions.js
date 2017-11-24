@@ -10,6 +10,7 @@ export const userActions = {
 	login,
 	logout,
 	register,
+	fetchUserProfile,
 }
 
 // Use case:
@@ -102,6 +103,21 @@ async function register(first_name,last_name,email,password,
 // Use case:
 // Status: 
 async function deleteAccount(){
+
+}
+
+
+// Use case:
+// Status:
+async function fetchUserProfile(id){
+	const headers = authHeader();
+	const user = await axios.get(API_URL + `/api/users/${id}` , {headers} )
+	
+	return {
+		type:userConstants.USER_FETCH_PROFILE,
+		user: user.data,
+	}
+	
 
 }
 

@@ -2,7 +2,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {userActions} from '../../actions';
+import {history} from '../../helpers';
 import {Icon} from 'antd';
+
 
 class CustomerNavbar extends React.Component{
 	constructor(){
@@ -47,9 +49,12 @@ class CustomerNavbar extends React.Component{
 								<Icon type="clock-circle-o" style={{marginRight:'20px'}}/>
 								   ประวัติการจอง
 							</a>
-							<a href="#" className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}>
+
+							<a href="#" className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}
+								onClick={()=> history.push('/userProfile')}>
 								<Icon type="user" style={{marginRight:'20px'}}/>
 								   แก้ไขข้อมูลส่วนตัว
+
 							</a>
 							<hr className="dropdown-divider"/>
 							<a href="#" className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}
