@@ -33,7 +33,11 @@ class Profile extends React.Component{
             isOwner: false,
             isCustomer: false,
             isAdmin: false,
-            first_name: ''
+            first_name: '',
+            last_name: '',
+            address:'',
+            contact:'',
+            
         };
 
     }
