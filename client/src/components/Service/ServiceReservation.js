@@ -1,22 +1,16 @@
 import React from 'react';
-import { Steps, Icon,Button, message, Calendar  } from 'antd';
+import axios from 'axios';
+import {API_URL} from 'constants/ConfigConstants';
+import {authHeader} from 'helpers';
+import { Steps, Icon,Button, message, DatePicker, TimePicker} from 'antd';
+import moment from 'moment';
 import styled from 'styled-components';
 
 const Step = Steps.Step;
 
-//Step1: choose service
-const Step1 = ()=>(
-	<div/>
-)
-
-//Step2: select 
-const Step2 = ()=>(
-	<div/>
-)
-
-const Step3 = ()=>(
-	<div/>
-)
+const loader = styled.div.attrs({
+	className: 'is-loading'
+})``;
 
 const StepsContent = styled.div.attrs({
 	className: 'steps-content'
@@ -35,23 +29,45 @@ const StepsAction = styled.div.attrs({
 })`
 	margin-top: 24px;
 `;
-
-const steps = [{
-  title: 'เลือกวันเวลา',
-  content: Step1(),
-}, {
-  title: 'ชำระค่ามัดจำ',
-  content: Step2(),
-}, {
-  title: 'เสร็จสิ้น',
-  content: Step3(),
-}];
 class ServiceReservation extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			current:0
+			current:0,
+			steps: [],
+			isStepsLoaded: false,
+			employees:[],
+			isEmployeesLoaded: false,
+			// for checking already selected 
+			isSelectDate: false,
+			isSelectTime: false,
+			isSelectEmployee: false,
+			isSelectPaymentAccount: false,
+			isConfirmAgreement: false,
+			// for send to server
+			date:'',
+			start_time:'',
+			end_time:'',
+			employee_id:'',
+			price: ''
 		}
+	}
+
+	componentDidMount(){
+		const steps = [{
+			title: 'เลือกวันเวลา',
+			content: this.renderSelectDateAndTime(),
+		}, {
+			title: 'เลือกผู้ให้บริการ',
+			content: this.renderSelectEmployee(),
+		}, {
+			title: 'เลือกช่องทางการชำระค่าบริการ',
+			content: this.renderSelectPaymentAccount(),
+		},{
+			title: 'ยอมรับเงื่อนไขการให้บริการ',
+			content: 'eiei'
+		}];
+		this.setState({steps, isStepsLoaded:true})
 	}
 
 	next() {
@@ -63,8 +79,82 @@ class ServiceReservation extends React.Component{
     this.setState({ current });
 	}
 
+	// ===== START Step1: choose day =====
+	renderSelectDateAndTime = ()=>{
+		const dateFormat = 'YYYY/MM/DD';
+		return(
+			<div>
+				เลือกวันที่ต้องการ
+				<DatePicker onChange={this.onSelectDate} defaultValue={moment('2015/01/01', dateFormat)} format={dateFormat} />
+				เลือกเวลาที่ต้องการ
+				<TimePicker onChange={this.onSelectTime} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} />,			
+			</div>
+		);
+	}
+
+	onSelectDate = ({_d})=>{
+		// console.log(_d);
+		// const date = _d ....
+		// this.setState({date});
+		this.setState({date:_d, isSelectDate: true});
+	}
+
+	onSelectTime = (t)=>{
+		console.log(t);
+		this.setState({isSelectTime: true});
+	}
+	// ===== END Step1: choose day =====
+
+	// ===== START Step2: choose employee =====
+	renderSelectEmployee = ()=>{
+		<div>
+			{this.state.isEmployeesLoaded? <div/>: loader}
+		</div>
+	}
+
+	fetchEmployees = async()=>{
+		const data = {
+			service_id: this.props.service_id ,
+			employee_id: this.state.employee_id, 
+			start_time: this.state.start_time, 
+			end_time: this.state.end_time, 
+			date: this.state.date
+		}
+		const headers = authHeader();
+		const res = await axios.post(`${API_URL}/api/reservation/new`, data, {headers});
+
+		
+		// const employees = await axios.get();
+		// this.setState({employees, isEmployeesLoaded: true});
+		
+	}
+
+	onSelectEmployee = (employee)=>{
+		// this.setState({employee, isSelectEmployee: true});
+		this.setState({isSelectEmployee: true});
+	}
+	// ===== END Step2: choose employee =====
+
+	// ===== Step3: choose payment account =====
+	renderSelectPaymentAccount = ()=>{
+		return(
+			<div/>
+		);
+	}
+
+	onSelectPaymentAccount = ()=>{
+		this.setState({isSelectPaymentAccount:true});
+	}
+	// ===== END Step3: payment account =====
+
+	// ===== START Step4: confirm reservation =====
+	onConfirmReservation = () =>{
+		this.setState({isConfirmAgreement:true});
+	}
+	// ===== END Step4: confirm reservation =====
+	
 	render(){
-		const { current } = this.state;
+		const { isStepsLoaded, steps, current } = this.state;
 
 		return(
 			<div>
@@ -77,25 +167,26 @@ class ServiceReservation extends React.Component{
 				</Steps>
 				{/* <div className="steps-content"></div> */}
 				<StepsContent>
-					{steps[this.state.current].content}
+					{isStepsLoaded && steps[this.state.current].content}
 				</StepsContent>
 				{/* <div className="steps-action"> */}
 				<StepsAction>
+					{	
+            this.state.current > 0
+            &&
+            <Button onClick={() => this.prev()}> ย้อนกลับ </Button>
+          }
           {
             this.state.current < steps.length - 1
             &&
-            <Button type="primary" onClick={() => this.next()}>ต่อไป</Button>
+            <Button style={{ marginLeft: 8 }} type='primary' onClick={() => this.next()}>ต่อไป</Button>
           }
           {
             this.state.current === steps.length - 1
             &&
-            <Button type="primary" onClick={() => message.success('การจองบริการสำเร็จ')}>เสร็จสิ้นการจอง</Button>
+            <Button style={{ marginLeft: 8 }} type="primary" onClick={() => message.success('การจองบริการสำเร็จ')}>เสร็จสิ้นการจอง</Button>
           }
-          {	
-            this.state.current > 0
-            &&
-            <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}> ย้อนกลับ </Button>
-          }
+          
 				</StepsAction>
 			</div>
 		);
