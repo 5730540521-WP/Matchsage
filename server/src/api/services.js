@@ -10,7 +10,7 @@ const EmployeeModel = require('../models/employee')
 // Services api
 let router = Router()
 
-const filteredServiceKeys = require('../config/filter').filteredServiceKeys
+const filteredServiceKeys = require('../config/filter').service
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
