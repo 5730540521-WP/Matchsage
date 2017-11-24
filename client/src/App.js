@@ -74,49 +74,6 @@ class App extends React.Component {
 						component={user ? () => {
 							const user_type = JWT(localStorage.getItem('user')).user_type;
 							console.log(user_type)
-<<<<<<< HEAD
-							if(user_type == 'owner')
-								return <Redirect to="/owner"/>
-							else 
-								return <Redirect to="/service/search"/>
-						} : Home }
-				/>
-				<Route exact path="/owner" render={() => {
-					if(!user) {
-						return (<Redirect to="/" />)
-					} else {
-						return <Owner />
-					}
-				}}/>
-				<Route exact path='/admin/login' render={() => {
-					if (localStorage.admin) {
-						return (<Redirect to='/admin/users/search' />)
-					} else {
-						return (<AdminLogin />)
-					}
-				}} />
-				<Route exact path="/admin/users/search" render={() => {
-					if (!localStorage.admin) {
-						return (<Redirect to='/admin/login'/>)
-					} else {
-						return (<AdminSearch />)
-					}
-				}}/>
-				<Route exact path="/team" component={Team}/>
-				
-				<Route exact path="/service/search/:filter?" component={user?Service:()=>{return <Redirect to="/"/>}}/>
-				<Route exact path="/service/:id" component={user?ServiceDetail:()=>{return <Redirect to='/'/>}}/>
-				<Route exact path="/Profile" component={user?Profile:()=>{return <Redirect to="/"/>}}/>
-				{/* <Route exact path="/service/:id/reserve" component={user?ServiceReservation:()=>(<Redirect to='/'/>)}/> */}
-				
-				{/* <Route path="/posts/:id" component={}/> */}
-				<Route component={NotFound}/>
-				
-			</Switch>
-		</Router>
-	);
-}
-=======
 							if (user_type == 'owner')
 								return <Redirect to="/owner" />
 							else
@@ -148,9 +105,8 @@ class App extends React.Component {
 
 					<Route exact path="/service/search/:filter?" component={user ? Service : () => { return <Redirect to="/" /> }} />
 					<Route exact path="/service/:id" component={user ? ServiceDetail : () => { return <Redirect to='/' /> }} />
-					<Route exact path="/userProfile" component={user ? EditProfile : () => { return <Redirect to="/" /> }} />
+					<Route exact path="/Profile" component={user?Profile:()=>{return <Redirect to="/"/>}}/>
 					{/* <Route exact path="/service/:id/reserve" component={user?ServiceReservation:()=>(<Redirect to='/'/>)}/> */}
->>>>>>> 18b649a05405f5164e9cd72a20f39b5374473f11
 
 					{/* <Route path="/posts/:id" component={}/> */}
 					<Route component={NotFound} />

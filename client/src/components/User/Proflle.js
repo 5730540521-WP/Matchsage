@@ -37,7 +37,10 @@ class Profile extends React.Component{
             last_name: '',
             address:'',
             contact:'',
-            
+            password:'',
+            new_pwd:'',
+            conf_pwd:'',
+
         };
 
     }
@@ -59,8 +62,12 @@ class Profile extends React.Component{
         this.setState({user},()=>{
             console.log(userActions.fetchUserProfile(JWT(localStorage.getItem('user')).user_id));
             
-            if(this.state.user.user_type === 'owner') this.setState({isOwner:true,first_name:user.first_name});
-            else if(this.state.user.user_type === 'customer')  this.setState({isCustomer:true,first_name:this.state.user.first_name});
+            if(this.state.user.user_type === 'owner') this.setState({isOwner:true});
+            else if(this.state.user.user_type === 'customer')  this.setState({isCustomer:true});
+
+
+            this.setState({first_name:this.state.user.first_name,last_name:this.state.user.last_name})
+            this.setState({address:this.state.user.address,contact:this.state.user.contact})
         });
         
        
@@ -102,8 +109,8 @@ class Profile extends React.Component{
                             </Col>
                             <Col span={2}><Aright>นามสกุล</Aright></Col>
                             <Col span={8}>
-                            <Input value={this.state.user ? this.state.user.last_name:''} 
-                                onChange/>
+                            <Input name='last_name' value={this.state.last_name} 
+                                onChange={(e)=>this.onInputChange(e)}/>
                             </Col>
                         </Row> 
                         <Row>
@@ -111,7 +118,8 @@ class Profile extends React.Component{
                             </Col>
                             <Col span={2}><Aright>ที่อยู่</Aright></Col>
                             <Col span={8}>
-                            <Input value={this.state.user ? this.state.user.address:false}/>
+                            <Input name='address' value={this.state.address}
+                                onChange={(e)=>this.onInputChange(e)}/>
                             </Col>
                         </Row>
                         <Row>
@@ -119,7 +127,8 @@ class Profile extends React.Component{
                             </Col>
                             <Col span={2}><Aright>เบอร์โทรศัพท์</Aright></Col>
                             <Col span={8}>
-                            <Input value={this.state.user ? this.state.user.contact:false}/>
+                            <Input name='contact' value={this.state.contact}
+                                onChange={(e)=>this.onInputChange(e)}/>
                             </Col>
                         </Row>
                         <Row>
@@ -135,7 +144,8 @@ class Profile extends React.Component{
                             </Col>
                             <Col span={2}><Aright>รหัสผ่านเดิม</Aright></Col>
                             <Col span={8}>
-                            <Input type="password" value=""/>
+                            <Input name="password" type="password" value={this.state.password}
+                                onChange={(e)=>this.onInputChange(e)}/>
                             </Col>
                         </Row>
                         <Row>
@@ -143,7 +153,8 @@ class Profile extends React.Component{
                             </Col>
                             <Col span={2}><Aright>รหัสผ่านใหม่</Aright></Col>
                             <Col span={8}>
-                            <Input type="password" value=""/>
+                            <Input name="new_pwd" type="password" value={this.state.new_pwd}
+                                onChange={(e)=>this.onInputChange(e)}/>
                             </Col>
                         </Row>
                         <Row>
@@ -151,7 +162,8 @@ class Profile extends React.Component{
                             </Col>
                             <Col span={2}><Aright>ยืนยันรหัส</Aright></Col>
                             <Col span={8}>
-                            <Input type="password" value=""/>
+                            <Input name="conf_pwd" type="password" value={this.state.conf_pwd}
+                                onChange={(e)=>this.onInputChange(e)}/>
                             </Col>
                         </Row>
                         <Row>
