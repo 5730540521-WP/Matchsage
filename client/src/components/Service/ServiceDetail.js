@@ -1,13 +1,12 @@
 import React from 'react';
-import { Row,Col,Button,Menu } from 'antd';
+import { Row,Col,Button,Menu,Carousel,Avatar,Card } from 'antd';
 import {connect} from 'react-redux';
 import {CustomerActions} from '../../actions';
 import NotFound from '../NotFound';
 import styled from 'styled-components';
-import { Carousel } from 'antd';
-import { Avatar } from 'antd';
 import MapComponent from './MapComponent';
 import ServiceReservation from './ServiceReservation';
+import ReportEmployeeModal from 'components/Common/Modal/ReportEmployeeModal';
 
 const H1 = styled.h1`
 	text-align:left;
@@ -24,11 +23,12 @@ class ServiceDetail extends React.Component{
 	state={
 		current :'detail',
 		current2 : 'overall',
-		isReservation: false
+		isReservation: false,
+		showReportEmployeeModal: false
 	}
 	handleClick = (e) => {
 		console.log('click ', e);
-		if(e.key === 'detail' || e.key === 'review'){
+		if(e.key === 'detail' || e.key === 'employee'){
 			this.setState({
 				current: e.key,
 				isReservation: false
@@ -97,22 +97,41 @@ class ServiceDetail extends React.Component{
 					</div>
 					:
 					<div>
-						<Row >
-							<Col span={12}>
-								{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%2===0?<div><div><Avatar shape="square" size="large" icon="user" /></div>ชื่อ {employee.first_name} {employee.last_name}<br/>คะแนน {employee.rating}</div>:null})}
-							</Col>
-							<Col span={12}>
-								{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%2===1?<div><div><Avatar shape="square" size="large" icon="user" /></div>ชื่อ {employee.first_name} {employee.last_name}<br/>คะแนน {employee.rating}</div>:null})}
-							</Col>
-						</Row>
+						
 					</div>
 					}
 				</div>
 				:
-				<div>ความคิดเห็น</div>
+				<div>
+					<Row >
+						<Col span={12}>
+							{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%2===0?this.renderEmployeeCard(employee):null})}
+						</Col>
+						<Col span={12}>
+							{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%2===1?this.renderEmployeeCard(employee):null})}
+						</Col>
+					</Row>
+				</div>
 				}
 			</div>
 		);
+	}
+
+	renderEmployeeCard(employee){
+		return <div>
+		<Card style={{ width: '25.5vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
+			<div>
+				<img src="../images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'25.5vw'}}/>
+			</div>
+			<div>
+				ชื่อ {employee.first_name} {employee.last_name}
+				<br/>เพศ {employee.gender==='male'?'ชาย':'หญิง'}
+				<br/>คะแนน {employee.rating}
+				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>this.setState({showReportEmployeeModal:true})}>รายงานพนักงานคนนี้</Button>
+				<ReportEmployeeModal employee={employee} visible={this.state.showReportEmployeeModal} close={()=>this.setState({showReportEmployeeModal:false})}/>
+			</div>
+		</Card>
+	</div>
 	}
 
 	render(props){
@@ -132,8 +151,8 @@ class ServiceDetail extends React.Component{
 							<Menu.Item key="detail">
 								ข้อมูลของร้าน
 							</Menu.Item>
-							<Menu.Item key="review">
-								ความคิดเห็น
+							<Menu.Item key="employee">
+								พนักงานในร้าน
 							</Menu.Item>
 						</Menu>
 						<Button type="primary" style={{'marginTop':'10px'}}

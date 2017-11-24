@@ -17,7 +17,8 @@ export const CustomerActions = {
 	payService,
 	informBillDetail,
 	downloadBillDetail,
-	sendComplaint
+	sendComplaint,
+	sendEmployeeComplaint
 }
 
 async function fetchServices(){
@@ -29,11 +30,12 @@ async function fetchServices(){
 	}
 }
 
-async function fetchService(id){
+async function fetchService(service_id){
 	const headers = authHeader();
-	const service = await axios.get(API_URL + `/api/services/${id}`, {headers});
+	const service = await axios.get(API_URL + `/api/services/${service_id}`, {headers});
 	const ownerDetail = await axios.get(API_URL + `/api/users/${service.data.owner_id}`,{headers});
-	const employees = await axios.get(API_URL + `/api/services/${id}/employees` , {headers});
+	const employees = await axios.get(API_URL + `/api/services/${service_id}/employees` , {headers});
+	console.log(employees)
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICE,
 		service: service,
@@ -108,6 +110,10 @@ function downloadBillDetail(){
 }
 
 // Use case: 18
-function sendComplaint(){
+function sendServiceComplaint(){
+
+}
+
+function sendEmployeeComplaint(employee_id,topic,content){
 
 }
