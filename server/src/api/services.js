@@ -10,7 +10,7 @@ const EmployeeModel = require('../models/employee')
 // Services api
 let router = Router()
 
-const filteredServiceKeys = require('../config/filter').filteredServiceKeys
+const filteredServiceKeys = require('../config/filter').service
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
@@ -44,10 +44,10 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.get('/:id/avai_employees', AuthServ.isAuthenticated, async (req, res) => {
-  const date = req.query.date || '2000-12-20'
-  const startTime = req.query.start_time || '2500'
-  const endTime = req.query.end_time || '2500'
+router.post('/:id/avai_employees', AuthServ.isAuthenticated, async (req, res) => {
+  const date = req.body.date || '2000-12-20'
+  const startTime = req.body.start_time || '2500'
+  const endTime = req.body.end_time || '2500'
   const serviceId = req.params.id
   const employees = await ServiceServ.getAvailableEmployees({ date, start_time: startTime, end_time: endTime, serviceId })
   res.send(employees)

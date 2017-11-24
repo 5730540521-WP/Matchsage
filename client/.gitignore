@@ -56,3 +56,6 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# kick package-lock ass
+package-lock.json

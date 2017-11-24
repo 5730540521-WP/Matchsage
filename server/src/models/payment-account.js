@@ -36,6 +36,10 @@ PaymentAccountSchema.statics = {
 
   subtractAmountFrom: function (number, amount) {
     return PaymentAccount.findOneAndUpdate({ number }, { $inc: { amount: -amount } })
+  },
+
+  findByUserId: function (userId) {
+    return PaymentAccount.find({ user_id: userId })
   }
 }
 

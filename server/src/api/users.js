@@ -2,10 +2,11 @@ const { Router } = require('express')
 const AuthServ = require('../services/auth')
 const UserServ = require('../services/user')
 const UserModel = require('../models/user')
+const PaymentAccountModel = require('../models/payment-account')
 const _ = require('lodash')
 
 let router = Router()
-const filteredUserKeys = require('../config/filter').filteredUserKeys
+const filters = require('../config/filter')
 
 // search users admin purpose
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
@@ -13,13 +14,13 @@ router.get('/', AuthServ.isAuthenticated, async (req, res) => {
   let opts = req.query
   delete opts.keyword
   const users = await UserModel.findWithRegexp(keyword, opts)
-  res.json({ users: _.map(users, user => _.pick(user, filteredUserKeys)) })
+  res.json({ users: _.map(users, user => _.pick(user, filters.user)) })
 })
 // get user detail
 router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const user = await UserModel.findByUserId(req.params.id)
-    res.json(_.pick(user, filteredUserKeys))
+    res.json(_.pick(user, filters.user))
   } catch (error) {
     next(error)
   }
@@ -48,6 +49,20 @@ router.post('/:id/add-bank-account', AuthServ.isAuthenticated, async (req, res, 
     }
     await UserServ.addBankAccount(req.user.user_id, req.body)
     res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/:id/payment_accounts', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    if (req.user.user_id !== req.params.id) {
+      const error = new Error('Unauthorized')
+      error.status = 401
+      throw error
+    }
+    const accounts = await PaymentAccountModel.findByUserId(req.user.user_id)
+    res.json({ payment_accounts: _.map(accounts, account => _.pick(account, filters.payment)) })
   } catch (error) {
     next(error)
   }
