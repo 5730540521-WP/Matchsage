@@ -1,6 +1,7 @@
 const ReceiptModel = require('../models/receipt')
 const UserModel = require('../models/user')
 
+
 async function viewReceipt (userId, reserveId) {
   const receipt = await ReceiptModel.findByReservationId(reserveId)
   if (receipt.user_id !== userId) {
@@ -21,6 +22,8 @@ async function downloadReceipt (userId, reserveId) {
   }
 
 // Start Download File
+  // Download at client??
+  //res the receipt and create pdf at client??
 }
 
 module.exports = {

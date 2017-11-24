@@ -210,13 +210,13 @@ describe('API tests', () => {
   describe('# see user', () => {
     it('Should return user detail', () => {
       return request(app)
-      .get(`/api/users/${customer1.user_id}`)
+      .get('/api/users/match-user-1')
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
         expect(res.body).to.be.an('object')
-        expect(res.body.user_id).to.equal(`${customer1.user_id}`)
+        expect(res.body.user_id).to.equal('match-user-1')
       })
     })
   })
@@ -376,36 +376,6 @@ describe('API tests', () => {
     })
   })
 
-  // should move up to group with user api if possible
-  describe('# see customer\'s reservation list', () => {
-    it('Should return customer reservation list', () => {
-      return request(app)
-      .get(`/api/users/${customer1.user_id}/reservations`)
-      .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
-      .expect(200)
-      .then(async res => {
-        expect(res.body).to.be.an('object')
-        expect(res.body.reservations[0].reserve_id).to.equal(reserve1.reserve_id)
-      })
-    })
-  })
-
-  // should move up to group with service api if possible
-  describe('# see service\'s reservation list by service\'s owner', () => {
-    it('Should return owner\'s service reservation list', () => {
-      return request(app)
-      .get(`/api/services/${service1.service_id}/reservations`)
-      .set('Accept', 'application/json')
-      .set('Authorization', ownerToken)
-      .expect(200)
-      .then(async res => {
-        expect(res.body).to.be.an('object')
-        expect(res.body.reservations[0].reserve_id).to.equal(reserve1.reserve_id)
-      })
-    })
-  })
-
   describe('# see reservation', () => {
     it('Unauthorized customer should not be able to access to other\'s reservation', () => {
       return request(app)
@@ -494,11 +464,12 @@ describe('API tests', () => {
       .post(`/api/complaints/new/`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ customer_id: customer1.user_id, service_id: service1.service_id })
+      .send({ customer_id: customer1.user_id, service_id: service1.service_id, employee_id: employee1.employee_id })
       .expect(200)
       .then(async res => {
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
+        expect(res.body.employee_id).to.equal(employee1.employee_id)
       })
     })
     it('should list all complaints', () => {
