@@ -51,7 +51,7 @@ class CustomerNavbar extends React.Component{
 							</a>
 
 							<a href="#" className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}
-								onClick={()=> history.push('/userProfile')}>
+								onClick={()=> history.push('/Profile')}>
 								<Icon type="user" style={{marginRight:'20px'}}/>
 								   แก้ไขข้อมูลส่วนตัว
 
