@@ -24,7 +24,7 @@ class ServiceDetail extends React.Component{
 		current :'detail',
 		current2 : 'overall',
 		isReservation: false,
-		showReportEmployeeModal: false
+		showReportEmployeeModal: []
 	}
 	handleClick = (e) => {
 		console.log('click ', e);
@@ -39,8 +39,8 @@ class ServiceDetail extends React.Component{
 			});
 		}
   }
-	componentDidMount(){
-		this.props.loadService(this.props.match.params.id);
+	async componentDidMount(){
+		await this.props.loadService(this.props.match.params.id);
 	}
 
 	onClickReservation = ()=>{
@@ -51,7 +51,7 @@ class ServiceDetail extends React.Component{
 		return(
 			<div>
 				{this.state.current==='detail'?<div>
-				<H1>ชื่อร้าน {this.props.serviceReducer.service.service_name}</H1>
+				<H1>ชื่อร้าน {this.props.serviceStore.service.service_name}</H1>
 				<Row gutter={16} style={{marginBottom:'10px'}}>
 					<Col span={12}>
 						<Carousel autoplay>
@@ -87,13 +87,13 @@ class ServiceDetail extends React.Component{
 						<H1>คำอธิบายร้าน</H1>
 						<P>บลา บลา บลา</P>
 						<H1>เจ้าของ</H1>
-						<P>{this.props.serviceReducer.ownerDetail.first_name} {this.props.serviceReducer.ownerDetail.last_name}</P>
+						<P>{this.props.serviceStore.ownerDetail.first_name} {this.props.serviceStore.ownerDetail.last_name}</P>
 						<H1>ที่อยู่</H1>
 						<P>555/555 บลา บลา บลา<br/></P>
-						<P>เบอร์ {this.props.serviceReducer.service.contact_number}</P>
-						<P>อีเมล์ {this.props.serviceReducer.ownerDetail.email}</P>
+						<P>เบอร์ {this.props.serviceStore.service.contact_number}</P>
+						<P>อีเมล์ {this.props.serviceStore.ownerDetail.email}</P>
 						<H1>คะแนน</H1>
-						<P>{this.props.serviceReducer.service.rating}</P>
+						<P>{this.props.serviceStore.service.rating}</P>
 					</div>
 					:
 					<div>
@@ -105,10 +105,10 @@ class ServiceDetail extends React.Component{
 				<div>
 					<Row >
 						<Col span={12}>
-							{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%2===0?this.renderEmployeeCard(employee):null})}
+							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%2===0?this.renderEmployeeCard(employee):null})}
 						</Col>
 						<Col span={12}>
-							{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%2===1?this.renderEmployeeCard(employee):null})}
+							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%2===1?this.renderEmployeeCard(employee):null})}
 						</Col>
 					</Row>
 				</div>
@@ -135,9 +135,9 @@ class ServiceDetail extends React.Component{
 	}
 
 	render(props){
-		let loaded = this.props.serviceReducer.service;
+		let loaded = this.props.serviceStore.service;
 		return (
-			loaded?this.props.serviceReducer.service.service_id?
+			loaded?this.props.serviceStore.service.service_id?
 			<div style={{color:'#402900'}}>
 				<img src="../images/banner.jpg" style={{width:'100%',height:'12vw'}}/>
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
@@ -175,7 +175,7 @@ class ServiceDetail extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		serviceReducer: state.service
+		serviceStore: state.service
 	}
 }
 

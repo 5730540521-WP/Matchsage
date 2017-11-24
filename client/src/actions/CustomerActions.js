@@ -17,7 +17,7 @@ export const CustomerActions = {
 	payService,
 	informBillDetail,
 	downloadBillDetail,
-	sendComplaint,
+	sendServiceComplaint,
 	sendEmployeeComplaint
 }
 
@@ -114,6 +114,14 @@ function sendServiceComplaint(){
 
 }
 
-function sendEmployeeComplaint(employee_id,topic,content){
-
+async function sendEmployeeComplaint(service_id,employee_id,topic,content){
+	const data = {
+		service_id,
+		employee_id,
+		title:topic,
+		note:content
+	}
+	const headers = authHeader();
+	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers});
+	return;
 }

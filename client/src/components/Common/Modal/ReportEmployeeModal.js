@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Button,Input } from 'antd';
-import {sendEmployeeComplaint} from 'actions/CustomerActions';
+import {CustomerActions} from '../../../actions/CustomerActions';
+import {connect} from 'react-redux';
 
 const {TextArea} = Input
 
@@ -10,12 +11,11 @@ class ReportEmployeeModal extends React.Component{
     topic:'',
     content:''
   }
-  handleOk = () => {
+  handleOk = async () => {
     this.setState({ loading: true });
-    setTimeout(() => {
-      this.setState({ loading: false });
-      this.props.close();
-    }, 3000);
+    await this.props.sendComplaint(this.props.serviceStore.service_id,this.props.employee.employee_id,this.state.topic,this.state.content);
+    this.setState({loading:false});
+    this.props.close();
   }
   handleCancel = () => {
     this.props.close();
@@ -23,7 +23,7 @@ class ReportEmployeeModal extends React.Component{
   render(){
     return <Modal
       visible={this.props.visible}
-      title={'รายงาน'+this.props.employee.first_name+' '+this.props.employee.last_name}
+      title={'รายงาน'+this.props.employee.first_name+' '+this.props.employee.last_name+' '+this.props.employee.gender}
       onOk={this.handleOk}
       onCancel={this.handleCancel}
       footer={[
@@ -44,14 +44,14 @@ class ReportEmployeeModal extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		serviceReducer: state.service
+		serviceStore: state.service
 	}
 }
 
 function mapDispatchToProps(dispatch){
 	return {
-		sendComplaint: (employee_id,topic,content)=>{
-			dispatch(sendEmployeeComplaint(employee_id,topic,content));
+		sendComplaint: (service_id,employee_id,topic,content)=>{
+			dispatch(CustomerActions.sendEmployeeComplaint(service_id,employee_id,topic,content));
 		}
 	}
 }
