@@ -14,7 +14,7 @@ import Owner from './components/Owner/Owner';
 import AdminSearch from './components/Admin/AdminSearch';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
-import ServiceReservation from 'components/Service/ServiceReservation';
+// import ServiceReservation from 'components/Service/ServiceReservation';
 import EditProfile from './components/User/EditProflle';
 import NotFound from './components/NotFound';
 import * as JWT from 'jwt-decode';
