@@ -10,7 +10,7 @@ async function createComplaint (userId, values) {
     error.status = 401
     throw error
   }
-  
+
   const service = await ServiceModel.findByServiceId(values.service_id)
   const employee = await EmployeeModel.findByEmployeeId(values.employee_id)
 
@@ -20,7 +20,8 @@ async function createComplaint (userId, values) {
     throw error
   }
 
-  const newComplaint = await ComplaintModel.createComplaint(values)
+  const opts = Object.assign({}, values, { customer_id: userId })
+  const newComplaint = await ComplaintModel.createComplaint(opts)
   return newComplaint
 }
 
