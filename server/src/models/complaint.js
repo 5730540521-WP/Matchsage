@@ -11,12 +11,18 @@ const ComplaintSchema = new mongoose.Schema({
     required: true
   },
   service_id: {
+    type: String
+  },
+  employee_id: {
+    type: String
+  },
+  title: {
     type: String,
-    require: true
+    default: 'Title'
   },
   note: {
     type: String,
-    default: 'This service is not satisfying'
+    default: 'This service / employee is not satisfying'
   }
 })
 

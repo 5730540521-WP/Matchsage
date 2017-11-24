@@ -33,7 +33,7 @@ async function rate (values) {
 
     const ratingCount = await RatingModel.find({service_id: values.service_id}).count()
     const newRating = (service.rating * (ratingCount - 1) + values.score) / ratingCount
-    await ServiceModel.findOneAndUpdate({ service_id: values.service_id }, { rating: newRating })
+    await ServiceModel.findOneAndUpdate({ service_id: values.service_id, is_delete: false }, { rating: newRating })
     return rating
   } else if (values.rating_type === 'employee') {
     if (!values.employee_id) {

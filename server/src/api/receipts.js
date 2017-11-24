@@ -3,6 +3,7 @@ const _ = require('lodash')
 const AuthServ = require('../services/auth')
 const ReceiptModel = require('../models/receipt')
 const UserModel = require('../models/user')
+const ReceiptService = require('../services/receipt')
 
 let router = Router()
 
@@ -17,12 +18,23 @@ router.get('/', AuthServ.isAuthenticated, async(req, res, next) => {
   }
 })
 
+// create new receipt
+router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    // console.log(req)
+    const receipt = await ReceiptModel.createReceipt(req.body)
+    res.json(receipt)
+  } catch (error) {
+    next(error)
+  }
+})
+
 // show specific receipt by reservation ID
 router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    const receipt = await ReceiptModel.findByReservationId(req.param.id)
+    const receipt = await ReceiptModel.findByReservationId(req.params.id)
     const user = await UserModel.findByUserId(req.user.user_id)
-    if (receipt.user_id !== user.user_id) {
+    if (receipt.customer_id !== user.user_id) {
       const error = new Error('Only customer who make this reservation can view this receipt')
       error.status = 400
       throw error
@@ -33,12 +45,19 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-// create new receipt
-router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
+router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    // console.log(req)
-    const receipt = await ReceiptModel.createReceipt(req.body)
-    res.json(receipt)
+    const receipt = await ReceiptModel.findByReservationId(req.params.id)
+    const user = await UserModel.findByUserId(receipt.customer_id)
+    
+    if (receipt.customer_id !== req.user.user_id) {
+      const error = new Error('Only customer who make this reservation can download this receipt')
+      error.status = 400
+      throw error
+    }
+    const DnReceipt = ReceiptService.downloadReceipt(user.user_id, receipt.reservation_id)
+
+    res.download('receipt.pdf')
   } catch (error) {
     next(error)
   }
