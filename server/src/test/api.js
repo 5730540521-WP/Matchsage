@@ -71,10 +71,11 @@ describe('API tests', () => {
   }
 
   let service1 = {}
+  let service2 = {}
   let reserve1 = {}
-  let complaint1 = {}
-  let receipt1 = {}
+
   let serviceTestRemove = {service_name: 'service-test-remove'}
+  let serviceTestRemove2 = {service_name: 'service-test-remove2'}
 
   let cusToken = ''
   let ownerToken = ''
@@ -94,6 +95,8 @@ describe('API tests', () => {
     cusToken2 = `JWT ${cusToken2}`
     serviceTestRemove.owner_id = owner1.user_id
     serviceTestRemove = await ServiceModel.createService(serviceTestRemove)
+    serviceTestRemove2.owner_id = owner1.user_id
+    serviceTestRemove2 = await ServiceModel.createService(serviceTestRemove2)
   })
 
   after(() => {
@@ -270,7 +273,7 @@ describe('API tests', () => {
         expect(res.body.services[0].service_id).to.equal('match-ser-1')
       })
     })
-    /* it('Should list services containing input string', () => {
+    it('Should list services containing input string', () => {
       return request(app)
       .get('/api/services/search?service_name=ser&rating=1.5')
       .set('Accept', 'application/json')
@@ -279,7 +282,7 @@ describe('API tests', () => {
       .then(async res => {
         expect(res.body.services.length).to.equal(0)
       })
-    }) */
+    })
   })
 
   describe('# see service', () => {
@@ -299,7 +302,17 @@ describe('API tests', () => {
     const update = {
       service_name: 'service_new'
     }
-    it('Should update the service data', () => {
+
+    /* it('Other should not able to update the service data', () => {
+      return request(app)
+      .post(`/api/services/${service1.service_id}/update`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken2)
+      .send(update)
+      .expect(401)
+    }) */
+
+    it('Owner should able to update the service data', () => {
       return request(app)
       .post(`/api/services/${service1.service_id}/update`)
       .set('Accept', 'application/json')
@@ -311,16 +324,59 @@ describe('API tests', () => {
         expect(service.service_name).to.be.equal('service_new')
       })
     })
+
+    const update1 = {
+      service_name: 'service_new_again'
+    }
+    it('Admin should able to update the service data', () => {
+      return request(app)
+      .post(`/api/services/${service1.service_id}/update`)
+      .set('Accept', 'application/json')
+      .set('Authorization', adminToken)
+      .send(update1)
+      .expect(200)
+      .then(async () => {
+        const service = await ServiceModel.findByServiceId(service1.service_id)
+        expect(service.service_name).to.be.equal('service_new_again')
+      })
+    })
   })
 
   describe('# remove service', () => {
-    it('Should remove the specified service', () => {
+    it('Owner should able to remove the specified service', () => {
       const tmpId = serviceTestRemove.service_id
       return request(app)
       .get(`/api/services/${serviceTestRemove.service_id}/delete`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
-      .send(owner1.user_id, serviceTestRemove.service_id)
+      .expect(200)
+      .then(async res => {
+        const serv = await ServiceModel.findByServiceId(tmpId)
+        expect(serv).to.equal(null)
+      })
+    })
+
+    it('Should able to add new service', () => {
+      return request(app)
+      .post('/api/services/new')
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .send({ service_name: 'service2' })
+      .expect(200)
+      .then(async res => {
+        expect(res.body.service_name).to.equal('service2')
+        service2 = res.body
+        const user = await UserModel.findByUserId(owner1.user_id)
+        expect(_.includes(user.own_services, service2.service_id)).to.equal(true)
+      })
+    })
+
+    it('Admin should able to remove the specified service', () => {
+      const tmpId = serviceTestRemove2.service_id
+      return request(app)
+      .get(`/api/services/${serviceTestRemove2.service_id}/delete`)
+      .set('Accept', 'application/json')
+      .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
         const serv = await ServiceModel.findByServiceId(tmpId)

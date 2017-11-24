@@ -15,6 +15,12 @@ Matchsage web application using React and NodeJs.
 ## Authors
 
 * **Wasin Watthanasrisong** - [WasinWatt](https://github.com/wasinwatt)
+* **Wasin Saengow** [chrsow](https://github.com/chrsow)
+* **Wasin Panitansirikul** [5730447921-PW](https://github.com/5730447921-PW)
+* **Kissada Pornratthanapong** [5730022821-KP](https://github.com/5730022821-KP)
+* **Narit Kemtongchareon** [5730290621-NK](https://github.com/5730290621-NK)
+* **Panuvit Wonganankit** [5730447921-PW](https://github.com/5730447921-PW)
+* **Varitthorn Sutthisopa-arporn** [(https://github.com/Vl3oss](https://github.com/Vl3oss)
 
 See also the list of [contributors](https://github.com/we-inc/Matchsage/contributors) who participated in this project.
 

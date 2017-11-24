@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Carousel } from 'antd';
 import { Avatar } from 'antd';
 import MapComponent from './MapComponent';
-import ServiceReservation from './ServiceReservation';
+import ServiceReservation from './Reservation/ServiceReservation';
 
 const H1 = styled.h1`
 	text-align:left;
@@ -144,7 +144,7 @@ class ServiceDetail extends React.Component{
 					</Col>
 
 					<Col span={19} style={{backgroundColor:'#FFF8EB',padding:'20px'}}>
-						{ this.state.isReservation? <ServiceReservation/> :this.renderServiceDetail()}
+						{ this.state.isReservation? <ServiceReservation service_id={this.props.match.params.id}/> :this.renderServiceDetail()}
 					</Col>
 					
 				</Row>
