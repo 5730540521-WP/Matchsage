@@ -1,13 +1,21 @@
 import React from 'react';
-import { Steps, Icon,Button,message } from 'antd';
+import { Steps, Icon,Button, message, Calendar  } from 'antd';
 import styled from 'styled-components';
 
 const Step = Steps.Step;
 
-const test = ()=>(
-	<div>
-		hahadhsfdsjfhd
-	</div>
+//Step1: choose service
+const Step1 = ()=>(
+	<div/>
+)
+
+//Step2: select 
+const Step2 = ()=>(
+	<div/>
+)
+
+const Step3 = ()=>(
+	<div/>
 )
 
 const StepsContent = styled.div.attrs({
@@ -30,13 +38,13 @@ const StepsAction = styled.div.attrs({
 
 const steps = [{
   title: 'เลือกวันเวลา',
-  content: test,
+  content: Step1(),
 }, {
   title: 'ชำระค่ามัดจำ',
-  content: 'Second-content',
+  content: Step2(),
 }, {
   title: 'เสร็จสิ้น',
-  content: 'sdf',
+  content: Step3(),
 }];
 class ServiceReservation extends React.Component{
 	constructor(props){
@@ -76,19 +84,17 @@ class ServiceReservation extends React.Component{
           {
             this.state.current < steps.length - 1
             &&
-            <Button type="primary" onClick={() => this.next()}>Next</Button>
+            <Button type="primary" onClick={() => this.next()}>ต่อไป</Button>
           }
           {
             this.state.current === steps.length - 1
             &&
-            <Button type="primary" onClick={() => message.success('การจองบริการสำเร็จ')}>Done</Button>
+            <Button type="primary" onClick={() => message.success('การจองบริการสำเร็จ')}>เสร็จสิ้นการจอง</Button>
           }
           {	
             this.state.current > 0
             &&
-            <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-              Previous
-            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}> ย้อนกลับ </Button>
           }
 				</StepsAction>
 			</div>
