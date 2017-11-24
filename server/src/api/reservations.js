@@ -10,13 +10,11 @@ const EmailServ = require('../services/email')
 // Reservations api
 let router = Router()
 
-const filteredReserveKeys = ['reserve_id', 'service_id', 'customer_id', 'employee_id', 'start_time',
-  'end_time', 'date', 'is_cancel', 'paid_status', 'price']
-
+const filteredReservationKeys = require('../config/filter').reservation
 router.get('/', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const reserves = await ReserveModel.find(req.query)
-    res.json({ reservations: _.map(reserves, reserve => _.pick(reserve, filteredReserveKeys)) })
+    res.json({ reservations: _.map(reserves, reserve => _.pick(reserve, filteredReservationKeys)) })
   } catch (error) {
     next(error)
   }
@@ -36,7 +34,7 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
       error.status = 400
       throw error
     }
-    res.json(_.pick(reserve, filteredReserveKeys))
+    res.json(_.pick(reserve, filteredReservationKeys))
   } catch (error) {
     next(error)
   }

@@ -57,6 +57,8 @@ describe('API tests', () => {
   let employee1 = {
     email: 'employee1@test.com',
     user_type: 'employee',
+    first_name: 'John1',
+    last_name: 'JJ',
     work_for: 'match-ser-1',
     gender: 'female'
   }
@@ -69,8 +71,11 @@ describe('API tests', () => {
   }
 
   let service1 = {}
+  let service2 = {}
   let reserve1 = {}
+
   let serviceTestRemove = {service_name: 'service-test-remove'}
+  let serviceTestRemove2 = {service_name: 'service-test-remove2'}
 
   let cusToken = ''
   let ownerToken = ''
@@ -90,6 +95,8 @@ describe('API tests', () => {
     cusToken2 = `JWT ${cusToken2}`
     serviceTestRemove.owner_id = owner1.user_id
     serviceTestRemove = await ServiceModel.createService(serviceTestRemove)
+    serviceTestRemove2.owner_id = owner1.user_id
+    serviceTestRemove2 = await ServiceModel.createService(serviceTestRemove2)
   })
 
   after(() => {
@@ -295,7 +302,17 @@ describe('API tests', () => {
     const update = {
       service_name: 'service_new'
     }
-    it('Should update the service data', () => {
+
+    /* it('Other should not able to update the service data', () => {
+      return request(app)
+      .post(`/api/services/${service1.service_id}/update`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken2)
+      .send(update)
+      .expect(401)
+    }) */
+
+    it('Owner should able to update the service data', () => {
       return request(app)
       .post(`/api/services/${service1.service_id}/update`)
       .set('Accept', 'application/json')
@@ -307,15 +324,59 @@ describe('API tests', () => {
         expect(service.service_name).to.be.equal('service_new')
       })
     })
+
+    const update1 = {
+      service_name: 'service_new_again'
+    }
+    it('Admin should able to update the service data', () => {
+      return request(app)
+      .post(`/api/services/${service1.service_id}/update`)
+      .set('Accept', 'application/json')
+      .set('Authorization', adminToken)
+      .send(update1)
+      .expect(200)
+      .then(async () => {
+        const service = await ServiceModel.findByServiceId(service1.service_id)
+        expect(service.service_name).to.be.equal('service_new_again')
+      })
+    })
   })
 
   describe('# remove service', () => {
-    it('Should remove the specified service', () => {
+    it('Owner should able to remove the specified service', () => {
       const tmpId = serviceTestRemove.service_id
       return request(app)
       .get(`/api/services/${serviceTestRemove.service_id}/delete`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
+      .expect(200)
+      .then(async res => {
+        const serv = await ServiceModel.findByServiceId(tmpId)
+        expect(serv).to.equal(null)
+      })
+    })
+
+    it('Should able to add new service', () => {
+      return request(app)
+      .post('/api/services/new')
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .send({ service_name: 'service2' })
+      .expect(200)
+      .then(async res => {
+        expect(res.body.service_name).to.equal('service2')
+        service2 = res.body
+        const user = await UserModel.findByUserId(owner1.user_id)
+        expect(_.includes(user.own_services, service2.service_id)).to.equal(true)
+      })
+    })
+
+    it('Admin should able to remove the specified service', () => {
+      const tmpId = serviceTestRemove2.service_id
+      return request(app)
+      .get(`/api/services/${serviceTestRemove2.service_id}/delete`)
+      .set('Accept', 'application/json')
+      .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
         const serv = await ServiceModel.findByServiceId(tmpId)
@@ -345,7 +406,7 @@ describe('API tests', () => {
   describe('# get available employees', () => {
     it('Should get all available employee in paticular date and time', () => {
       return request(app)
-      .get(`/api/services/${service1.service_id}/avai_employees`)
+      .post(`/api/services/${service1.service_id}/avai_employees`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
       .expect(200)
@@ -458,19 +519,20 @@ describe('API tests', () => {
   describe('# complaint', () => {
     it('should create a new complaint', () => {
       return request(app)
-      .post(`/api/complaint/new`)
+      .post(`/api/complaints/new/`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ customer_id: customer1.user_id, service_id: service1.service_id })
+      .send({ customer_id: customer1.user_id, service_id: service1.service_id, employee_id: employee1.employee_id })
       .expect(200)
       .then(async res => {
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
+        expect(res.body.employee_id).to.equal(employee1.employee_id)
       })
     })
     it('should list all complaints', () => {
       return request(app)
-      .get(`/api/complaint/`)
+      .get(`/api/complaints/`)
       .set('Accept', 'application/json')
       .set('Authorization', adminToken)
       .expect(200)
@@ -512,5 +574,65 @@ describe('API tests', () => {
         expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
       })
     })
+  })
+
+  describe('# get payment accounts', () => {
+    it('Should list all correct payment accounts of a user', () => {
+      return request(app)
+      .get(`/api/users/${customer1.user_id}/payment_accounts`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        console.log(res.body)
+        expect(res.body.payment_accounts.length).to.equal(2)
+      })
+    })
+  })
+
+  // add receipt test
+  describe('# receipt', () => {
+    it('should be able to create new receipt', () => {
+      return request(app)
+      .post(`/api/receipts/new`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ customer_id: customer1.user_id, reservation_id: reserve1.reserve_id })
+      .expect(200)
+      .then(async res => {
+        expect(res.body.customer_id).to.equal(customer1.user_id)
+        expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
+      })
+    })
+    it('should list all receipts', () => {
+      return request(app)
+      .get(`/api/receipts/`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.receipt[0].receipt_id).to.equal('match-rec-1')
+      })
+    })
+
+    it('should be able to show receipt for specific reservation', () => {
+      return request(app)
+      .get(`/api/receipts/${reserve1.reserve_id}`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
+      })
+      
+    })
+
+    it('should be able to download the pdf receipt', () => {
+      return request(app)
+      .get(`/api/receipts/${reserve1.reserve_id}/download`)
+      .set('Accept', 'application/pdf')
+      .set('Authorization', cusToken)
+      .expect(200)
+    }) 
   })
 })

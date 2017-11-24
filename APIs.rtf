@@ -1,0 +1,49 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww12460\viewh10060\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 ##### List of all APIs #####\
+\
+PLEASE READ !\
+	*  = required ex. Body: \{ id*, age \} means [ id ] is a required field\
+	:id  = have to follow with [ id ]\
+\
+\ul APIs\ulnone \
+1. users\
+ - search users with query : GET /api/users\
+ - get a user info		: GET /api/users/:user_id\
+ - user add credit card	: POST /api/users/:user_id/add-credit-card  \
+	Body: \{ number*, company*, amount* \}\
+ - user add bank account	: POST /api/users/:user_id/add-bank-account  \
+	Body: \{ number*, company*, amount* \}\
+ - user or admin update info : POST /api/users/:user_id/update 	*Body: updated fields ex. first_name, email, \'85\
+ - get reservations of a user : GET /api/users/:user_id/reservations\
+\
+2. services\
+ - search services with query : GET /api/services\
+ - get a service info		: GET /api/services/:service_id\
+ - create a new service	: POST /api/services/new\
+	Body: \{ service_name*, contact_number, address*, price_per_hour* \}\
+ - get available employees of a service : POST /api/services/:service_id/avai_employees	Body: \{ date, start_time, end_time \}\
+ - get all employees of a service : GET /api/services/:service_id/employees\
+ - add employee to a service : POST /api/services/:service_id/add_employee\
+	Body: \{ first_name*, last_name*, gender* \}\
+ - update service information : POST /api/services/:id/update\
+	Body: updated fields ex. service_name, address, contact\
+ - rate a service			: POST /api/services/:service_id/rate\
+	Body: \{ score, rating_type: \'91service\'92 \}\
+ - delete a service		: GET /api/services/:service_id/delete\
+ - get all reservations of a service : GET /api/services/:service_id/\
+\
+3. reservations\
+ - search reservations with query : GET /api/reservations\
+ - get a reservation info	: GET /api/reservations/:reserve_id\
+ - new reservation		: POST /api/reservations/new\
+	Body: \{ service_id, employee_id, start_time, end_time, date, price \}\
+	price = calculated from service.price_per_hour * ( end_time - start_time ) in hour\
+ - cancel a reservation	: GET /api/reservations/:reserve_id/cancel\
+ - make full payment		: POST /api/reservations/:reserve_id/make-full-payment\
+	Body: \{ payment_number \}}

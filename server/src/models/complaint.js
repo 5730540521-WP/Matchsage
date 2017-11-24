@@ -11,12 +11,14 @@ const ComplaintSchema = new mongoose.Schema({
     required: true
   },
   service_id: {
-    type: String,
-    require: true
+    type: String
+  },
+  employee_id: {
+    type: String
   },
   note: {
     type: String,
-    default: 'This service is not satisfying'
+    default: 'This service / employee is not satisfying'
   }
 })
 
@@ -27,6 +29,10 @@ ComplaintSchema.statics = {
 
   findByComplaintId: function (complaintId) {
     return Complaint.findOne({ complaint_id: complaintId })
+  },
+
+  findByServiceId: function (serviceId) {
+    return Complaint.findOne({ service_id: serviceId })
   },
 
   createComplaint: async function (values) {

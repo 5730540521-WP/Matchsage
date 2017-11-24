@@ -3,6 +3,8 @@ const UserModel = require('../models/user')
 const ReserveModel = require('../models/reservation')
 const EmployeeModel = require('../models/employee')
 const Promise = require('bluebird')
+const _ = require('lodash')
+const filteredReserveKeys = require('../config/filter').reservation
 
 async function createService (values) {
   // check if the caller's id is a service owner
@@ -27,13 +29,13 @@ async function createService (values) {
 
 async function deleteService (userId, serviceId) {
   const service = await ServiceModel.findByServiceId(serviceId)
-  if (service.owner_id !== userId) {
+  if (service.owner_id !== userId && userId !== 'admin') {
     const error = new Error('Unauthorized.')
-    error.status = 400
+    error.status = 401
     throw error
   }
 
-  await ServiceModel.findOneAndRemove({ service_id: serviceId })
+  await ServiceModel.deleteService(serviceId)
 }
 
 async function getAvailableEmployees ({ date, start_time, end_time, serviceId }) {
@@ -64,12 +66,18 @@ async function addEmployee (serviceId, values) {
 
   values.work_for = serviceId
   const newEmployee = await EmployeeModel.createEmployee(values)
-  await ServiceModel.findOneAndUpdate({ service_id: serviceId }, { $push: { employees: newEmployee.employee_id } })
+  await ServiceModel.findOneAndUpdate({ service_id: serviceId, is_delete: false }, { $push: { employees: newEmployee.employee_id } })
+}
+
+async function getReservations (serviceId) {
+  const reserveList = await ReserveModel.find({service_id: serviceId})
+  return _.map(reserveList, reserve => _.pick(reserve, filteredReserveKeys))
 }
 
 module.exports = {
   createService,
   getAvailableEmployees,
   addEmployee,
-  deleteService
+  deleteService,
+  getReservations
 }

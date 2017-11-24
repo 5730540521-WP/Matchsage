@@ -3,7 +3,6 @@ const _ = require('lodash')
 
 const AuthServ = require('../services/auth')
 const RatingServ = require('../services/rating')
-const UserModel = require('../models/user')
 
 let router = Router()
 
