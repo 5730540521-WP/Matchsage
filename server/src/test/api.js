@@ -542,5 +542,25 @@ describe('API tests', () => {
         expect(res.body.receipt[0].receipt_id).to.equal('match-rec-1')
       })
     })
+
+    it('should be able to show receipt for specific reservation', () => {
+      return request(app)
+      .get(`/api/receipts/${reserve1.reserve_id}`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
+      })
+      
+    })
+
+    it('should be able to download the pdf receipt', () => {
+      return request(app)
+      .get(`/api/receipts/${reserve1.reserve_id}/download`)
+      .set('Accept', 'application/pdf')
+      .set('Authorization', cusToken)
+      .expect(200)
+    }) 
   })
 })
