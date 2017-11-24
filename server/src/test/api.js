@@ -77,11 +77,21 @@ describe('API tests', () => {
   let serviceTestRemove = {service_name: 'service-test-remove'}
   let serviceTestRemove2 = {service_name: 'service-test-remove2'}
 
+  let customerTestDel = {
+    email: 'customerDel@test.com',
+    password: 'test',
+    user_type: 'customer',
+    first_name: 'die',
+    last_name: 'tmr',
+    gender: 'male'
+  }
+
   let cusToken = ''
   let ownerToken = ''
   let adminToken = ''
   let cusToken2 = ''
   let ownerToken2 = ''
+  let cusTokenTestDel = ''
 
   before(async () => {
     owner1 = await UserModel.createUser(owner1)
@@ -97,6 +107,9 @@ describe('API tests', () => {
     serviceTestRemove = await ServiceModel.createService(serviceTestRemove)
     serviceTestRemove2.owner_id = owner1.user_id
     serviceTestRemove2 = await ServiceModel.createService(serviceTestRemove2)
+    customerTestDel = await UserModel.createUser(customerTestDel)
+    cusTokenTestDel = jwt.sign({user_id: customerTestDel.user_id, user_type: customerTestDel.user_type}, 'MATCHSAGE_USER')
+    cusTokenTestDel = `JWT ${cusTokenTestDel}`
   })
 
   after(() => {
@@ -197,7 +210,7 @@ describe('API tests', () => {
       .set('Authorization', adminToken)
       .expect(200)
       .then(async res => {
-        expect(res.body.users.length).to.equal(4)
+        expect(res.body.users.length).to.equal(5)
       })
     })
     it('Authorized should get all users', () => {
@@ -241,6 +254,21 @@ describe('API tests', () => {
         const user = await UserModel.findByUserId(customer1.user_id)
         expect(res.body.success).to.equal(true)
         expect(user.first_name).to.equal(update.first_name)
+      })
+    })
+  })
+
+  describe('# delete user', () => {
+    it('Admin should able to delete the user data', () => {
+      const tmpId = customerTestDel.user_id
+      return request(app)
+      .get(`/api/users/${customerTestDel.user_id}/delete`)
+      .set('Accept', 'appication/json')
+      .set('Authorization', adminToken)
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(tmpId)
+        expect(user).to.equal(null)
       })
     })
   })
@@ -584,7 +612,6 @@ describe('API tests', () => {
       .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
-        console.log(res.body)
         expect(res.body.payment_accounts.length).to.equal(2)
       })
     })
@@ -624,7 +651,6 @@ describe('API tests', () => {
       .then(async res => {
         expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
       })
-      
     })
 
     it('should be able to download the pdf receipt', () => {
@@ -633,6 +659,6 @@ describe('API tests', () => {
       .set('Accept', 'application/pdf')
       .set('Authorization', cusToken)
       .expect(200)
-    }) 
+    })
   })
 })

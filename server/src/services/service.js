@@ -35,6 +35,8 @@ async function deleteService (userId, serviceId) {
     throw error
   }
 
+  await UserModel.findOneAndUpdate({user_id: service.owner_id}, {$pull: {own_services: service.service_id}})
+
   await ServiceModel.deleteService(serviceId)
 }
 

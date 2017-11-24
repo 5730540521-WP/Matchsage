@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose')
 const Promise = require('bluebird')
+const UserModel = require('./user')
+const _ = require('lodash')
 
 const ServiceSchema = new mongoose.Schema({
   service_id: {

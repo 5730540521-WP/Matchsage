@@ -93,7 +93,7 @@ UserSchema.statics = {
   },
 
   deleteUser: async function (userId) {
-    return User.findOneAndUpdate({user_id: userId}, {is_delete: true})
+    await User.findOneAndUpdate({user_id: userId}, {is_delete: true})
   }
 }
 

@@ -103,4 +103,13 @@ router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next)
   }
 })
 
+router.get('/:id/delete', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
+  try {
+    await UserModel.deleteUser(req.params.id)
+    res.json({success: true})
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = router
