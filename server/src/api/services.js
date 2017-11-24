@@ -10,7 +10,7 @@ const EmployeeModel = require('../models/employee')
 // Services api
 let router = Router()
 
-const filteredServiceKeys = ['service_id', 'service_name', 'contact_number', 'owner_id', 'rating', 'address', 'price_per_hour']
+const filteredServiceKeys = require('../config/filter').filteredServiceKeys
 
 // search services
 router.get('/', AuthServ.isAuthenticated, async (req, res) => {
@@ -92,6 +92,21 @@ router.get('/:id/delete', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     await ServiceServ.deleteService(req.user.user_id, req.params.id)
     res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next) => {
+  try {
+    const service = await ServiceModel.findByServiceId(req.params.id)
+    if (service.owner_id !== req.user.user_id) {
+      const error = new Error('UnAuthorized. Only service owner can access this information.')
+      error.status = 401
+      throw error
+    }
+    const reserveList = await ServiceServ.getReservations(req.params.id)
+    res.json({reservations: reserveList})
   } catch (error) {
     next(error)
   }

@@ -3,6 +3,8 @@ const UserModel = require('../models/user')
 const ReserveModel = require('../models/reservation')
 const EmployeeModel = require('../models/employee')
 const Promise = require('bluebird')
+const _ = require('lodash')
+const filteredReserveKeys = require('../config/filter').filteredReserveKeys
 
 async function createService (values) {
   // check if the caller's id is a service owner
@@ -67,9 +69,15 @@ async function addEmployee (serviceId, values) {
   await ServiceModel.findOneAndUpdate({ service_id: serviceId }, { $push: { employees: newEmployee.employee_id } })
 }
 
+async function getReservations (serviceId) {
+  const reserveList = await ReserveModel.find({service_id: serviceId})
+  return _.map(reserveList, reserve => _.pick(reserve, filteredReserveKeys))
+}
+
 module.exports = {
   createService,
   getAvailableEmployees,
   addEmployee,
-  deleteService
+  deleteService,
+  getReservations
 }
