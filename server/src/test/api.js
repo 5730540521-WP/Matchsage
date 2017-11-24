@@ -57,6 +57,8 @@ describe('API tests', () => {
   let employee1 = {
     email: 'employee1@test.com',
     user_type: 'employee',
+    first_name: 'John1',
+    last_name: 'JJ',
     work_for: 'match-ser-1',
     gender: 'female'
   }
@@ -348,7 +350,7 @@ describe('API tests', () => {
   describe('# get available employees', () => {
     it('Should get all available employee in paticular date and time', () => {
       return request(app)
-      .get(`/api/services/${service1.service_id}/avai_employees`)
+      .post(`/api/services/${service1.service_id}/avai_employees`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
       .expect(200)
@@ -543,6 +545,20 @@ describe('API tests', () => {
         expect(account.company).to.equal('kasikorn')
         expect(account.amount).to.equal(7000)
         expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
+      })
+    })
+  })
+
+  describe('# get payment accounts', () => {
+    it('Should list all correct payment accounts of a user', () => {
+      return request(app)
+      .get(`/api/users/${customer1.user_id}/payment_accounts`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        console.log(res.body)
+        expect(res.body.payment_accounts.length).to.equal(2)
       })
     })
   })

@@ -4,7 +4,7 @@ const ReserveModel = require('../models/reservation')
 const EmployeeModel = require('../models/employee')
 const Promise = require('bluebird')
 const _ = require('lodash')
-const filteredReserveKeys = require('../config/filter').filteredReserveKeys
+const filteredReserveKeys = require('../config/filter').reservation
 
 async function createService (values) {
   // check if the caller's id is a service owner
