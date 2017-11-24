@@ -29,7 +29,7 @@ async function downloadReceipt (userId, reserveId) {
     .fontSize(30)
     .text(`Receipt No. ${receipt.receipt_id} \nValue Customer:  ${user.first_name}   ${user.last_name}\nService : ${receipt.reservation_id}\nPrice: ${receipt.price}`, 100, 100)    
   tempReceipt.end()
-
+  
   return tempReceipt
 }
 
