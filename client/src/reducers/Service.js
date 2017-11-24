@@ -7,10 +7,7 @@ export function service(state=initialState,action){
 	switch(action.type){
 		case(customerConstants.CUSTOMER_FETCH_SERVICES):
 			let services = action.services.data.services;
-			return {...state,services};
-		case(ownerConstants.OWNER_FETCH_SERVICES):
-			services = action.payload.data.services;
-			return {...state,services};
+			return {...state,services};		
 		case(customerConstants.CUSTOMER_FETCH_SERVICE):
 			const service = action.service.data;
 			const ownerDetail = action.ownerDetail.data;

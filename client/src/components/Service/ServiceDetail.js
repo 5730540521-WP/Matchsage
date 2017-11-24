@@ -5,7 +5,7 @@ import {CustomerActions} from '../../actions';
 import NotFound from '../NotFound';
 import styled from 'styled-components';
 import MapComponent from './MapComponent';
-import ServiceReservation from './ServiceReservation';
+import ServiceReservation from './Reservation/ServiceReservation';
 import ReportEmployeeModal from 'components/Common/Modal/ReportEmployeeModal';
 
 const H1 = styled.h1`

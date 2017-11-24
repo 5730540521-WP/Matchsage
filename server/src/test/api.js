@@ -624,7 +624,6 @@ describe('API tests', () => {
       .then(async res => {
         expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
       })
-      
     })
 
     it('should be able to download the pdf receipt', () => {

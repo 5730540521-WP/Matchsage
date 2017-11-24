@@ -5,6 +5,8 @@ import {bindActionCreators} from 'redux';
 import {OwnerActions} from 'actions';
 import styled from 'styled-components';
 import { Button, Modal, Input, Form, Icon, Checkbox} from 'antd';
+import * as JWT from 'jwt-decode';
+
 const FormItem = Form.Item
 
 class ServiceForm extends React.Component{
@@ -16,15 +18,14 @@ class ServiceForm extends React.Component{
 		}
 	}
 
-	onCreateSubmit = (e) => {
+	onCreateSubmit =  (e) => {
 		e.preventDefault();
-		this.props.form.validateFieldsAndScroll((err, values) => {
+		this.props.form.validateFieldsAndScroll(async (err, values) => {
 			if (!err) {				
-				const { service_name, price_per_hour } = values;
-				console.log(service_name)
-				console.log(this.props.owner_id)
-				this.props.createService(service_name,price_per_hour);
-				this.props.aftersubmit()
+				const { service_name, price_per_hour } = values;								
+				const res = await this.props.createService(service_name,price_per_hour);
+				this.props.fetchServices()		
+				this.props.aftersubmit()		
 			} else {
 				console.log(values);
 			}
@@ -78,7 +79,8 @@ class CreateServiceModal extends React.Component {
 				onClose={this.props.onCloseModal}				
 			>
 				<WrappedServiceForm 					
-					createService = {this.props.createService}		
+					createService = {this.props.createService}	
+					fetchServices = {this.props.fetchServices}	
 					aftersubmit = {this.props.aftersubmit}			
 				/>
 			</Modal>
@@ -87,7 +89,11 @@ class CreateServiceModal extends React.Component {
 }
 function mapDispacthToProps(dispatch){
 	const createService = OwnerActions.createService;
-	return bindActionCreators( {createService}, dispatch)
+	const fetchServices = () => OwnerActions.fetchServices(JWT(localStorage.getItem('user')).user_id);
+	return bindActionCreators( {
+		createService,
+		fetchServices
+	}, dispatch)
 }
 export default connect(null, mapDispacthToProps)(CreateServiceModal);
 
