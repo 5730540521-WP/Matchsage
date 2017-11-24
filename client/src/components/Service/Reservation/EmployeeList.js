@@ -16,7 +16,7 @@ class EmployeeList extends React.PureComponent{
 
 	renderEmployeeList = () =>{
 		const {employees} = this.props;
-		employees.push()
+		// employees.push();
 		return(
 			<Row gutter={16}>
 				<Col span={8}>
