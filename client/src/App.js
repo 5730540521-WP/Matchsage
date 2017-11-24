@@ -14,13 +14,8 @@ import Owner from './components/Owner/Owner';
 import AdminSearch from './components/Admin/AdminSearch';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
-<<<<<<< HEAD
-import ServiceReservation from 'components/Service/ServiceReservation';
-import Profile from './components/User/Proflle';
-=======
 // import ServiceReservation from 'components/Service/ServiceReservation';
-import EditProfile from './components/User/EditProflle';
->>>>>>> 18b649a05405f5164e9cd72a20f39b5374473f11
+import Profile from './components/User/Proflle';
 import NotFound from './components/NotFound';
 import * as JWT from 'jwt-decode';
 import './theme.css';
