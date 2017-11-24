@@ -56,10 +56,7 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
       throw error
     }
     const DnReceipt = ReceiptService.downloadReceipt(user.user_id, receipt.reservation_id)
-    console.log('here')
-    console.log(DnReceipt)
-    //res.download('receipt.pdf')
-    
+    res.download('receipt.pdf')
   } catch (error) {
     next(error)
   }
