@@ -10,7 +10,7 @@ export default withRouter((props)=>{
 		<div className="box">
 			<article className="media">
 			  <div className="media-left">
-					<figure className="image is-64x64" onClick={()=>props.history.push(`/service/${service.service_id}`)}>
+					<figure className="image is-64x64" onClick={()=>props.history.push(`/service/edit/${service.service_id}`)}>
 						<img src="https://bulma.io/images/placeholders/128x128.png" alt="Image"/>
 					</figure>
 				</div>
