@@ -621,7 +621,7 @@ describe('API tests', () => {
       .post(`/api/complaints/new/`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ customer_id: customer1.user_id, service_id: service1.service_id, complaint_type: 'service' })
+      .send({ service_id: service1.service_id, complaint_type: 'service' })
       .expect(200)
       .then(async res => {
         expect(res.body.service_id).to.equal(service1.service_id)

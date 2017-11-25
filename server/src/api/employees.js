@@ -12,7 +12,9 @@ let router = Router()
 router.post('/:id/rate', AuthServ.isAuthenticated, ExpressJoi({
   body: {
     score: Joi.number().required(),
-    rating_type: Joi.string().required().valid('employee')
+    rating_type: Joi.string().required().valid('employee'),
+    price: Joi.number().optional(),
+    payment_date: Joi.string().optional()
   }
 }), async (req, res, next) => {
   try {

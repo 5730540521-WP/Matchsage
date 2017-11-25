@@ -21,9 +21,8 @@ class ServiceForm extends React.Component{
 	onCreateSubmit =  (e) => {
 		e.preventDefault();
 		this.props.form.validateFieldsAndScroll(async (err, values) => {
-			if (!err) {				
-				const { service_name, price_per_hour } = values;								
-				const res = await this.props.createService(service_name,price_per_hour);
+			if (!err) {							
+				const res = await this.props.createService(values);
 				this.props.fetchServices()		
 				this.props.aftersubmit()		
 			} else {
@@ -61,7 +60,7 @@ class ServiceForm extends React.Component{
 						label="เบอร์ติดต่อ"
 						hasFeedback
 					>
-						{getFieldDecorator('address', {
+						{getFieldDecorator('contact_number', {
 							rules: [{ required: false, message: 'โปรดใส่เบอร์ติดต่อ', whitespace: true }],
 						})(
 							<Input />
@@ -79,7 +78,7 @@ class ServiceForm extends React.Component{
 					</FormItem>											
 					<Button type="primary" htmlType="submit" className="login-form-button" style={{ marginTop: 20, marginBottom: 20 }}>
 							สร้างบริการใหม่
-          </Button>					
+          			</Button>					
 				</Form>
 		)
 	}

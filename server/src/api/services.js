@@ -64,9 +64,9 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
 
 router.post('/:id/avai_employees', AuthServ.isAuthenticated, ExpressJoi({
   Body: {
-    date: Joi.string(),
-    startTime: Joi.string(),
-    endTime: Joi.string()
+    date: Joi.string().optional(),
+    startTime: Joi.string().optional(),
+    endTime: Joi.string().optional()
   }
 }), async (req, res) => {
   const date = req.body.date || '2000-12-20'
@@ -105,7 +105,7 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
 router.post('/:id/rate', AuthServ.isAuthenticated, ExpressJoi({
   Body: {
     score: Joi.number(),
-    rating_type: Joi.string().valid('service')
+    rating_type: Joi.string().valid('service').required()
   }
 }), async (req, res, next) => {
   try {
