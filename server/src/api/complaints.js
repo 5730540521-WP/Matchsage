@@ -45,7 +45,9 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
   body: {
     service_id: Joi.string(),
     employee_id: Joi.string(),
-    complaint_type: Joi.string()
+    complaint_type: Joi.string(),
+    title: Joi.string().optional(),
+    note: Joi.string().optional()
   }
 }), async (req, res, next) => {
   try {
