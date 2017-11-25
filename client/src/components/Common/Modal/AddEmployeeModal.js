@@ -44,8 +44,7 @@ class ServiceForm extends React.Component{
 		const { service_name, price_per_hour} = this.props.service;
 				
 		return (
-				<Form onSubmit={this.onEditSubmit} className="login-form" style={{marginLeft:85}}>					
-					<strong>{service_name}</strong>	
+				<Form onSubmit={this.onEditSubmit} className="login-form" style={{marginLeft:85}}>	
 					<FormItem	label="ชื่อจริง">
 						{getFieldDecorator('first_name', {
 							rules: [{ required: true, message: 'โปรดใส่ชื่อจริง', whitespace: true }],
