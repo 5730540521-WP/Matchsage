@@ -47,3 +47,17 @@ PLEASE READ !\
  - cancel a reservation	: GET /api/reservations/:reserve_id/cancel\
  - make full payment		: POST /api/reservations/:reserve_id/make-full-payment\
 	Body: \{ payment_number \}}
+
+	4. complaints\
+	- search complaints with query : GET /api/comaplints\
+	- search for specific complain from service id : GET /api/complaints/:id\
+	- create new complaint : POST /api/complaints/new\
+		Body: \{ service_id, employee_id, title, note \}\
+	
+	5. receipts\
+	- search list of receipts : GET /api/receipts\
+	- search for specific receipts with reservation id : GET /api/receipts/:id\
+	- create new receipt : POST /api/receipts/new\
+	 Body: \{customer_id, reservation_id, price, payment_date \}\
+	- download specific receipt from reservation id : GET /api/receipts/:id/download\
+	 Body: \{customer_id \}\

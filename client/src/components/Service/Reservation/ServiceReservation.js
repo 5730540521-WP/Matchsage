@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import axios from 'axios';
 import {API_URL} from 'constants/ConfigConstants';
 import {authHeader} from 'helpers';
@@ -6,11 +7,18 @@ import { Steps, Icon,Button, message, DatePicker, TimePicker} from 'antd';
 import moment from 'moment';
 import styled from 'styled-components';
 
+import EmployeeList from './EmployeeList';
+import PaymentSelection from './PaymentSelection';
+import ReservationConfirmation from './ReservationConfirmation';
+
 const Step = Steps.Step;
 
 const loader = styled.div.attrs({
 	className: 'is-loading'
-})``;
+})`
+	max-width: 50px;
+	max-height: 50px;
+`;
 
 const StepsContent = styled.div.attrs({
 	className: 'steps-content'
@@ -44,6 +52,7 @@ class ServiceReservation extends React.Component{
 			isSelectEmployee: false,
 			isSelectPaymentAccount: false,
 			isConfirmAgreement: false,
+			price:0,
 			// for send to server
 			service_id:'',
 			date:'',
@@ -65,7 +74,7 @@ class ServiceReservation extends React.Component{
 			content: this.renderSelectPaymentAccount(),
 		},{
 			title: 'ยอมรับเงื่อนไขการให้บริการ',
-			content: 'eiei'
+			content: this.renderConfirmReservation()
 		}];
 		this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id})
 	}
@@ -93,7 +102,6 @@ class ServiceReservation extends React.Component{
 	}
 
 	onSelectDate = ({_d}='')=>{
-		// console.log(_d);
 		// const date = _d ....
 		// this.setState({date});
 		this.setState({date:_d, isSelectDate: true});
@@ -107,9 +115,14 @@ class ServiceReservation extends React.Component{
 
 	// ===== START Step2: choose employee =====
 	renderSelectEmployee = ()=>{
-		<div>
-			{this.state.isEmployeesLoaded? loader : loader}
-		</div>
+		// this.fetchEmployees();
+		return(
+			<div>
+				{/* <EmployeeList employees={}/> */}
+				{/* {this.state.isEmployeesLoaded? <EmployeeList/> : loader} */}
+				<EmployeeList haha='haha' onClick={this.onSelectEmployee}/>
+			</div>
+		);
 	}
 
 	fetchEmployees = async ()=>{
@@ -132,16 +145,23 @@ class ServiceReservation extends React.Component{
 	// ===== Step3: choose payment account =====
 	renderSelectPaymentAccount = ()=>{
 		return(
-			<div/>
+			<PaymentSelection onSelectPaymentAccount/>
 		);
 	}
 
 	onSelectPaymentAccount = ()=>{
-		this.setState({isSelectPaymentAccount:true});
+		const price = 1;
+		this.setState({isSelectPaymentAccount:true,price});
 	}
 	// ===== END Step3: payment account =====
 
 	// ===== START Step4: confirm reservation =====
+
+	renderConfirmReservation = ()=>{
+		// this.onConfirmReservation();
+		return <ReservationConfirmation price={this.state.price}/>;
+	}
+
 	onConfirmReservation = async () =>{
 		const data = {
 			service_id: this.props.service_id ,
@@ -204,4 +224,9 @@ class ServiceReservation extends React.Component{
 	}
 }
 
-export default ServiceReservation;
+function mapStateToProps({service}){
+	return {service};
+}
+
+// export default ServiceReservation;
+export default connect(mapStateToProps)(ServiceReservation);

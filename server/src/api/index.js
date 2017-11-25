@@ -11,6 +11,8 @@ const complaintRoute = require('./complaints')
 const receiptRoute = require('./receipts')
 
 const _ = require('lodash')
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
 
 let api = Router()
 
@@ -22,7 +24,16 @@ api.use('/complaints', complaintRoute)
 api.use('/receipts', receiptRoute)
 
 // user signup
-api.post('/signup', async (req, res, next) => {
+api.post('/signup', ExpressJoi({
+  body: {
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+    first_name: Joi.string().required(),
+    last_name: Joi.string().required(),
+    gender: Joi.string().valid('male', 'female').required(),
+    user_type: Joi.string().valid('owner', 'customer').required()
+  }
+}), async (req, res, next) => {
   try {
     const newUser = await AuthServ.signup(req.body)
     res.json({ token: jwt.sign({ user_id: newUser.user_id, user_type: newUser.user_type }, 'MATCHSAGE_USER') })

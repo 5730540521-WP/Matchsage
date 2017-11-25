@@ -37,7 +37,7 @@ class ServiceForm extends React.Component{
 				
 		return (
 				<Form onSubmit={this.onCreateSubmit} className="login-form" style={{marginLeft:85}}>	
-					<FormItem					 
+					<FormItem
 					label="ชื่อบริการ"
 					hasFeedback
 					>
@@ -46,6 +46,26 @@ class ServiceForm extends React.Component{
 						})(
 							<Input />
 						)}
+					</FormItem>
+					<FormItem
+						label="ที่อยู่"
+						hasFeedback
+					>
+						{getFieldDecorator('address', {
+							rules: [{ required: true, message: 'โปรดใส่ที่อยู่', whitespace: true }],
+						})(
+							<Input />
+							)}
+					</FormItem>
+					<FormItem
+						label="เบอร์ติดต่อ"
+						hasFeedback
+					>
+						{getFieldDecorator('address', {
+							rules: [{ required: false, message: 'โปรดใส่เบอร์ติดต่อ', whitespace: true }],
+						})(
+							<Input />
+							)}
 					</FormItem>
 					<FormItem					 
 					label="ค่าใช้จ่ายต่อชั่วโมง"
@@ -57,9 +77,9 @@ class ServiceForm extends React.Component{
 							<Input />
 						)}
 					</FormItem>											
-					<Button type="primary" htmlType="submit" className="login-form-button">
+					<Button type="primary" htmlType="submit" className="login-form-button" style={{ marginTop: 20, marginBottom: 20 }}>
 							สร้างบริการใหม่
-          			</Button>					
+          </Button>					
 				</Form>
 		)
 	}
