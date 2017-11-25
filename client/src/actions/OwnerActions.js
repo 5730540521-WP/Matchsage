@@ -71,7 +71,7 @@ async function addServiceEmployee(service_id, data){
 	});	
 
 	return{
-		type: ownerConstants.OWNER_ADD_EMPKOYEE_SERVIC,
+		type: ownerConstants.OWNER_ADD_EMPlOYEE_SERVICE,
 		payload: res	
 	}	
 
