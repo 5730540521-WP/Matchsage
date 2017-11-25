@@ -315,8 +315,9 @@ describe('API tests', () => {
       const tmpId = customerTestDel.user_id
       const tmpSerId1 = serviceTestRemovewUser.serviceId
       const tmpSerId2 = serviceTestRemovewUser2.serviceId
-      const tmpReserId1 = reserveTestRemovewUser.reservation_id
-      const tmpReserId2 = reserveTestRemovewUser2.reservation_id
+      const tmpReserId1 = reserveTestRemovewUser.reserve_id
+      const tmpReserId2 = reserveTestRemovewUser2.reserve_id
+      console.log(customerTestDel)
       return request(app)
       .get(`/api/users/${customerTestDel.user_id}/delete`)
       .set('Accept', 'appication/json')

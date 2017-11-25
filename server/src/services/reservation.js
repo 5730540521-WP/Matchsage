@@ -33,10 +33,35 @@ async function makeFullPayment (userId, reserveId, paymentNumber) {
     error.status = 400
     throw error
   }
-  await PaymentAccountModel.subtractAmountFrom(paymentNumber, reserve.price)
+  await PaymentAccountModel.subtractAmountFrom(paymentNumber, reserve.price * 0.7)
+  await ReserveModel.findOneAndUpdate({reserve_id: reserveId}, {paid_status: 'fully-paid'})
+}
+
+async function makeDepositPayment (userId, reserveId, paymentNumber) {
+  const reserve = await ReserveModel.findByReservationId(reserveId)
+  const user = await UserModel.findByUserId(userId)
+  if (reserve.customer_id !== user.user_id) {
+    const error = new Error('Only customer who make this reservation can make payment on this reservation.')
+    error.status = 400
+    throw error
+  }
+  if (_.includes(user.payment_accounts, paymentNumber) === false) {
+    const error = new Error('Wrong credit-card/bank-account number.')
+    error.status = 401
+    throw error
+  }
+  const paymentAccount = await PaymentAccountModel.findByNumber(paymentNumber)
+  if (paymentAccount.amount < reserve.price) {
+    const error = new Error('Not enough credit in your payment account.')
+    error.status = 400
+    throw error
+  }
+  await PaymentAccountModel.subtractAmountFrom(paymentNumber, reserve.price * 0.3)
+  await ReserveModel.findOneAndUpdate({reserve_id: reserveId}, {paid_status: 'deposit-paid'})
 }
 
 module.exports = {
   cancelReservation,
-  makeFullPayment
+  makeFullPayment,
+  makeDepositPayment
 }
