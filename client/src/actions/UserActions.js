@@ -11,6 +11,7 @@ export const userActions = {
 	logout,
 	register,
 	fetchUserProfile,
+	fetchReservations
 }
 
 // Use case:
@@ -114,11 +115,35 @@ async function fetchUserProfile(id){
 	const user = await axios.get(API_URL + `/api/users/${id}` , {headers} )
 	
 	return {
-		type:userConstants.USER_FETCH_PROFILE,
+		type:userConstants.FETCH_PROFILE,
 		user: user.data,
 	}
 	
 
+}
+
+async function fetchReservations(customer_id){
+	const headers = authHeader();
+	const resFetchReservations = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
+	console.log(resFetchReservations.data);
+	
+	let formattedReservationsData = [];
+	resFetchReservations.data.reservations.map((reservation)=>{
+		formattedReservationsData = [...formattedReservationsData,{
+			reserve_id: reservation.reserve_id,
+			name: reservation.service_id,
+			service_type: '',
+			date: reservation.date,
+			time: `${reservation.start_time.toString().substr(0,2)}:${reservation.start_time.toString().substr(2,2)} ถึง ${reservation.end_time.toString().substr(0,2)}:${reservation.end_time.toString().substr(0,2)}`,
+			action: '',
+			paid_status: reservation.paid_status+'s'
+		}]
+	});
+	console.log(formattedReservationsData);
+	return {
+		type:userConstants.FETCH_USER_RESERVATIONS,
+		customerReservations:formattedReservationsData
+	}
 }
 
 // Use case:

@@ -18,6 +18,7 @@ import ServiceDetail from './components/Service/ServiceDetail';
 // import ServiceReservation from 'components/Service/ServiceReservation';
 import Profile from './components/User/Proflle';
 import NotFound from './components/NotFound';
+import ReservedServices from 'components/User/ReservedServices';
 import * as JWT from 'jwt-decode';
 import './theme.css';
 import './App.css';
@@ -108,8 +109,9 @@ class App extends React.Component {
 					<Route exact path="/service/edit/:id" component={user && JWT(localStorage.getItem('user')).user_type == 'owner' ? OwnerServiceDetail : () => { return <Redirect to='/' /> }} />
 					<Route exact path="/service/:id" component={user ? ServiceDetail : () => { return <Redirect to='/' /> }} />
 					<Route exact path="/Profile" component={user?Profile:()=>{return <Redirect to="/"/>}}/>
+					<Route exact path="/reservedServices" component={user?ReservedServices:()=>{return <Redirect to="/"/>}}/>
 					{/* <Route exact path="/service/:id/reserve" component={user?ServiceReservation:()=>(<Redirect to='/'/>)}/> */}
-
+					
 					{/* <Route path="/posts/:id" component={}/> */}
 					<Route component={NotFound} />
 
