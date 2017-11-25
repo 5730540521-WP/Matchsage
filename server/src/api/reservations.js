@@ -48,7 +48,7 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
     date: Joi.string(),
     startTime: Joi.string(),
     endTime: Joi.string(),
-    paidStatus: Joi.string()
+    paidStatus: Joi.string().optional()
   }
 }), async (req, res, next) => {
   try {

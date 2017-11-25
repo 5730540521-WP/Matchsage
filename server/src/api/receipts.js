@@ -26,8 +26,8 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
   body:{
     customer_id: Joi.string().required(),
     reservation_id: Joi.string().required(),
-    price: Joi.number(),
-    payment_date: Joi.string()
+    price: Joi.number().optional(),
+    payment_date: Joi.string().optional()
   }
 }), async (req, res, next) => {
   try {
