@@ -4,6 +4,7 @@ const UserServ = require('../services/user')
 const UserModel = require('../models/user')
 const PaymentAccountModel = require('../models/payment-account')
 const _ = require('lodash')
+const ServiceModel = require('../models/service')
 
 let router = Router()
 const filters = require('../config/filter')
@@ -105,7 +106,7 @@ router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next)
 
 router.get('/:id/delete', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
   try {
-    await UserModel.deleteUser(req.params.id)
+    await UserServ.deleteUser(req.params.id)
     res.json({success: true})
   } catch (error) {
     next(error)

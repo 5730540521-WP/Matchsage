@@ -90,10 +90,6 @@ UserSchema.statics = {
     values.user_id = 'match-user-' + (userCount + 1).toString()
     values.password = await bcrypt.hashSync(values.password, bcrypt.genSaltSync(8), null)
     return User.create(values)
-  },
-
-  deleteUser: async function (userId) {
-    await User.findOneAndUpdate({user_id: userId}, {is_delete: true})
   }
 }
 

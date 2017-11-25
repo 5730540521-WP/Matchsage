@@ -413,7 +413,7 @@ describe('API tests', () => {
         let tmpRes = await ReserveModel.findByReservationId(tmpReserveId2)
         expect(tmpRes).to.equal(null)
         tmpRes = await ReserveModel.findByReservationId(tmpReserveId3)
-        //expect(tmpRes).to.equal(null)
+        expect(tmpRes).to.equal(null)
       })
     })
 

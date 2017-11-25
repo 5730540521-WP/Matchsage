@@ -77,10 +77,16 @@ async function getReservations (serviceId) {
   return _.map(reserveList, reserve => _.pick(reserve, filteredReserveKeys))
 }
 
+async function deleteAllofUser (userId) {
+  await ReserveModel.update({owner_id: userId}, {is_delete: true}, {multi: true})
+  await ServiceModel.update({owner_id: userId}, {is_delete: true}, {multi: true})
+}
+
 module.exports = {
   createService,
   getAvailableEmployees,
   addEmployee,
   deleteService,
-  getReservations
+  getReservations,
+  deleteAllofUser
 }
