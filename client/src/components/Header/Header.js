@@ -6,6 +6,7 @@ import {Icon} from 'antd';
 import GuestNavbar from './GuestNavbar';
 import CustomerNavbar from './CustomerNavbar'
 import ServiceOwnerNavbar from './ServiceOwnerNavbar'
+import history from 'helpers/history';
 // import AdminNavbar from './AdminNavbar';
 // import {userActions} from '../../actions';
 
@@ -58,7 +59,7 @@ class Header extends Component{
 		return(
 			<NavBar>
 				<div className="navbar-brand">
-					<a className="navbar-item" href="/">
+					<a className="navbar-item" onClick={()=>history.push('/')}>
 						{/* <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"/> */}
 						<h1>Matchsage</h1>
 					</a>

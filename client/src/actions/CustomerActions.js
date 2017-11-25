@@ -110,8 +110,17 @@ function downloadBillDetail(){
 }
 
 // Use case: 18
-function sendServiceComplaint(){
-
+async function sendServiceComplaint(service_id,topic,content){
+	const data = {
+		service_id,
+		title:topic,
+		note:content
+	}
+	const headers = authHeader();
+	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
+		return console.log(error);
+	});
+	return res;
 }
 
 async function sendEmployeeComplaint(service_id,employee_id,topic,content){
@@ -122,6 +131,8 @@ async function sendEmployeeComplaint(service_id,employee_id,topic,content){
 		note:content
 	}
 	const headers = authHeader();
-	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers});
-	return;
+	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
+		return console.log(error);
+	});
+	return res;
 }

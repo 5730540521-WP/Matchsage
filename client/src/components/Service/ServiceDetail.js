@@ -1,12 +1,14 @@
 import React from 'react';
-import { Row,Col,Button,Menu,Carousel,Avatar,Card } from 'antd';
+import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
 import {connect} from 'react-redux';
 import {CustomerActions} from '../../actions';
 import NotFound from '../NotFound';
 import styled from 'styled-components';
 import MapComponent from './MapComponent';
-import ServiceReservation from './Reservation/ServiceReservation';
+import ServiceReservation from 'components/Service/Reservation/ServiceReservation';
 import ReportEmployeeModal from 'components/Common/Modal/ReportEmployeeModal';
+
+const {TextArea} = Input;
 
 const H1 = styled.h1`
 	text-align:left;
@@ -24,34 +26,76 @@ class ServiceDetail extends React.Component{
 		current :'detail',
 		current2 : 'overall',
 		isReservation: false,
-		showReportEmployeeModal: []
+		showReportEmployeeModal: false,
+		selectedReportEmployee:'',
+		reportEmployeeTopic:'',
+		reportEmployeeContent:'',
+		showServiceComplaint: false,
+		sendServiceComplaintLoading:false,
+		serviceComplaint_topic:'',
+		serviceComplaint_content:''
 	}
 	handleClick = (e) => {
-		console.log('click ', e);
 		if(e.key === 'detail' || e.key === 'employee'){
 			this.setState({
 				current: e.key,
 				isReservation: false
 			});
-		}else if(e.key === 'overall' || e.key === 'employee'){
+		}else if(e.key === 'overall'){
 			this.setState({
 				current2: e.key,
 			});
 		}
   }
-	async componentDidMount(){
-		await this.props.loadService(this.props.match.params.id);
+	componentDidMount(){
+		this.props.loadService(this.props.match.params.id);
 	}
 
 	onClickReservation = ()=>{
 		this.setState({isReservation:true});
 	}
 
+	renderServiceComplaint(service_name){
+		return <Modal
+			visible={this.state.showServiceComplaint}
+			title={'รายงาน'+service_name}
+			// onOk={()=>{
+			// 	this.setState({showServiceComplaint:false})
+			// }}
+			onCancel={()=>{
+				this.setState({showServiceComplaint:false})
+			}}
+			footer={[
+				<Button key="back" size="large" onClick={()=>{
+					this.setState({ loading: false,showServiceComplaint:false});
+				}}>ยกเลิก</Button>,
+				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
+					this.setState({ loading: true });
+					await this.props.sendComplaint(this.props.serviceStore.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
+					this.setState({ loading: false,showServiceComplaint:false });
+				}}>
+					ส่ง
+				</Button>,
+			]}
+		>
+			หัวข้อ<br/>
+			<Input placeholder="หัวข้อ" value={this.state.serviceComplaint_topic} onChange={(e)=>this.setState({serviceComplaint_topic:e.target.value})}/>
+			รายละเอียด<br/>
+			<TextArea placeholder="รายละเอียด" value={this.state.serviceComplaint_content} width="100%" autosize={{ minRows: 6}} onChange={(e)=>this.setState({serviceComplaint_content:e.target.value})}/>
+
+		</Modal>
+	}
+
 	renderServiceDetail = ()=>{
 		return(
 			<div>
 				{this.state.current==='detail'?<div>
-				<H1>ชื่อร้าน {this.props.serviceStore.service.service_name}</H1>
+					<Row>
+						<H1 style={{display:'inline',float:'left'}}>ชื่อร้าน {this.props.serviceStore.service.service_name}</H1>
+						<Button icon="exclamation-circle" type="danger" onClick={()=>this.setState({showServiceComplaint:true,serviceComplaint_topic:'',serviceComplaint_content:''})}
+						style={{display:'inline',float:'right'}}>รายงานบริการนี้</Button>
+						{this.renderServiceComplaint(this.props.serviceStore.service.service_name)}
+					</Row>
 				<Row gutter={16} style={{marginBottom:'10px'}}>
 					<Col span={12}>
 						<Carousel autoplay>
@@ -78,9 +122,6 @@ class ServiceDetail extends React.Component{
 						<Menu.Item key="overall">
 							ข้อมูลทั่วไป
 						</Menu.Item>
-						<Menu.Item key="employee" style={{}}>
-							พนักงาน
-						</Menu.Item>
 					</Menu>
 					</Row>
 					{this.state.current2==='overall'?<div>
@@ -104,31 +145,36 @@ class ServiceDetail extends React.Component{
 				:
 				<div>
 					<Row >
-						<Col span={12}>
-							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%2===0?this.renderEmployeeCard(employee):null})}
+						<Col span={8}>
+							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%3===0?this.renderEmployeeCard(employee,index):null})}
 						</Col>
-						<Col span={12}>
-							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%2===1?this.renderEmployeeCard(employee):null})}
+						<Col span={8}>
+							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%3===1?this.renderEmployeeCard(employee,index):null})}
+						</Col>
+						<Col span={8}>
+							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%3===2?this.renderEmployeeCard(employee,index):null})}
 						</Col>
 					</Row>
+					<ReportEmployeeModal changeTopic={(topic)=>this.setState({reportEmployeeTopic:topic})} changeContent={(content)=>this.setState({reportEmployeeContent:content})} topic={this.state.reportEmployeeTopic} content={this.state.reportEmployeeContent} employee={this.state.selectedReportEmployee} visible={this.state.showReportEmployeeModal} close={()=>this.setState({showReportEmployeeModal:false})}/>
 				</div>
 				}
 			</div>
 		);
 	}
 
-	renderEmployeeCard(employee){
+	renderEmployeeCard(employee,index){
 		return <div>
-		<Card style={{ width: '25.5vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
+		<Card style={{ width: '22vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
 			<div>
-				<img src="../images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'25.5vw'}}/>
+				<img src="../images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
 			</div>
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
 				<br/>เพศ {employee.gender==='male'?'ชาย':'หญิง'}
 				<br/>คะแนน {employee.rating}
-				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>this.setState({showReportEmployeeModal:true})}>รายงานพนักงานคนนี้</Button>
-				<ReportEmployeeModal employee={employee} visible={this.state.showReportEmployeeModal} close={()=>this.setState({showReportEmployeeModal:false})}/>
+				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>{
+					this.setState({showReportEmployeeModal:true,selectedReportEmployee:employee,reportEmployeeTopic:'',reportEmployeeContent:''})
+				}}>รายงานพนักงานคนนี้</Button>
 			</div>
 		</Card>
 	</div>
@@ -173,9 +219,9 @@ class ServiceDetail extends React.Component{
 	}
 }
 
-function mapStateToProps(state){
+function mapStateToProps(store){
 	return {
-		serviceStore: state.service
+		serviceStore: store.service
 	}
 }
 
@@ -183,6 +229,9 @@ function mapDispatchToProps(dispatch){
 	return {
 		loadService: (id)=>{
 			dispatch(CustomerActions.fetchService(id))
+		},
+		sendComplaint:(service_id,topic,content)=>{
+			dispatch(CustomerActions.sendServiceComplaint(service_id,topic,content))
 		}
 	}
 }

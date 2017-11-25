@@ -8,12 +8,10 @@ const {TextArea} = Input
 class ReportEmployeeModal extends React.Component{
   state = {
     loading: false,
-    topic:'',
-    content:''
   }
   handleOk = async () => {
     this.setState({ loading: true });
-    await this.props.sendComplaint(this.props.serviceStore.service_id,this.props.employee.employee_id,this.state.topic,this.state.content);
+    await this.props.sendComplaint(this.props.serviceStore.service_id,this.props.employee.employee_id,this.props.topic,this.props.content);
     this.setState({loading:false});
     this.props.close();
   }
@@ -23,7 +21,7 @@ class ReportEmployeeModal extends React.Component{
   render(){
     return <Modal
       visible={this.props.visible}
-      title={'รายงาน'+this.props.employee.first_name+' '+this.props.employee.last_name+' '+this.props.employee.gender}
+      title={'รายงาน'+this.props.employee.first_name+' '+this.props.employee.last_name}
       onOk={this.handleOk}
       onCancel={this.handleCancel}
       footer={[
@@ -34,9 +32,9 @@ class ReportEmployeeModal extends React.Component{
       ]}
     >
       หัวข้อ<br/>
-      <Input placeholder="หัวข้อ" onChange={(e)=>this.setState({topic:e.target.value})}/>
+      <Input placeholder="หัวข้อ" value={this.props.topic} onChange={(e)=>this.props.changeTopic(e.target.value)}/>
       รายละเอียด<br/>
-      <TextArea placeholder="รายละเอียด" autosize={{ minRows: 6}} onChange={(e)=>this.setState({content:e.target.value})}/>
+      <TextArea placeholder="รายละเอียด" value={this.props.content} width="100%" autosize={{ minRows: 6}} onChange={(e)=>this.props.changeContent(e.target.value)}/>
 
     </Modal>
   }
