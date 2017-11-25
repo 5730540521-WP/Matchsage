@@ -116,7 +116,7 @@ class OwnerServiceDetail extends React.Component{
 						<H1>เจ้าของ</H1>
 						<P>{this.props.serviceReducer.ownerDetail.first_name} {this.props.serviceReducer.ownerDetail.last_name}</P>
 						<H1>ที่อยู่</H1>
-						<P>555/555 บลา บลา บลา<br/></P>
+						<P>{this.props.serviceReducer.service.address}<br/></P>
 						<P>เบอร์ {this.props.serviceReducer.service.contact_number}</P>
 						<P>อีเมล์ {this.props.serviceReducer.ownerDetail.email}</P>
 						<H1>คะแนน</H1>
@@ -164,14 +164,15 @@ class OwnerServiceDetail extends React.Component{
 			title: 'paid_status',
 			dataIndex: 'paid_status',
 			key: 'paid_status',
-		  }];
-
+		  }];	
+		  
 		return(
+			this.props.History.length > 0 ?
 			<Table className="tableja"
 			dataSource={this.props.History}
 			columns={columns}	
 			onRowClick={this.onReserveClick}		  
-			pagination={false}/>
+			pagination={false}/>:<div>no reservetions for this sevice now...</div>
 		)
 	}
 
