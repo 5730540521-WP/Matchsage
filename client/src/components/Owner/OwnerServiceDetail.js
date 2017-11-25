@@ -1,7 +1,7 @@
 import React from 'react';
-import { Row,Col,Button,Menu } from 'antd';
+import { Row, Col, Button, Menu, Table, Modal} from 'antd';
 import {connect} from 'react-redux';
-import {CustomerActions} from '../../actions';
+import {CustomerActions, OwnerActions} from '../../actions';
 import NotFound from '../NotFound';
 import styled from 'styled-components';
 import { Carousel } from 'antd';
@@ -28,8 +28,11 @@ class OwnerServiceDetail extends React.Component{
 		super(props);
 		this.state = {			
 			current : 'overall',
+			currentWindow: 'detail',
 			isEditServiceModalActive: false,
-			isAddEmployeeModalActive: false
+			isAddEmployeeModalActive: false,
+			isReserveModalActive: false,
+			reserveModaldata: []
 		};		
 	}
 	
@@ -39,17 +42,26 @@ class OwnerServiceDetail extends React.Component{
 		});
 	}
 
-	handleSidebarClick = (e) => {
+		handleSidebarClick = (e) => {
 		if (e.key == 'edit')
 			this.toggleEditServiceModal(true)
 		else if (e.key == 'add')
 			this.toggleAddEmployeeModal(true)
 		else if (e.key == 'back')
 			this.props.history.push('/owner')
+		else
+		this.setState({
+			currentWindow: e.key,
+		});
 
  	 }
 	componentDidMount(){
 		this.props.loadService(this.props.match.params.id);
+		this.props.loadHistory(this.props.match.params.id);
+	}
+
+	toggleReserveModalModal(modalValue){
+		this.setState({isReserveModalActive: modalValue})
 	}
 
 	toggleEditServiceModal(modalValue){
@@ -123,9 +135,44 @@ class OwnerServiceDetail extends React.Component{
 							</Col>
 						</Row>
 					</div>
-					}
+					}					
 				</div>			
 		);
+	}
+
+	onReserveClick = (record, index) => {
+		console.log(record)
+		this.toggleReserveModalModal(true)
+		this.setState({reserveModaldata: record})
+	}
+
+	renderServiceHistory = () =>{
+
+		const columns = [{
+			title: 'customer_id',
+			dataIndex: 'customer_id',
+			key: 'customer_id',
+		  }, {
+			title: 'employee_id',
+			dataIndex: 'employee_id',
+			key: 'employee_id',
+		  }, {
+			title: 'date',
+			dataIndex: 'date',
+			key: 'date',
+		  }, {
+			title: 'paid_status',
+			dataIndex: 'paid_status',
+			key: 'paid_status',
+		  }];
+
+		return(
+			<Table className="tableja"
+			dataSource={this.props.History}
+			columns={columns}	
+			onRowClick={this.onReserveClick}		  
+			pagination={false}/>
+		)
 	}
 
 	render(){
@@ -136,10 +183,16 @@ class OwnerServiceDetail extends React.Component{
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu			
-							onClick={this.handleSidebarClick}		
-							selectable = {false}
+							onClick={this.handleSidebarClick}								
 							mode="inline"
-							style={{color:'#402900'}}						>
+							selectedKeys={[this.state.currentWindow]}
+							style={{color:'#402900'}}>
+							<Menu.Item key="detail">
+								ข้อมูลร้าน
+							</Menu.Item>
+							<Menu.Item key="history">
+								ข้อมูลการใช้บริการ
+							</Menu.Item>	
 							<Menu.Item key="edit">
 								แก้ไขข้อมูลร้าน
 							</Menu.Item>
@@ -154,10 +207,12 @@ class OwnerServiceDetail extends React.Component{
 						</Menu>													
 					</Col>
 
-					<Col span={19} style={{backgroundColor:'#FFF8EB',padding:'20px'}}>
-						{this.renderServiceDetail()}
-					</Col>
-					
+					<Col span={19} > 											
+						{(this.state.currentWindow == 'detail') ?
+						<Col style={{backgroundColor:'#FFF8EB',padding:'20px'}}>
+							{this.renderServiceDetail()}
+						</Col>:	this.renderServiceHistory()}						
+					</Col>					
 				</Row>
 
 				<EditServiceModal 
@@ -174,6 +229,21 @@ class OwnerServiceDetail extends React.Component{
 					aftersubmit = {this.aftersubmit}
 				/>
 
+				<Modal
+					title="Reserveeee"
+					visible={this.state.isReserveModalActive}
+					closable = {false}
+					footer={[
+						<Button key="OK" 
+						size="large" 
+						type = "primary"
+						onClick = {() => this.toggleReserveModalModal(false)}>
+						OK</Button>			
+					  ]}
+					>	
+						{JSON.stringify(this.state.reserveModaldata)}
+				</Modal>
+
 			</div>:<NotFound/>
 			:null
 		)
@@ -182,7 +252,8 @@ class OwnerServiceDetail extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		serviceReducer: state.service
+		serviceReducer: state.service,
+		History: state.OwnerReducer.History
 	}
 }
 
@@ -190,6 +261,9 @@ function mapDispatchToProps(dispatch){
 	return {
 		loadService: (id)=>{
 			dispatch(CustomerActions.fetchService(id))
+		},
+		loadHistory: (id)=>{
+			dispatch(OwnerActions.fetchServiceHistory(id))
 		}
 	}
 }

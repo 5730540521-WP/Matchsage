@@ -19,7 +19,7 @@ class Owner extends React.Component{
 		this.state = {			
 			isCreateServiceModalActive: false,		
 			editService: [],		
-			isServiceLoaded: false	
+			isServiceLoaded: false,				
 		};		
 	}	
 
@@ -30,7 +30,7 @@ class Owner extends React.Component{
 
 	toggleCreateServiceModal(modalValue){
 		this.setState({isCreateServiceModalActive: modalValue})
-	}	
+	}		
 
 	aftersubmit = () => {		
 		this.setState({isCreateServiceModalActive: false})			
@@ -90,7 +90,7 @@ class Owner extends React.Component{
 					modalState={this.state.isCreateServiceModalActive} 
 					onCloseModal={()=>this.toggleCreateServiceModal(false)}					
 					aftersubmit = {this.aftersubmit}
-				/>				
+				/>							
 			</div>
 		);
 	}

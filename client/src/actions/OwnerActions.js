@@ -8,7 +8,8 @@ export const OwnerActions = {
     createService,
     deleteService,
 	updateService,
-	addServiceEmployee
+	addServiceEmployee,
+	fetchServiceHistory
 }
 
 async function fetchServices(owner_id){
@@ -74,6 +75,19 @@ async function addServiceEmployee(service_id, data){
 		type: ownerConstants.OWNER_ADD_EMPlOYEE_SERVICE,
 		payload: res	
 	}	
-
 }
+
+async function fetchServiceHistory(service_id){
+	const headers = authHeader();	
+	const res = await axios.get(API_URL + '/api/services/'+service_id+'/reservations', {headers})
+	.catch(err => {
+		console.log(err);	
+	});	
+	console.log(res)
+	return{
+		type: ownerConstants.OWNER_FETCH_SERVICE_HISTORY,
+		payload: res	
+	}	
+}
+
 
