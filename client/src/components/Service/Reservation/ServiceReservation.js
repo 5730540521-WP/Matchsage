@@ -62,21 +62,24 @@ class ServiceReservation extends React.Component{
 		}
 	}
 
-	componentDidMount(){
-		const steps = [{
-			title: 'เลือกวันเวลา',
-			content: this.renderSelectDateAndTime(),
-		}, {
-			title: 'เลือกผู้ให้บริการ',
-			content: this.renderSelectEmployee(),
-		}, {
-			title: 'เลือกช่องทางการชำระค่าบริการ',
-			content: this.renderSelectPaymentAccount(),
-		},{
-			title: 'ยอมรับเงื่อนไขการให้บริการ',
-			content: this.renderConfirmReservation()
-		}];
-		this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id})
+	async componentDidMount(){
+		const fetchE = await this.fetchEmployees(this.props.service_id);
+		if(fetchE){
+			const steps = [{
+				title: 'เลือกวันเวลา',
+				content: this.renderSelectDateAndTime(),
+			}, {
+				title: 'เลือกผู้ให้บริการ',
+				content: this.renderSelectEmployee(),
+			}, {
+				title: 'เลือกช่องทางการชำระค่าบริการ',
+				content: this.renderSelectPaymentAccount(),
+			},{
+				title: 'ยอมรับเงื่อนไขการให้บริการ',
+				content: this.renderConfirmReservation()
+			}];
+			this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id});
+		}
 	}
 
 	next() {
@@ -103,53 +106,56 @@ class ServiceReservation extends React.Component{
 	}
 
 	onSelectDate = ({_d}='')=>{
-		const date = _d.toISOString().split('T')[0]; 
+		// const date = _d.toISOString().split('T')[0]; 
+		const date = _d.toLocaleDateString('en-GB').split('/').reverse().join('-');//.replace(/\//g,'-');
+		console.log(date);
 		this.setState({date, isSelectDate: true});
 	}
 
 	onSelectStartTime = ({_d})=>{
 		console.log(_d);
 		// const start_time = _d.toISOString().split('T')[1].split('.')[0];
-		const start_time = _d.toLocaleDateString();//toISOString();
+		// const start_time = _d.toLocaleTimeString();//toISOString();
+		const start_time = _d.toISOString();
 		console.log(start_time);
 		this.setState({start_time, isSelectTime: true});
 	}
 
 	onSelectEndTime = ({_d})=>{
 		const end_time = _d;
-		this.setState({isSelectTime: true});
+		this.setState({end_time, isSelectTime: true});
 	}
 	// ===== END Step1: choose day =====
 
 	// ===== START Step2: choose employee =====
 	renderSelectEmployee = ()=>{
-		this.fetchEmployees();
-		console.log(this.state)
+		console.log(5555);
+		console.log(this.state.employees);
 		return(
 			<div>
 				{/* <EmployeeList employees={}/> */}
 				{/* {this.state.isEmployeesLoaded? <EmployeeList/> : loader} */}
-				<EmployeeList haha='haha' onClick={this.onSelectEmployee}/>
+				<EmployeeList onSelectEmployee={this.onSelectEmployee} employees={this.state.employees}/>
+				{/* <EmployeeList employees={this.state.employees}/> */}
 			</div>
-		);
+		);	
 	}
 
-	fetchEmployees = async ()=>{
+	fetchEmployees = async (service_id)=>{
 		const {date, start_time, end_time} = this.state;
 		const data = {
 			date, start_time, end_time
 		};
 		const headers = authHeader();
-		const res = await axios.post(`${API_URL}/api/services/${this.state.service_id}/avai_employees`, data, {headers});
-		// const employess = 
-		console.log(res);
-		// this.setState({employees, isEmployeesLoaded: true});
-		// this.setState({isEmployeesLoaded: true});		
+		const res = await axios.post(`${API_URL}/api/services/${service_id}/avai_employees`, data, {headers});
+
+		const employees = res.data;
+		this.setState({employees, isEmployeesLoaded: true});
+		return 1;
 	}
 
 	onSelectEmployee = (employee)=>{
-		// this.setState({employee, isSelectEmployee: true});
-		this.setState({isSelectEmployee: true});
+		this.setState({employee, isSelectEmployee: true},()=>console.log(this.state.employee));
 	}
 	// ===== END Step2: choose employee =====
 
