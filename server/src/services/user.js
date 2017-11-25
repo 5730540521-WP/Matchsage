@@ -1,6 +1,7 @@
 const PaymentAccountModel = require('../models/payment-account')
 const UserModel = require('../models/user')
 const ReserveModel = require('../models/reservation')
+const ServiceModel = require('../models/service')
 const _ = require('lodash')
 const filteredReserveKeys = require('../config/filter').reservation
 
@@ -21,8 +22,15 @@ async function getReserveListByCustomer (userId) {
   return _.map(reserveList, reserve => _.pick(reserve, filteredReserveKeys))
 }
 
+async function deleteUser (userId) {
+  await ReserveModel.update({owner_id: userId}, {is_delete: true}, {multi: true})
+  await ServiceModel.update({owner_id: userId}, {is_delete: true}, {multi: true})
+  await UserModel.findOneAndUpdate({user_id: userId}, {is_delete: true})
+}
+
 module.exports = {
   addCreditCard,
   addBankAccount,
-  getReserveListByCustomer
+  getReserveListByCustomer,
+  deleteUser
 }

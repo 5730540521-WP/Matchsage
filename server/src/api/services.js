@@ -70,8 +70,8 @@ router.get('/:id/employees', AuthServ.isAuthenticated, async(req, res) => {
 
 router.post('/:id/add_employee', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    await ServiceServ.addEmployee(req.params.id, req.body)
-    res.json({ success: true })
+    const emp = await ServiceServ.addEmployee(req.params.id, req.body)
+    res.json({ employee_id: emp.employee_id, success: true })
   } catch (error) {
     next(error)
   }
@@ -123,21 +123,5 @@ router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next)
     next(error)
   }
 })
-
-/* async function validate (req) {
-  if (req.admin) return
-  const user = await UserModel.findByUserId(req.user.user_id)
-  const service = await ServiceModel.findByServiceId(req.params.id)
-  if (user.user_type !== 'owner') {
-    const err = new Error('Unauthorized. Invalid user type.')
-    err.status = 401
-    throw err
-  }
-  if (user.user.id !== service.owner_id) {
-    const err = new Error('Unauthorized. Only owner of this service can access this information.')
-    err.status = 401
-    throw err
-  }
-} */
 
 module.exports = router

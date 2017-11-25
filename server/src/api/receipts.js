@@ -48,7 +48,6 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
 router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const receipt = await ReceiptModel.findByReservationId(req.params.id)
-    
     if (receipt.customer_id !== req.user.user_id) {
       const error = new Error('Only customer who make this reservation can download this receipt')
       error.status = 400
