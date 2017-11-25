@@ -518,17 +518,26 @@ describe('API tests', () => {
 
   describe('# create reservation', () => {
     it('Should create a new reservation', () => {
+      console.log(customer1)
+      const body = {
+        service_id: service1.service_id,
+        employee_id: employee1.employee_id,
+        start_time: '0100',
+        end_time: '0300',
+        date: '29-12-2017'
+      }
       return request(app)
       .post(`/api/reservations/new`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ service_id: service1.service_id, employee_id: employee1.employee_id })
+      .send(body)
       .expect(200)
       .then(async res => {
         reserve1 = res.body
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
         expect(res.body.employee_id).to.equal(employee1.employee_id)
+        
       })
     })
   })
