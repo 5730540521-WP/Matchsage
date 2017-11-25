@@ -8,13 +8,24 @@ class AdminComplaint extends React.Component{
 		constructor(props){
 			super(props);
 			this.state = {			
-							
+				isComplaintModalActive: false,
+				CompalaintModaldata: []
 			};		
 		}
 		
 		componentDidMount(){
 			this.props.fetchComplaints()
 		}	
+
+		toggleComplaintModalModal(modalValue){
+			this.setState({isComplaintModalActive: modalValue})
+		}
+
+		onComplaintClick = (record, index) => {
+			console.log(record)
+			this.toggleComplaintModalModal(true)
+			this.setState({CompalaintModaldata: record})
+		}
 	
 	
 		render(){		
@@ -32,12 +43,31 @@ class AdminComplaint extends React.Component{
 				key: 'complaint_type',
 			  }];	
 
-			return (			
-				this.props.complaints ?
-				<Table
-				dataSource={this.props.complaints}
-				columns={columns}						  
-				pagination={false}/>:<div>no reservetions for this sevice now...</div>			
+			return (
+				<div>			
+					{this.props.complaints ?
+					<Table
+					dataSource={this.props.complaints}
+					onRowClick={this.onComplaintClick}
+					columns={columns}						  
+					pagination={false}/>:<div>no reservetions for this sevice now...</div>	}
+
+				<Modal
+					title="คำร้องเรียน"
+					visible={this.state.isComplaintModalActive}
+					closable = {false}
+					footer={[
+						<Button key="OK" 
+						size="large" 
+						type = "primary"
+						onClick = {() => this.toggleComplaintModalModal(false)}>
+						OK</Button>			
+					  ]}
+					>	
+						{JSON.stringify(this.state.CompalaintModaldata)}
+				</Modal>
+
+				</div>		
 			)
 		}
 	}	
