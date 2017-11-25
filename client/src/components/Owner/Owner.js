@@ -20,8 +20,7 @@ class Owner extends React.Component{
 		this.state = {
 			owner_id: JWT(localStorage.getItem('user')).user_id,
 			isCreateServiceModalActive: false,
-			isEditServiceModalActive: false,
-			services: this.props.services,
+			isEditServiceModalActive: false,			
 			editService: [],		
 			isServiceLoaded: false	
 		};		
@@ -29,7 +28,7 @@ class Owner extends React.Component{
 
 	componentDidMount(){
 		const {fetchServices} = this.props;		
-		fetchServices(this.state.owner_id);		
+		fetchServices();			
 	}
 
 	toggleCreateServiceModal(modalValue){
@@ -41,15 +40,13 @@ class Owner extends React.Component{
 	}
 
 	aftersubmit = () => {		
-		this.setState({isCreateServiceModalActive: false, isEditServiceModalActive: false})	
-		setTimeout(() => {window.location.reload();}, 500)	
-		console.log('relode')	
+		this.setState({isCreateServiceModalActive: false, isEditServiceModalActive: false})			
 	}
 
-	deleteService = (service) =>{		
-		console.log(service.owner_id)
-		console.log(this.state.owner_id)
-		this.props.deleteService(service.service_id)		
+	 deleteService = async (service) =>{
+		const res = await this.props.deleteService(service.service_id);		
+		console.log(res)
+		this.props.fetchServices()
 	}
 
 	editService = (service) =>{
@@ -64,7 +61,7 @@ class Owner extends React.Component{
 			this.setState({ services: this.props.services, isServiceLoaded: true })
 		}	
 		return <Row gutter={24}>
-				<Col span={12}>{this.state.services.map( (service,index) =>{
+				<Col span={12}>{this.props.services.map( (service,index) =>{
 					return index%2==0?
 					<ServiceOwnerItem 
 					key={service.service_id} 
@@ -73,7 +70,7 @@ class Owner extends React.Component{
 					onClickEdit={() => this.editService(service)}
 					/>:null})}
 				</Col>
-				<Col span={12}>{this.state.services.map( (service,index) =>{
+				<Col span={12}>{this.props.services.map( (service,index) =>{
 					return index%2==1?
 					<ServiceOwnerItem 
 					key={service.service_id} 
@@ -88,8 +85,6 @@ class Owner extends React.Component{
 	}	
 
 	render(){
-
-		console.log(this.state.owner_id);
 		
 		return(
 			<div className="columns">				
@@ -120,13 +115,13 @@ class Owner extends React.Component{
 		);
 	}
 }
-function mapStateToProps({service}){
-	const {services} = service;
+function mapStateToProps({OwnerReducer}){
+	const {services} = OwnerReducer;
 	return {services};
 }
 
 function mapDispatchToProps(dispatch){
-	const fetchServices = OwnerActions.fetchServices;
+	const fetchServices = () => OwnerActions.fetchServices(JWT(localStorage.getItem('user')).user_id);
 	const deleteService = OwnerActions.deleteService;
 	return bindActionCreators({
 		fetchServices,

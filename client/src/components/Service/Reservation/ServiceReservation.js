@@ -45,11 +45,11 @@ class ServiceReservation extends React.Component{
 			isSelectPaymentAccount: false,
 			isConfirmAgreement: false,
 			// for send to server
+			service_id:'',
 			date:'',
 			start_time:'',
 			end_time:'',
-			employee_id:'',
-			price: ''
+			employee_id:''
 		}
 	}
 
@@ -67,7 +67,7 @@ class ServiceReservation extends React.Component{
 			title: 'ยอมรับเงื่อนไขการให้บริการ',
 			content: 'eiei'
 		}];
-		this.setState({steps, isStepsLoaded:true})
+		this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id})
 	}
 
 	next() {
@@ -92,7 +92,7 @@ class ServiceReservation extends React.Component{
 		);
 	}
 
-	onSelectDate = ({_d})=>{
+	onSelectDate = ({_d}='')=>{
 		// console.log(_d);
 		// const date = _d ....
 		// this.setState({date});
@@ -108,25 +108,19 @@ class ServiceReservation extends React.Component{
 	// ===== START Step2: choose employee =====
 	renderSelectEmployee = ()=>{
 		<div>
-			{this.state.isEmployeesLoaded? <div/>: loader}
+			{this.state.isEmployeesLoaded? loader : loader}
 		</div>
 	}
 
-	fetchEmployees = async()=>{
+	fetchEmployees = async ()=>{
 		const data = {
-			service_id: this.props.service_id ,
-			employee_id: this.state.employee_id, 
-			start_time: this.state.start_time, 
-			end_time: this.state.end_time, 
-			date: this.state.date
-		}
+			
+		};
 		const headers = authHeader();
-		const res = await axios.post(`${API_URL}/api/reservation/new`, data, {headers});
-
-		
-		// const employees = await axios.get();
-		// this.setState({employees, isEmployeesLoaded: true});
-		
+		const res = await axios.post(`${API_URL}/api/services/${this.state.service_id}/avai_employees`, data, {headers});
+		// const employess = 
+		// this.setState({employees, isEmployeesL	oaded: true});
+		this.setState({isEmployeesLoaded: true});		
 	}
 
 	onSelectEmployee = (employee)=>{
@@ -148,13 +142,24 @@ class ServiceReservation extends React.Component{
 	// ===== END Step3: payment account =====
 
 	// ===== START Step4: confirm reservation =====
-	onConfirmReservation = () =>{
+	onConfirmReservation = async () =>{
+		const data = {
+			service_id: this.props.service_id ,
+			employee_id: this.state.employee_id, 
+			start_time: this.state.start_time, 
+			end_time: this.state.end_time, 
+			date: this.state.date
+		}
+		const headers = authHeader();
+		const res = await axios.post(`${API_URL}/api/reservation/new`, data, {headers});
+
 		this.setState({isConfirmAgreement:true});
 	}
 	// ===== END Step4: confirm reservation =====
 	
 	render(){
-		const { isStepsLoaded, steps, current } = this.state;
+		const { isStepsLoaded, steps, current, isSelectDate, isSelectTime, 
+			isSelectEmployee, isSelectPaymentAccount, isConfirmAgreement } = this.state;
 
 		return(
 			<div>
@@ -184,7 +189,13 @@ class ServiceReservation extends React.Component{
           {
             this.state.current === steps.length - 1
             &&
-            <Button style={{ marginLeft: 8 }} type="primary" onClick={() => message.success('การจองบริการสำเร็จ')}>เสร็จสิ้นการจอง</Button>
+            <Button style={{ marginLeft: 8 }} type="primary" 
+							disabled={!(isSelectDate && isSelectTime && 
+								isSelectEmployee && isSelectPaymentAccount && isConfirmAgreement)}
+							onClick={() => message.success('การจองบริการสำเร็จ')}
+						> 
+							เสร็จสิ้นการจอง
+						</Button>
           }
           
 				</StepsAction>
