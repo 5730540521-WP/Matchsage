@@ -17,8 +17,7 @@ import * as JWT from 'jwt-decode';
 class Owner extends React.Component{
 	constructor(props){
 		super(props);
-		this.state = {
-			owner_id: JWT(localStorage.getItem('user')).user_id,
+		this.state = {			
 			isCreateServiceModalActive: false,
 			isEditServiceModalActive: false,			
 			editService: [],		
