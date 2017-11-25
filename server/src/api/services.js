@@ -1,6 +1,9 @@
 const { Router } = require('express')
 const _ = require('lodash')
 
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
+
 const AuthServ = require('../services/auth')
 const ServiceServ = require('../services/service')
 const RatingServ = require('../services/rating')
@@ -35,7 +38,14 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
+  Body: {
+    service_name: Joi.string().required(),
+    contact_number: Joi.string(),
+    address: Joi.string(),
+    price_per_hour: Joi.number()
+  }
+}), async (req, res, next) => {
   try {
     const user = await UserModel.findByUserId(req.user.user_id)
     if (user.user_type !== 'owner') {
@@ -52,7 +62,13 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/:id/avai_employees', AuthServ.isAuthenticated, async (req, res) => {
+router.post('/:id/avai_employees', AuthServ.isAuthenticated, ExpressJoi({
+  Body: {
+    date: Joi.string(),
+    startTime: Joi.string(),
+    endTime: Joi.string()
+  }
+}), async (req, res) => {
   const date = req.body.date || '2000-12-20'
   const startTime = req.body.start_time || '2500'
   const endTime = req.body.end_time || '2500'
@@ -86,7 +102,12 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/:id/rate', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/:id/rate', AuthServ.isAuthenticated, ExpressJoi({
+  Body: {
+    score: Joi.number(),
+    rating_type: Joi.string().valid('service')
+  }
+}), async (req, res, next) => {
   try {
     const opts = Object.assign(req.body, { service_id: req.params.id, customer_id: req.user.user_id })
     await RatingServ.rate(opts)

@@ -29,7 +29,7 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
     price: Joi.number(),
     payment_date: Joi.string()
   }
-}),async (req, res, next) => {
+}), async (req, res, next) => {
   try {
     // console.log(req)
     const receipt = await ReceiptModel.createReceipt(req.body)

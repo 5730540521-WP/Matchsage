@@ -36,8 +36,7 @@ router.post('/:id/add-credit-card', AuthServ.isAuthenticated , ExpressJoi({
     amount: Joi.number(),
     company: Joi.string()
   }
-})
-  ,async (req, res, next) => {
+}), async (req, res, next) => {
   try {
     if (req.user.user_id !== req.params.id) {
       const error = new Error('Unauthorized')
@@ -57,8 +56,7 @@ router.post('/:id/add-bank-account', AuthServ.isAuthenticated, ExpressJoi({
     amount: Joi.number(),
     company: Joi.string()
   }
-})
-  ,async (req, res, next) => {
+}), async (req, res, next) => {
   try {
     if (req.user.user_id !== req.params.id) {
       const error = new Error('Unauthorized')
