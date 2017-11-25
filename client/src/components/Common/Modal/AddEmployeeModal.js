@@ -4,14 +4,24 @@ import {bindActionCreators} from 'redux';
 // import {Field, reduxForm} from 'redux-form';
 import {OwnerActions} from 'actions';
 import styled from 'styled-components';
-import { Button, Modal, Input, Form, Icon, Checkbox} from 'antd';
+import { Button, Modal, Input, Form, Icon, Checkbox, Cascader} from 'antd';
 const FormItem = Form.Item
+
+const genders = [{
+	value:'male',
+	label:'ชาย'
+},{
+	value:'female',
+	label:'หญิง'
+}];
 
 class ServiceForm extends React.Component{
 	constructor(props){
 		super(props);		
 		this.state = {			
-			'price_per_hour':'',			
+			'first_name':'',	
+			'last_name':'',		
+			'gender':'',		
 		}
 	}
 
@@ -19,9 +29,9 @@ class ServiceForm extends React.Component{
 		e.preventDefault();
 		this.props.form.validateFieldsAndScroll((err, values) => {
 			if (!err) {				
-				const { price_per_hour } = values;	
-				const service_id = this.props.service.service_id;			
-				this.props.editService(service_id, {price_per_hour});
+				const { first_name, last_name, gender} = values;	
+				const service_id = this.props.service.service_id;					
+				this.props.addServiceEmployee(service_id,  { first_name, last_name, gender});
 				this.props.aftersubmit()
 			} else {
 				console.log(values);
@@ -36,18 +46,30 @@ class ServiceForm extends React.Component{
 		return (
 				<Form onSubmit={this.onEditSubmit} className="login-form" style={{marginLeft:85}}>					
 					<strong>{service_name}</strong>	
-					<FormItem					 
-					label="ค่าใช้จ่ายต่อชั่วโมง"
-					hasFeedback
-					>
-						{getFieldDecorator('price_per_hour', {
-							rules: [{ required: true, message: 'ค่าใช้จ่ายต่อชั่วโมง', whitespace: true }],
+					<FormItem	label="ชื่อจริง">
+						{getFieldDecorator('first_name', {
+							rules: [{ required: true, message: 'โปรดใส่ชื่อจริง', whitespace: true }],
 						})(
-							<Input value = {price_per_hour}/>
+							<Input />
 						)}
-					</FormItem>											
+					</FormItem>	
+					<FormItem	label="นามสกุล">
+						{getFieldDecorator('last_name', {
+							rules: [{ required: true, message: 'โปรดใส่นามสกุล', whitespace: true }],
+						})(
+							<Input />
+						)}
+					</FormItem>	
+					<FormItem label="เพศ" >
+						{getFieldDecorator('gender', {
+							initialValue: ['ชาย', 'หญิง'],
+							rules: [{ type: 'array', required: true, message: 'โปรดระบุเพศ' }],
+						})(
+							<Cascader options={genders} />
+						)}
+					</FormItem>								
 					<Button type="primary" htmlType="submit" className="login-form-button">
-						แก้ไขบริการ
+						เพิ่ม
           			</Button>					
 				</Form>
 		)
@@ -60,7 +82,7 @@ const WrappedServiceForm = Form.create()(ServiceForm);
 class AddEmployeeModal extends React.Component {
 	render() {
 		return (
-			<Modal title="แก้ไขบริการ"
+			<Modal title="เพิ่มพนักงาน"
 				visible={this.props.modalState}
 				onOk={this.hideModal}
 				footer={null}
@@ -68,7 +90,7 @@ class AddEmployeeModal extends React.Component {
 				onClose={this.props.onCloseModal}				
 			>
 				<WrappedServiceForm 					
-					editService = {this.props.updateService}		
+					addServiceEmployee = {this.props.addServiceEmployee}		
 					aftersubmit = {this.props.aftersubmit}	
 					service = {this.props.editService}			
 				/>
@@ -77,8 +99,8 @@ class AddEmployeeModal extends React.Component {
 	}
 }
 function mapDispacthToProps(dispatch){
-	const updateService = OwnerActions.updateService;
-	return bindActionCreators( {updateService}, dispatch)
+	const addServiceEmployee = OwnerActions.addServiceEmployee;	
+	return bindActionCreators( {addServiceEmployee}, dispatch)
 }
 export default connect(null, mapDispacthToProps)(AddEmployeeModal);
 
