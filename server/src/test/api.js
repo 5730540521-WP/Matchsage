@@ -620,12 +620,12 @@ describe('API tests', () => {
       .post(`/api/complaints/new/`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
-      .send({ customer_id: customer1.user_id, service_id: service1.service_id, employee_id: employee1.employee_id })
+      .send({ customer_id: customer1.user_id, service_id: service1.service_id, complaint_type: 'service' })
       .expect(200)
       .then(async res => {
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
-        expect(res.body.employee_id).to.equal(employee1.employee_id)
+        expect(res.body.complaint_type).to.equal('service')
       })
     })
     it('should list all complaints', () => {
