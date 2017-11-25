@@ -40,7 +40,7 @@ router.get('/:id', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
 // create new complain (customer)
 router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    const complaint = await ComplaintServ.createComplaint(req.body)
+    const complaint = await ComplaintServ.createComplaint(req.user.user_id, req.body)
     res.json(complaint)
   } catch (error) {
     next(error)

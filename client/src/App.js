@@ -14,8 +14,8 @@ import Owner from './components/Owner/Owner';
 import AdminSearch from './components/Admin/AdminSearch';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
-import ServiceReservation from 'components/Service/ServiceReservation';
-import EditProfile from './components/User/EditProflle';
+// import ServiceReservation from 'components/Service/ServiceReservation';
+import Profile from './components/User/Proflle';
 import NotFound from './components/NotFound';
 import * as JWT from 'jwt-decode';
 import './theme.css';
@@ -41,74 +41,81 @@ const AdminRoute = ()=>(
 	</Switch>
 )
 
-const Body = () =>{
-	const user = localStorage.getItem('user');	
-	const admin = localStorage.getItem('admin');	
-	return(
-		<Router history={browserHistory}>
-			<Switch>
-						
-				<Route exact path="/" 
-					component={user ? ()=>
-						{
-							const user_type = JWT(localStorage.getItem('user')).user_type;
-							console.log(user_type)
-							if(user_type == 'owner')
-								return <Redirect to="/owner"/>
-							else 
-								return <Redirect to="/service/search"/>
-						} : Home }
-				/>
-				<Route exact path="/owner" render={() => {
-					if(!user) {
-						return (<Redirect to="/" />)
-					} else {
-						return <Owner />
-					}
-				}}/>
-				<Route exact path='/admin/login' render={() => {
-					if (localStorage.admin) {
-						return (<Redirect to='/admin/users/search' />)
-					} else {
-						return (<AdminLogin />)
-					}
-				}} />
-				<Route exact path="/admin/users/search" render={() => {
-					if (!localStorage.admin) {
-						return (<Redirect to='/admin/login'/>)
-					} else {
-						return (<AdminSearch />)
-					}
-				}}/>
-				<Route exact path="/team" component={Team}/>
-				
-				<Route exact path="/service/search/:filter?" component={user?Service:()=>{return <Redirect to="/"/>}}/>
-				<Route exact path="/service/:id" component={user?ServiceDetail:()=>{return <Redirect to='/'/>}}/>
-				<Route exact path="/userProfile" component={user?EditProfile:()=>{return <Redirect to="/"/>}}/>
-				{/* <Route exact path="/service/:id/reserve" component={user?ServiceReservation:()=>(<Redirect to='/'/>)}/> */}
-				
-				{/* <Route path="/posts/:id" component={}/> */}
-				<Route component={NotFound}/>
-				
-			</Switch>
-		</Router>
-	);
+class Wrap extends React.Component {
+	constructor (props) {
+		super(props)
+	}
+
+	render() {
+		return (
+			<div className="App" style={{ fontFamily: 'Kanit' }}>
+				{/* <Helmet title="Matchsage"/> */}
+				<Header />
+				{this.props.children}
+				{/* <Footer/> */}
+			</div>
+		);
+	}
 }
 
-class App extends Component {
-	constructor(props){
-		super(props);
+class App extends React.Component {
+	constructor(props) {
+		super(props)
 	}
-  render() {
-    return (
-      <div className="App" style={{fontFamily:'Kanit'}}>
-				{/* <Helmet title="Matchsage"/> */}
-				<Header/>
-				<Body/>
-				{/* <Footer/> */}
-      </div>
-    );
-  }
+
+	render(){
+		const user = localStorage.getItem('user');
+		const admin = localStorage.getItem('admin');
+		return (
+			<Router history={browserHistory}>
+				<Wrap>
+					<Switch>
+					<Route exact path="/"
+						component={user ? () => {
+							const user_type = JWT(localStorage.getItem('user')).user_type;
+							console.log(user_type)
+							if (user_type == 'owner')
+								return <Redirect to="/owner" />
+							else
+								return <Redirect to="/service/search" />
+						} : Home}
+					/>
+					<Route exact path="/owner" render={() => {
+						if (!user) {
+							return (<Redirect to="/" />)
+						} else {
+							return <Owner />
+						}
+					}} />
+					<Route exact path='/admin/login' render={() => {
+						if (localStorage.admin) {
+							return (<Redirect to='/admin/users/search' />)
+						} else {
+							return (<AdminLogin />)
+						}
+					}} />
+					<Route exact path="/admin/users/search" render={() => {
+						if (!localStorage.admin) {
+							return (<Redirect to='/admin/login' />)
+						} else {
+							return (<AdminSearch />)
+						}
+					}} />
+					<Route exact path="/team" component={Team} />
+
+					<Route exact path="/service/search/:filter?" component={user ? Service : () => { return <Redirect to="/" /> }} />
+					<Route exact path="/service/:id" component={user ? ServiceDetail : () => { return <Redirect to='/' /> }} />
+					<Route exact path="/Profile" component={user?Profile:()=>{return <Redirect to="/"/>}}/>
+					{/* <Route exact path="/service/:id/reserve" component={user?ServiceReservation:()=>(<Redirect to='/'/>)}/> */}
+
+					{/* <Route path="/posts/:id" component={}/> */}
+					<Route component={NotFound} />
+
+				</Switch>
+				</Wrap>
+			</Router>
+		)
+	}
 }
 
 function mapStateToProps(state){

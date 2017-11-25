@@ -50,6 +50,11 @@ const UserSchema = new mongoose.Schema({
   },
   contact: {
     type: String
+  },
+  is_delete: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 })
 
@@ -61,11 +66,11 @@ UserSchema.methods = {
 
 UserSchema.statics = {
   findByEmail: function (email) {
-    return User.findOne({email})
+    return User.findOne({email, is_delete: false})
   },
 
   findByUserId: function (userId) {
-    return User.findOne({user_id: userId})
+    return User.findOne({user_id: userId, is_delete: false})
   },
 
   findWithRegexp: function (keyword, opts) {
@@ -76,6 +81,7 @@ UserSchema.statics = {
         { last_name: new RegExp(keyword, 'i') }
       ]
     })
+    filter.is_delete = false
     return User.find(filter).sort({ user_id: 1 })
   },
 
@@ -84,6 +90,10 @@ UserSchema.statics = {
     values.user_id = 'match-user-' + (userCount + 1).toString()
     values.password = await bcrypt.hashSync(values.password, bcrypt.genSaltSync(8), null)
     return User.create(values)
+  },
+
+  deleteUser: async function (userId) {
+    return User.findOneAndUpdate({user_id: userId}, {is_delete: true})
   }
 }
 

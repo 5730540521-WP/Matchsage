@@ -40,6 +40,11 @@ const ServiceSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 500
+  },
+  is_delete: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 })
 
@@ -48,15 +53,15 @@ ServiceSchema.methods = {
 
 ServiceSchema.statics = {
   findByServiceId: function (serviceId) {
-    return Service.findOne({ service_id: serviceId })
+    return Service.findOne({ service_id: serviceId, is_delete: false })
   },
 
   findByName: function (serviceName) {
-    return Service.findOne({ service_name: serviceName })
+    return Service.findOne({ service_name: serviceName, is_delete: false })
   },
 
   findWithRegexp: function ({ service_name, rating }) {
-    return Service.find({ service_name: new RegExp(service_name, 'i'), rating: { $gte: rating } }).sort({ rating: -1 })
+    return Service.find({ service_name: new RegExp(service_name, 'i'), rating: { $gte: rating }, is_delete: false }).sort({ rating: -1 })
   },
 
   createService: async function (values) {
@@ -66,7 +71,11 @@ ServiceSchema.statics = {
   },
 
   updateService: async function (serviceId, values) {
-    return Service.findOneAndUpdate({ service_id: serviceId }, values)
+    return Service.findOneAndUpdate({ service_id: serviceId, is_delete: false }, values)
+  },
+
+  deleteService: async function (serviceId) {
+    return Service.findOneAndUpdate({ service_id: serviceId, is_delete: false }, {is_delete: true})
   }
 }
 
