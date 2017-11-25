@@ -1,5 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {customerConstants} from 'constants/CustomerConstants'
 import axios from 'axios';
 import {API_URL} from 'constants/ConfigConstants';
 import {authHeader} from 'helpers';
@@ -37,7 +39,7 @@ const StepsAction = styled.div.attrs({
 })`
 	margin-top: 24px;
 `;
-class ServiceReservation extends React.Component{
+class ServiceReservation extends React.PureComponent{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -129,13 +131,13 @@ class ServiceReservation extends React.Component{
 
 	// ===== START Step2: choose employee =====
 	renderSelectEmployee = ()=>{
-		console.log(5555);
-		console.log(this.state.employees);
+		// console.log(5555);
+		// console.log(this.state.employees);
 		return(
 			<div>
 				{/* <EmployeeList employees={}/> */}
 				{/* {this.state.isEmployeesLoaded? <EmployeeList/> : loader} */}
-				<EmployeeList onSelectEmployee={this.onSelectEmployee} employees={this.state.employees}/>
+				<EmployeeList onSelectEmployee={this.onSelectEmployee}/>
 				{/* <EmployeeList employees={this.state.employees}/> */}
 			</div>
 		);	
@@ -245,5 +247,9 @@ function mapStateToProps({service}){
 	return {service};
 }
 
-// export default ServiceReservation;
+function mapDispatchToProps(dispatch){
+	const fetchEmployees = customerConstants.CUSTOMER_FETCH_EMPLOYEES_RESERVATION;
+	return bindActionCreators({ fetchEmployees },dispatch);
+}
+
 export default connect(mapStateToProps)(ServiceReservation);

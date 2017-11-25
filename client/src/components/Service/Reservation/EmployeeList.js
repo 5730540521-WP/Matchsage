@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
 
 import {Row, Col} from 'antd';
@@ -58,4 +59,9 @@ class EmployeeList extends React.PureComponent{
 	}
 }
 
-export default EmployeeList;
+function mapStateToProps({reservation}){
+	const {employees} = reservation;
+	return {employees};
+}
+
+export default connect(mapStateToProps)(EmployeeList);
