@@ -21,7 +21,6 @@ async function fetchServices(owner_id){
 
 async function createService(service_name, price_per_hour){
 	const headers = authHeader();
-
 	const data = {
 		service_name,price_per_hour
 	}	
@@ -53,6 +52,19 @@ async function deleteService(service_id){
 async function updateService(service_id,data){
 	const headers = authHeader();	
 	const res = await axios.post(API_URL + '/api/services/'+service_id+'/update',data,{headers})
+	.catch(err => {
+		console.log(err);		
+	});	
+	console.log(res)	
+	return{
+		type: ownerConstants.OWNER_UPDATE_SERVICE,
+		payload: res
+	}
+}
+
+async function fetchServiceEmployees(service_id){
+	const headers = authHeader();	
+	const res = await axios.GET(API_URL + '/api/services/'+service_id+'/employees',{headers})
 	.catch(err => {
 		console.log(err);		
 	});	
