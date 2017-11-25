@@ -94,28 +94,37 @@ class ServiceReservation extends React.Component{
 		return(
 			<div>
 				เลือกวันที่ต้องการ
-				<DatePicker onChange={this.onSelectDate} defaultValue={moment('2015/01/01', dateFormat)} format={dateFormat} />
+				<DatePicker onChange={this.onSelectDate} defaultValue={moment('2017/01/01', dateFormat)} format={dateFormat} />
 				เลือกเวลาที่ต้องการ
-				<TimePicker onChange={this.onSelectTime} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} />,			
+				<TimePicker onChange={this.onSelectStartTime} defaultOpenValue={moment('00:00', 'HH:mm')} />,			
+				<TimePicker onChange={this.onSelectEndTime} defaultOpenValue={moment('00:00', 'HH:mm')} />,			
 			</div>
 		);
 	}
 
 	onSelectDate = ({_d}='')=>{
-		// const date = _d ....
-		// this.setState({date});
-		this.setState({date:_d, isSelectDate: true});
+		const date = _d.toISOString().split('T')[0]; 
+		this.setState({date, isSelectDate: true});
 	}
 
-	onSelectTime = (t)=>{
-		console.log(t);
+	onSelectStartTime = ({_d})=>{
+		console.log(_d);
+		// const start_time = _d.toISOString().split('T')[1].split('.')[0];
+		const start_time = _d.toLocaleDateString();//toISOString();
+		console.log(start_time);
+		this.setState({start_time, isSelectTime: true});
+	}
+
+	onSelectEndTime = ({_d})=>{
+		const end_time = _d;
 		this.setState({isSelectTime: true});
 	}
 	// ===== END Step1: choose day =====
 
 	// ===== START Step2: choose employee =====
 	renderSelectEmployee = ()=>{
-		// this.fetchEmployees();
+		this.fetchEmployees();
+		console.log(this.state)
 		return(
 			<div>
 				{/* <EmployeeList employees={}/> */}
@@ -126,14 +135,16 @@ class ServiceReservation extends React.Component{
 	}
 
 	fetchEmployees = async ()=>{
+		const {date, start_time, end_time} = this.state;
 		const data = {
-			
+			date, start_time, end_time
 		};
 		const headers = authHeader();
 		const res = await axios.post(`${API_URL}/api/services/${this.state.service_id}/avai_employees`, data, {headers});
 		// const employess = 
-		// this.setState({employees, isEmployeesL	oaded: true});
-		this.setState({isEmployeesLoaded: true});		
+		console.log(res);
+		// this.setState({employees, isEmployeesLoaded: true});
+		// this.setState({isEmployeesLoaded: true});		
 	}
 
 	onSelectEmployee = (employee)=>{
