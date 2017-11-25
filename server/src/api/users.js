@@ -6,7 +6,6 @@ const PaymentAccountModel = require('../models/payment-account')
 const _ = require('lodash')
 const ServiceModel = require('../models/service')
 
-
 const ExpressJoi = require('express-joi-validator')
 const Joi = require('joi')
 
@@ -35,7 +34,7 @@ router.post('/:id/add-credit-card', AuthServ.isAuthenticated , ExpressJoi({
   body: {
     number: Joi.string(),
     amount: Joi.number(),
-    company: Joi.string()
+    company: Joi.string().optional()
   }
 }), async (req, res, next) => {
   try {
@@ -55,7 +54,7 @@ router.post('/:id/add-bank-account', AuthServ.isAuthenticated, ExpressJoi({
   body: {
     number: Joi.string(),
     amount: Joi.number(),
-    company: Joi.string()
+    company: Joi.string().optional()
   }
 }), async (req, res, next) => {
   try {
