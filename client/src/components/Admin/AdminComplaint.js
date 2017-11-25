@@ -9,7 +9,7 @@ class AdminComplaint extends React.Component{
 			super(props);
 			this.state = {			
 				isComplaintModalActive: false,
-				CompalaintModaldata: []
+				ComplaintModaldata: []
 			};		
 		}
 		
@@ -24,7 +24,7 @@ class AdminComplaint extends React.Component{
 		onComplaintClick = (record, index) => {
 			console.log(record)
 			this.toggleComplaintModalModal(true)
-			this.setState({CompalaintModaldata: record})
+			this.setState({ComplaintModaldata: record})
 		}
 	
 	
@@ -64,7 +64,7 @@ class AdminComplaint extends React.Component{
 						OK</Button>			
 					  ]}
 					>	
-						{JSON.stringify(this.state.CompalaintModaldata)}
+						{JSON.stringify(this.state.ComplaintModaldata)}
 				</Modal>
 
 				</div>		

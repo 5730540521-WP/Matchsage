@@ -43,9 +43,9 @@ async function login({ email, password }) {
 	}		
 }
 
-async function getUsers({ keyword = '', gender, user_type }) {		
-	try {		
-		console.log(localStorage.getItem('admin'))		
+async function getUsers(params) {		
+	try {
+		const { keyword, gender, user_type } = params	
 		const url = withQuery(`${API_URL}/api/users`, {		
 			keyword,		
 			gender,		
@@ -59,8 +59,11 @@ async function getUsers({ keyword = '', gender, user_type }) {
 		})		
 		
 		const res = await raw.json()		
-		if (res.error) throw Error(res.error)		
-		return res		
+		if (res.error) throw Error(res.error)				
+		return{
+			type: userConstants.ADMIN_FETCH_USERS,
+			payload: res	
+		}			
 	} catch (error) {		
 		alert(error)		
 	}		
@@ -78,7 +81,7 @@ async function fetchComplaints(){
 	.catch(err => {
 		console.log(err);	
 	});	
-
+	
 	return{
 		type: userConstants.ADMIN_FETCH_COMPLAINTS,
 		payload: res	
