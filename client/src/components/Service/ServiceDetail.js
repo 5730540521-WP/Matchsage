@@ -163,7 +163,7 @@ class ServiceDetail extends React.Component{
 	}
 
 	renderEmployeeCard(employee,index){
-		return <div>
+		return <div style={{paddingBottom:'2vw'}}>
 		<Card style={{ width: '22vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
 			<div>
 				<img src="../images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>

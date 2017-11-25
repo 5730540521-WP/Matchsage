@@ -105,9 +105,8 @@ class App extends React.Component {
 					<Route exact path="/team" component={Team} />
 
 					<Route exact path="/service/search/:filter?" component={user ? Service : () => { return <Redirect to="/" /> }} />
-					<Route exact path="/service/edit/:id" component={user ? OwnerServiceDetail : () => { return <Redirect to='/' /> }} />
-					<Route exact path="/service/:id" component={user && JWT(localStorage.getItem('user')).user_type == 'owner'
-						 ? ServiceDetail : () => { return <Redirect to='/' /> }} />
+					<Route exact path="/service/edit/:id" component={user && JWT(localStorage.getItem('user')).user_type == 'owner' ? OwnerServiceDetail : () => { return <Redirect to='/' /> }} />
+					<Route exact path="/service/:id" component={user ? ServiceDetail : () => { return <Redirect to='/' /> }} />
 					<Route exact path="/Profile" component={user?Profile:()=>{return <Redirect to="/"/>}}/>
 					{/* <Route exact path="/service/:id/reserve" component={user?ServiceReservation:()=>(<Redirect to='/'/>)}/> */}
 
