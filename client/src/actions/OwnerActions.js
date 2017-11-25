@@ -21,12 +21,9 @@ async function fetchServices(owner_id){
 	}
 }
 
-async function createService(service_name, price_per_hour){
-	const headers = authHeader();
-	const data = {
-		service_name,price_per_hour
-	}	
-	const res = await axios.post(API_URL + '/api/services/new', data,{headers	})
+async function createService(data){
+	const headers = authHeader();		
+	const res = await axios.post(API_URL + '/api/services/new', data,{headers})
 	.catch(err => {
 		console.log(err);	
 	});	

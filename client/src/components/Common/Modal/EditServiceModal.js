@@ -18,10 +18,9 @@ class ServiceForm extends React.Component{
 	onEditSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFieldsAndScroll((err, values) => {
-			if (!err) {				
-				const { price_per_hour } = values;	
+			if (!err) {								
 				const service_id = this.props.service.service_id;			
-				this.props.editService(service_id, {price_per_hour});
+				this.props.editService(service_id, values);
 				this.props.aftersubmit()
 			} else {
 				console.log(values);
@@ -41,9 +40,13 @@ class ServiceForm extends React.Component{
 					hasFeedback
 					>
 						{getFieldDecorator('price_per_hour', {
-							rules: [{ required: true, message: 'ค่าใช้จ่ายต่อชั่วโมง', whitespace: true }],
+							rules: [{ 
+								required: true, 
+								message: 'ค่าใช้จ่ายต่อชั่วโมง',
+								whitespace: true,
+								setFieldsValu: price_per_hour}],
 						})(
-							<Input value = {price_per_hour}/>
+							<Input/>
 						)}
 					</FormItem>											
 					<Button type="primary" htmlType="submit" className="login-form-button">
