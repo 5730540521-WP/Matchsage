@@ -64,13 +64,19 @@ function reserveService(){
 
 }
 
+function selectServiceReservation(service_id){
+	return{
+		type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
+		service_id
+	}
+}	
+
 async function fetchEmployees({service_id, date, start_time, end_time}){
 	const data = {
 		date, start_time, end_time
 	};
 	const headers = authHeader();
 	const res = await axios.post(`${API_URL}/api/services/${service_id}/avai_employees`, data, {headers});
-
 	const employees = res.data;
 	return{
 		type: customerConstants.CUSTOMER_FETCH_EMPLOYEES_RESERVATION,

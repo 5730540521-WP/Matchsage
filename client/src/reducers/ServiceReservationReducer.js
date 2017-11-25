@@ -9,7 +9,7 @@ const initialState = {
 export function reservation(state=initialState,action){
 	switch(action.type){		
 		case(customerConstants.CUSTOMER_FETCH_SERVICE):		
-			const service_id = '1';// = action.
+			const service_id = action.service_id;
 			return {...state,service_id};	
 		// case(customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION):
 		// 	const service_id = '1';// = action.

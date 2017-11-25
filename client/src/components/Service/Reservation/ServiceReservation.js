@@ -65,23 +65,23 @@ class ServiceReservation extends React.PureComponent{
 	}
 
 	async componentDidMount(){
-		const fetchE = await this.fetchEmployees(this.props.service_id);
-		if(fetchE){
-			const steps = [{
-				title: 'เลือกวันเวลา',
-				content: this.renderSelectDateAndTime(),
-			}, {
-				title: 'เลือกผู้ให้บริการ',
-				content: this.renderSelectEmployee(),
-			}, {
-				title: 'เลือกช่องทางการชำระค่าบริการ',
-				content: this.renderSelectPaymentAccount(),
-			},{
-				title: 'ยอมรับเงื่อนไขการให้บริการ',
-				content: this.renderConfirmReservation()
-			}];
-			this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id});
-		}
+		// const fetchE = await this.fetchEmployees(this.props.service_id);
+		// if(fetchE){
+		const steps = [{
+			title: 'เลือกวันเวลา',
+			content: this.renderSelectDateAndTime(),
+		}, {
+			title: 'เลือกผู้ให้บริการ',
+			content: this.renderSelectEmployee(),
+		}, {
+			title: 'เลือกช่องทางการชำระค่าบริการ',
+			content: this.renderSelectPaymentAccount(),
+		},{
+			title: 'ยอมรับเงื่อนไขการให้บริการ',
+			content: this.renderConfirmReservation()
+		}];
+		this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id});
+		// }
 	}
 
 	next() {
