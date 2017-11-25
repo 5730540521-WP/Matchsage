@@ -8,7 +8,8 @@ export const OwnerActions = {
     createService,
     deleteService,
 	updateService,
-	addServiceEmployee
+	addServiceEmployee,
+	fetchServiceHistory
 }
 
 async function fetchServices(owner_id){
@@ -20,12 +21,9 @@ async function fetchServices(owner_id){
 	}
 }
 
-async function createService(service_name, price_per_hour){
-	const headers = authHeader();
-	const data = {
-		service_name,price_per_hour
-	}	
-	const res = await axios.post(API_URL + '/api/services/new', data,{headers	})
+async function createService(data){
+	const headers = authHeader();		
+	const res = await axios.post(API_URL + '/api/services/new', data,{headers})
 	.catch(err => {
 		console.log(err);	
 	});	
@@ -71,9 +69,22 @@ async function addServiceEmployee(service_id, data){
 	});	
 
 	return{
-		type: ownerConstants.OWNER_ADD_EMPKOYEE_SERVIC,
+		type: ownerConstants.OWNER_ADD_EMPlOYEE_SERVICE,
 		payload: res	
 	}	
-
 }
+
+async function fetchServiceHistory(service_id){
+	const headers = authHeader();	
+	const res = await axios.get(API_URL + '/api/services/'+service_id+'/reservations', {headers})
+	.catch(err => {
+		console.log(err);	
+	});	
+	console.log(res)
+	return{
+		type: ownerConstants.OWNER_FETCH_SERVICE_HISTORY,
+		payload: res	
+	}	
+}
+
 

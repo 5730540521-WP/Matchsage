@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
 
 import {Row, Col} from 'antd';
@@ -14,43 +15,53 @@ class EmployeeList extends React.PureComponent{
 		};
 	}
 
-	// selectEmployee = ()=>{
+	componentDidMount(){
+		const {employees,haha,onSelectEmployee} = this.props;
 
+		employees.map( (employee,idx) => {
+			console.log(employee);
+		});
+	}
+	// renderEmployees = ()=>{
+		
+	// 	return(
+			
+	// 	);
 	// }
 
 	render(){
 		const {employees,haha,onSelectEmployee} = this.props;
-		//
 		// employess[this.state.selectedEmployeeIdx]. = 1
 		return(
-			<Row gutter={16}>
-				<Col span={8}>
-					{haha}
-				</Col>
-				<Col span={8}>
-					{haha}
-				</Col>
-				<Col span={8}>
-					{haha}
-				</Col>
-				{/* <Col span={8}>
-					{employees.map( (employee,idx) => {
-						return (idx%3==0 && <EmployeeDetail key={employee.id}/>);
-					})}
-				</Col>
-				<Col span={8}>
-					{employees.map( (employee,idx) => {
-						return (idx%3==1 && <EmployeeDetail key={employee.id}/>);
-					})}
-				</Col>
-				<Col span={8}>
-					{employees.map( (employee,idx) => {
-						return (idx%3==2 && <EmployeeDetail key={employee.id}/>);
-					})}
-				</Col> */}
-			</Row>
+			<div>
+				<Row gutter={16}>
+					<Col span={8}>
+						{employees.map( (employee,idx) => {
+							return ( idx%3==0 && <EmployeeDetail onSelectEmployee={onSelectEmployee}
+								key={employee.employee_id} employee={employee}/>);
+						})}
+					</Col>
+					<Col span={8}>
+						{employees.map( (employee,idx) => {
+							return (idx%3==1 && <EmployeeDetail onSelectEmployee={onSelectEmployee}
+								key={employee.employee_id} employee={employee}/>);
+						})}
+					</Col>
+					<Col span={8}>
+						{employees.map( (employee,idx) => {
+							return (idx%3==2 && <EmployeeDetail onSelectEmployee={onSelectEmployee}
+								key={employee.employee_id} employee={employee}/>);
+						})}
+					</Col>
+				</Row>
+			</div>
 		);
 	}
 }
 
-export default EmployeeList;
+function mapStateToProps({reservation}){
+	const {employees} = reservation;
+	return {employees};
+}
+
+export default connect(mapStateToProps)(EmployeeList);
