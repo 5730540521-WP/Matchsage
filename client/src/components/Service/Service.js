@@ -1,7 +1,7 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-
+import history from 'helpers/history';
 //Mock
 import { Input,Slider } from 'antd';
 import ServiceItem from './ServiceItem';
@@ -82,7 +82,7 @@ class Service extends React.Component{
 			if(hasPreviousFilter)	newSearchURL+='&'; else hasPreviousFilter =true;
 			newSearchURL+=`rating>=${this.state.ratingMin}`;
 		}
-		this.props.history.push(newSearchURL);
+		history.push(newSearchURL);
 	}
 
 	onInputChange(e){

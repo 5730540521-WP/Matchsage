@@ -7,6 +7,9 @@ const UserModel = require('../models/user')
 const ServiceModel = require('../models/service')
 const EmailServ = require('../services/email')
 
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
+
 // Reservations api
 let router = Router()
 
@@ -40,7 +43,14 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
+  Body: {
+    date: Joi.string(),
+    startTime: Joi.string(),
+    endTime: Joi.string(),
+    paidStatus: Joi.string()
+  }
+}), async (req, res, next) => {
   try {
     const date = req.body.date || '2000-12-20'
     const startTime = req.body.start_time || '2500'
