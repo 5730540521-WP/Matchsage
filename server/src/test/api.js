@@ -87,6 +87,11 @@ describe('API tests', () => {
   let serviceTestRemove = {service_name: 'service-test-remove'}
   let serviceTestRemove2 = {service_name: 'service-test-remove2'}
 
+  let serviceTestRemovewUser = {service_name: 'service-test-remove-w/user'}
+  let serviceTestRemovewUser2 = {service_name: 'service-test-remove-w/user2'}
+  let reserveTestRemovewUser = {}
+  let reserveTestRemovewUser2 = {}
+
   let customerTestDel = {
     email: 'customerDel@test.com',
     password: 'test',
@@ -132,6 +137,26 @@ describe('API tests', () => {
     reserve3 = await ReserveModel.createReservation({
       customer_id: customer2.user_id,
       service_id: serviceTestRemove.service_id,
+      employee_id: employee2.employee_id,
+      start_time: '0000',
+      end_time: '0300',
+      date: '2048-13-32'
+    })
+    serviceTestRemovewUser.owner_id = customerTestDel.user_id
+    serviceTestRemovewUser = await ServiceModel.createService(serviceTestRemovewUser)
+    serviceTestRemovewUser2.owner_id = customerTestDel.user_id
+    serviceTestRemovewUser2 = await ServiceModel.createService(serviceTestRemovewUser2)
+    reserveTestRemovewUser = await ReserveModel.createReservation({
+      customer_id: customerTestDel.user_id,
+      service_id: serviceTestRemovewUser.service_id,
+      employee_id: employee2.employee_id,
+      start_time: '0000',
+      end_time: '0300',
+      date: '2048-13-32'
+    })
+    reserveTestRemovewUser2 = await ReserveModel.createReservation({
+      customer_id: customerTestDel.user_id,
+      service_id: serviceTestRemovewUser2.service_id,
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
@@ -288,6 +313,10 @@ describe('API tests', () => {
   describe('# delete user', () => {
     it('Admin should able to delete the user data', () => {
       const tmpId = customerTestDel.user_id
+      const tmpSerId1 = serviceTestRemovewUser.serviceId
+      const tmpSerId2 = serviceTestRemovewUser2.serviceId
+      const tmpReserId1 = reserveTestRemovewUser.reservation_id
+      const tmpReserId2 = reserveTestRemovewUser2.reservation_id
       return request(app)
       .get(`/api/users/${customerTestDel.user_id}/delete`)
       .set('Accept', 'appication/json')
@@ -296,6 +325,14 @@ describe('API tests', () => {
       .then(async res => {
         const user = await UserModel.findByUserId(tmpId)
         expect(user).to.equal(null)
+        const ser1 = await ServiceModel.findByServiceId(tmpSerId1)
+        expect(ser1).to.equal(null)
+        const ser2 = await ServiceModel.findByServiceId(tmpSerId2)
+        expect(ser2).to.equal(null)
+        const reser1 = await ReserveModel.findByReservationId(tmpReserId1)
+        expect(reser1).to.equal(null)
+        const reser2 = await ReserveModel.findByReservationId(tmpReserId2)
+        expect(reser2).to.equal(null)
       })
     })
   })

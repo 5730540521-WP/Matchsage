@@ -124,20 +124,4 @@ router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next)
   }
 })
 
-/* async function validate (req) {
-  if (req.admin) return
-  const user = await UserModel.findByUserId(req.user.user_id)
-  const service = await ServiceModel.findByServiceId(req.params.id)
-  if (user.user_type !== 'owner') {
-    const err = new Error('Unauthorized. Invalid user type.')
-    err.status = 401
-    throw err
-  }
-  if (user.user.id !== service.owner_id) {
-    const err = new Error('Unauthorized. Only owner of this service can access this information.')
-    err.status = 401
-    throw err
-  }
-} */
-
 module.exports = router
