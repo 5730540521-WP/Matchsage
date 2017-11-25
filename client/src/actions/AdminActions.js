@@ -4,11 +4,11 @@ import {userConstants} from '../constants/UserConstants';
 import {API_URL} from '../constants/ConfigConstants';
 import withQuery from 'with-query';
 
-export const AdminActions = {
-	informComplaint,
+export const AdminActions = {	
 	restrictPrivilege,
 	login,
-	getUsers	
+	getUsers,
+	fetchComplaints	
 }
 
 let myheaders = new Headers({
@@ -67,8 +67,22 @@ async function getUsers({ keyword = '', gender, user_type }) {
 }
 
 // Use case: 29
-function informComplaint(){
+async function fetchComplaints(){	
+	setHeaderWithAccessToken()
+	const res = await axios.get(API_URL + '/api/complaints', {
+		headers: {		
+			"Authorization": 'JWT ' + localStorage.getItem('admin'),		
+			"Content-Type": "application/json"		
+		}
+	})
+	.catch(err => {
+		console.log(err);	
+	});	
 
+	return{
+		type: userConstants.ADMIN_FETCH_COMPLAINTS,
+		payload: res	
+	}	
 }
 
 // Use case: 30

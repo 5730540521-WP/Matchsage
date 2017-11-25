@@ -3,6 +3,7 @@ import { Row, Col, Button, Menu, Table, Modal} from 'antd';
 import history from 'helpers/history';
 import styled from 'styled-components';
 import AdminSearch from './AdminSearch';
+import AdminComplaint from './AdminComplaint';
 
 const H1 = styled.h1`
 	text-align:left;
@@ -61,11 +62,11 @@ class Admin extends React.Component{
 						</Menu>													
 					</Col>
 
-					<Col span={19} > 											
-						{(this.state.current == 'search') ?
+					<Col span={19} > 	
 						<Col>
-                            <AdminSearch />
-						</Col>:	<dev>inconstut</dev>}						
+                            {(this.state.current == 'search') ?
+                            <AdminSearch />:<AdminComplaint/>}
+						</Col>						
 					</Col>					
 				</Row>
 			</div>			
