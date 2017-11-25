@@ -5,6 +5,9 @@ const ReceiptModel = require('../models/receipt')
 const UserModel = require('../models/user')
 const ReceiptService = require('../services/receipt')
 
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
+
 let router = Router()
 
 // show list of receipt of those user
@@ -19,7 +22,14 @@ router.get('/', AuthServ.isAuthenticated, async(req, res, next) => {
 })
 
 // create new receipt
-router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
+  body:{
+    customer_id: Joi.string().required(),
+    reservation_id: Joi.string().required(),
+    price: Joi.number(),
+    payment_date: Joi.string()
+  }
+}),async (req, res, next) => {
   try {
     // console.log(req)
     const receipt = await ReceiptModel.createReceipt(req.body)
@@ -63,3 +73,6 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
 })
 
 module.exports = router
+
+
+//Done Validate

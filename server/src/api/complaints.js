@@ -5,6 +5,9 @@ const ComplaintModel = require('../models/complaint')
 const ComplaintServ = require('../services/complaint')
 const UserModel = require('../models/user')
 
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
+
 // Complaint api
 let router = Router()
 
@@ -38,14 +41,22 @@ router.get('/:id', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
 })
 
 // create new complain (customer)
-router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
-  try {
-    const complaint = await ComplaintServ.createComplaint(req.user.user_id, req.body)
-    res.json(complaint)
-  } catch (error) {
-    next(error)
+router.post('/new', AuthServ.isAuthenticated , ExpressJoi({
+  body:{
+    customer_id: Joi.string().required(),
+    service_id: Joi.string(),
+    employee_id: Joi.string(),
+    complaint_type: Joi.string()
+  }
+}),async (req, res, next) => {
+    try {
+      const complaint = await ComplaintServ.createComplaint(req.user.user_id, req.body)
+      res.json(complaint)
+    } catch (error) {
+      next(error)
   }
 })
 
 module.exports = router
 // Done??
+// Done Validate
