@@ -1,11 +1,11 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import history from 'helpers/history';
 
-export default withRouter((props)=>{
+export default (props)=>{
 	const {service} = props;
 	return(
 		
-		<div className="box" style={{color:'#402900'}} onClick={()=>props.history.push(`/service/${service.service_id}`)}>
+		<div className="box" style={{color:'#402900'}} onClick={()=>history.push(`/service/${service.service_id}`)}>
 			<article className="media">
 			  <div className="media-left">
 					<figure className="image is-64x64">
@@ -37,4 +37,4 @@ export default withRouter((props)=>{
 			</article>
 		</div>
 	);
-})
+}

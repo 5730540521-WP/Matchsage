@@ -17,7 +17,8 @@ export const CustomerActions = {
 	payService,
 	informBillDetail,
 	downloadBillDetail,
-	sendComplaint
+	sendServiceComplaint,
+	sendEmployeeComplaint
 }
 
 async function fetchServices(){
@@ -29,11 +30,12 @@ async function fetchServices(){
 	}
 }
 
-async function fetchService(id){
+async function fetchService(service_id){
 	const headers = authHeader();
-	const service = await axios.get(API_URL + `/api/services/${id}`, {headers});
+	const service = await axios.get(API_URL + `/api/services/${service_id}`, {headers});
 	const ownerDetail = await axios.get(API_URL + `/api/users/${service.data.owner_id}`,{headers});
-	const employees = await axios.get(API_URL + `/api/services/${id}/employees` , {headers});
+	const employees = await axios.get(API_URL + `/api/services/${service_id}/employees` , {headers});
+	console.log(employees)
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICE,
 		service: service,
@@ -108,6 +110,29 @@ function downloadBillDetail(){
 }
 
 // Use case: 18
-function sendComplaint(){
+async function sendServiceComplaint(service_id,topic,content){
+	const data = {
+		service_id,
+		title:topic,
+		note:content
+	}
+	const headers = authHeader();
+	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
+		return console.log(error);
+	});
+	return res;
+}
 
+async function sendEmployeeComplaint(service_id,employee_id,topic,content){
+	const data = {
+		service_id,
+		employee_id,
+		title:topic,
+		note:content
+	}
+	const headers = authHeader();
+	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
+		return console.log(error);
+	});
+	return res;
 }
