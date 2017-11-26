@@ -9,13 +9,13 @@ import * as JWT from 'jwt-decode';
 
 
 const Aright = styled.div`
-		text-align:right;	
-		font-size: 15px;
+	text-align:right;	
+	font-size: 15px;
         
-		padding: 8px
+	padding: 8px
 		
            
-    `
+ `
 const Aleft = styled.div`
 	text-align:left;
 	font-size: 15px;
