@@ -4,6 +4,7 @@ const initialState = {
 	price:0,
 	price_per_hour:0,
 	payment_accounts:[],
+	employee:{},
 	//Send To Server
 	service_id:'',
 	date:'',
@@ -30,9 +31,10 @@ export function reservation(state=initialState,action){
 		case(customerConstants.CUSTOMER_FETCH_EMPLOYEES_RESERVATION):
 			const employees = action.employees;
 			return {...state,employees};
-		// case(customerConstants.CUSTOMER_FETCH_EMPLOYEE_RESERVATION):
-		// 	const employees = action.employees;
-		// 	return {...state,employees};
+		case(customerConstants.CUSTOMER_SELECT_EMPLOYEE_RESERVATION):
+			const employee = action.employee;
+			const employee_id = employee.employee_id;
+			return {...state,employee,employee_id};
 		case(customerConstants.CUSTOMER_FETCH_PAYMENT_RESERVATION):
 			const payment_accounts = action.payment_accounts;
 			return {...state, payment_accounts};

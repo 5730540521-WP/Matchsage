@@ -13,6 +13,7 @@ export const CustomerActions = {
 	selectServiceReservation,
 	selectDateTimeReservation,
 	fetchEmployees,
+	selectEmployeeReservation,
 	fetchPaymentAccount,
 	// END Reserve
 	cancelReserveService,
@@ -120,10 +121,10 @@ async function fetchEmployees(service_id,date, start_time, end_time){
 	}
 }
 
-function selectEmployeeReservation(employee_id){
+function selectEmployeeReservation(employee){
 	return{
-		// type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
-		employee_id
+		type: customerConstants.CUSTOMER_SELECT_EMPLOYEE_RESERVATION,
+		employee
 	}
 }
 

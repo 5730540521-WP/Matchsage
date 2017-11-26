@@ -13,7 +13,7 @@ import DateTimeSelection from './DateTimeSelection';
 import EmployeeList from './EmployeeList';
 import PaymentSelection from './PaymentSelection';
 import ReservationConfirmation from './ReservationConfirmation';
-import { CustomerActions } from '../../../actions/CustomerActions';
+import { CustomerActions } from 'actions/CustomerActions';
 
 const Step = Steps.Step;
 

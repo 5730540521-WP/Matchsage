@@ -40,21 +40,32 @@ class PaymentSelection extends React.PureComponent{
 	componentDidMount(){
 		console.log('Yoyo');
 		this.props.fetchPaymentAccount();
-		this.setState({payment_accounts: this.props.payment_accounts});
-		const data = [{
-			key:'1',
-			card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
-			end_num: '5555',
-			exp_date: '2018/01',
-			choice: <Checkbox/>
-		},{
-			key:'2',
-			card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
-			end_num: '6666',
-			exp_date: '2018/01',
-			choice: <Checkbox/>
-		}];
-		this.setState({data});
+		this.setState({payment_accounts: this.props.payment_accounts},()=>{
+			const data = [];
+			this.state.payment_accounts.map((payment_account,i)=>{
+				data.push({
+					key: (i+1).toString(),
+					card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
+					end_num: this.markPaymentAccount(payment_account),
+					exp_date: '2018/01',
+					choice: <Checkbox/>
+				});
+			});
+			// const data = [{
+			// 	key:'1',
+			// 	card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
+			// 	end_num: '5555',
+			// 	exp_date: '2018/01',
+			// 	choice: <Checkbox/>
+			// },{
+			// 	key:'2',
+			// 	card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
+			// 	end_num: '6666',
+			// 	exp_date: '2018/01',
+			// 	choice: <Checkbox/>
+			// }];
+			this.setState({data});
+		});
 	}
 
 	onSelectaCard(){
@@ -62,7 +73,8 @@ class PaymentSelection extends React.PureComponent{
 	}
 
 	markPaymentAccount(paymentAccountNumber){
-		
+		const len = paymentAccountNumber.length;
+		return '*'.repeat(12) + paymentAccountNumber.slice(len-5,len-1);
 	}
 
 	render(){
