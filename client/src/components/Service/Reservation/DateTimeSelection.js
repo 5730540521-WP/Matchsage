@@ -29,13 +29,13 @@ class DateTimeSelection extends React.PureComponent{
 	onSelectStartTime = ({_d})=>{
 		console.log(_d);
 		// const start_time = _d.toISOString();
-		const start_time = _d.toLocaleTimeString().split(':').slice(0,2).join('');
+		const start_time = this.padTime(_d.toLocaleTimeString().split(':').slice(0,2).join(''));
 		this.props.selectDateTimeReservation(null,start_time);
 	}
 
 	onSelectEndTime = ({_d})=>{
 		console.log(_d);
-		const end_time = _d.toLocaleTimeString().split(':').slice(0,2).join('');
+		const end_time = this.padTime(_d.toLocaleTimeString().split(':').slice(0,2).join(''));
 		this.props.selectDateTimeReservation(null, null, end_time);
 	}
 
@@ -51,7 +51,7 @@ class DateTimeSelection extends React.PureComponent{
 			<LocaleProvider locale={enUS}>
 				<div>
 				เลือกวันที่ต้องการ
-				<DatePicker onChange={this.onSelectDate} defaultValue={moment('2017/01/01', dateFormat)} format={dateFormat} />
+				<DatePicker onChange={this.onSelectDate} defaultValue={moment('2017/11/28', dateFormat)} format={dateFormat} />
 				<br/>
 				เลือกเวลาที่ต้องการ
 				<h3>เวลารับบริการ</h3>

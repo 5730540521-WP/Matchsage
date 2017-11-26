@@ -38,6 +38,9 @@ export function reservation(state=initialState,action){
 		case(customerConstants.CUSTOMER_FETCH_PAYMENT_RESERVATION):
 			const payment_accounts = action.payment_accounts;
 			return {...state, payment_accounts};
+		case(customerConstants.CUSTOMER_SELECT_PAYMENT_ACCOUNT_RESERVATION):
+			const payment_account = action.payment_account;
+			return {...state, payment_account};
 		case(customerConstants.CUSTOMER_SELECT_DATE_RESERVATION):
 			// const date = '1';// = action.
 			return {...state,date};	
