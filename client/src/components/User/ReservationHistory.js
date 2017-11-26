@@ -14,7 +14,7 @@ class ReservationHistory extends React.Component{
     return <div style={{paddingLeft:'24px',paddingRight:'24px'}}>
       <h1 style={{marginBottom:'24px'}}>ประวัติการจอง</h1>
       {this.props.reservationHistory?this.props.reservationHistory.length>0?this.props.reservationHistory.map((reservation)=>{
-        return <Row gutter={24} style={{paddingBottom:'24px',marginLeft:'0px',marginRight:'0px'}}>
+        return <Row gutter={48} style={{paddingBottom:'24px',marginLeft:'0px',marginRight:'0px'}}>
           <Col span={10}>
             <img src="../images/banner.jpg" style={{width:'100%',maxHeight:'114px'}}/>
           </Col>
@@ -24,7 +24,7 @@ class ReservationHistory extends React.Component{
               <Col span={10}>
                 <div style={{fontSize:20}}>
                   <div style={{marginBottom:'6px'}}>วันที่จอง: {reservation.date_created}</div>
-                  ช่องทางการชำระเงิน: </div>
+                  ช่องทางการชำระเงิน: <img src="../../images/visa.png" style={{maxHeight:'20px'}}/></div>
               </Col>
               <Col span={12}>
                 <div style={{fontSize:20}}>
