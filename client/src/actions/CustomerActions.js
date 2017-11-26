@@ -1,7 +1,8 @@
 import axios from 'axios';
+import * as JWT from 'jwt-decode';
 import {customerConstants} from '../constants/CustomerConstants';
 import {API_URL, AUTH_HEADER} from '../constants/ConfigConstants';
-import {authHeader} from '../helpers';
+import {authHeader, history} from '../helpers';
 
 export const CustomerActions = {
 	fetchServices,
@@ -12,6 +13,8 @@ export const CustomerActions = {
 	selectServiceReservation,
 	selectDateTimeReservation,
 	fetchEmployees,
+	selectEmployeeReservation,
+	fetchPaymentAccount,
 	// END Reserve
 	cancelReserveService,
 	rateService,
@@ -65,15 +68,33 @@ async function searchService(keyword){
 }
 
 // Use case: 8
-function reserveService(){
-	
+async function reserveService(){
+
+	const {service_id, employee_id, start_time, end_time, date} = this.props;
+	const {price} = this.state;
+	const data = {
+		service_id, employee_id, start_time, end_time, date, price 
+	}
+	const headers = authHeader();
+	const res = await axios.post(`${API_URL}/api/reservations/new`, data, {headers})
+		.catch(err=>{
+			history.push(`/service/${service_id}`);
+			return failure(err);
+		});
+	history.push('/reserved-resevations');
+	return success();
+
+	function success(){return{type:customerConstants.CUSTOMER_RESERVE_SUCCESS}};
+	function failure(error){return{type:customerConstants.CUSTOMER_RESERVE_FAILURE,error}};
 }
 
-function selectServiceReservation(service_id){
-	console.log('In action: ' + service_id);
+function selectServiceReservation(service_id, price_per_hour){
 	return{
 		type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
-		service_id
+		payload:{
+			service_id,
+			price_per_hour
+		}
 	}
 }	
 
@@ -101,10 +122,22 @@ async function fetchEmployees(service_id,date, start_time, end_time){
 	}
 }
 
-function selectEmployeeReservation(employee_id){
+function selectEmployeeReservation(employee){
 	return{
-		// type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
-		employee_id
+		type: customerConstants.CUSTOMER_SELECT_EMPLOYEE_RESERVATION,
+		employee
+	}
+}
+
+async function fetchPaymentAccount(){
+	const user_id = JWT(localStorage.getItem('user')).user_id;
+	const headers = authHeader();
+	const res = await axios.get(`${API_URL}/api/users/${user_id}`, {headers});
+	const user = res.data;
+	const payment_accounts = user.payment_accounts;
+	return{
+		type: customerConstants.CUSTOMER_FETCH_PAYMENT_RESERVATION,
+		payment_accounts
 	}
 }
 

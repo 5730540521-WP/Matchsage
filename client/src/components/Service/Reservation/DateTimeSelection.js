@@ -39,6 +39,11 @@ class DateTimeSelection extends React.PureComponent{
 		this.props.selectDateTimeReservation(null, null, end_time);
 	}
 
+	// Ex: 400 => 0400
+	padTime = (time)=>{
+		return time.length<4 ? '0' + time : time;
+	}
+
 	render(){
 		const dateFormat = 'YYYY/MM/DD';
 		const timeFormat = 'HH:mm';

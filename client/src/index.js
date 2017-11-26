@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
+import { LocaleProvider } from 'antd';
+import thTH from 'antd/lib/locale-provider/th_TH';
 import {createStore, applyMiddleware,compose} from 'redux';
 import {BrowserRouter} from 'react-router-dom';
 import reduxPromise from 'redux-promise';//for resolve request in actions
@@ -36,9 +38,11 @@ const store = createStore(
 
 ReactDOM.render(
 	<Provider store={store}>
+		<LocaleProvider locale={thTH}>
 		<BrowserRouter>
 			<App/>
 		</BrowserRouter>
+		</LocaleProvider>
 	</Provider>
 	, document.getElementById('root'));
 registerServiceWorker();

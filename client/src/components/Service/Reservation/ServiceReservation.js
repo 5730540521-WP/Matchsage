@@ -13,7 +13,7 @@ import DateTimeSelection from './DateTimeSelection';
 import EmployeeList from './EmployeeList';
 import PaymentSelection from './PaymentSelection';
 import ReservationConfirmation from './ReservationConfirmation';
-import { CustomerActions } from '../../../actions/CustomerActions';
+import { CustomerActions } from 'actions/CustomerActions';
 
 const Step = Steps.Step;
 
@@ -68,8 +68,7 @@ class ServiceReservation extends React.PureComponent{
 	}
 
 	componentDidMount(){
-		console.log(this.props.service_id);
-		this.props.selectServiceReservation(this.props.service_id);
+		// this.props.selectServiceReservation(this.props.service_id);
 
 		console.log('DidMount');
 		const steps = [{

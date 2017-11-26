@@ -1,12 +1,31 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import axios from 'axios';
+
+import {CustomerActions} from 'actions/CustomerActions';
+import {authHeader, history} from 'helpers';
+import {API_URL} from 'constants/ConfigConstants';
 
 class ReservationConfirmation extends React.PureComponent{
 	constructor(props){
 		super(props);
 		this.state = {
-
+			price:0
 		};
+	}
+
+	componentDidMount(){
+		const {price_per_hour,start_time, end_time} = this.props;
+		const price = this.computePrice(price_per_hour,start_time, end_time);
+		this.setState({price});
+	}
+
+	computePrice = (price_per_hour,start_time, end_time)=>{
+
+		console.log(start_time);
+		console.log(end_time);
+		// return price_per_hour*();
 	}
 
 	render(){
@@ -23,4 +42,15 @@ class ReservationConfirmation extends React.PureComponent{
 	}
 }
 
-export default connect()(ReservationConfirmation);
+function mapStateToProps({reservation}){
+	const {price_per_hour, start_time, end_time, service_id, employee_id} = reservation;
+	return {price_per_hour, start_time, end_time};
+}	
+
+function mapDispatchToProps(dispatch){
+	const reserveService = CustomerActions.reserveService;
+	
+	return bindActionCreators({reserveService},dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReservationConfirmation);

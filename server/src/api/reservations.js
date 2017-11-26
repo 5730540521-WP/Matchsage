@@ -1,11 +1,13 @@
 const { Router } = require('express')
 const _ = require('lodash')
+const Moment = require('moment')
 const AuthServ = require('../services/auth')
 const ReserveModel = require('../models/reservation')
 const ReserveServ = require('../services/reservation')
 const UserModel = require('../models/user')
 const ServiceModel = require('../models/service')
 const EmailServ = require('../services/email')
+const ReceiptModel = require('../models/receipt')
 
 const ExpressJoi = require('express-joi-validator')
 const Joi = require('joi')
@@ -45,7 +47,7 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
 
 router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
   body: {
-    date: Joi.string(),
+    date_reserved: Joi.string(),
     start_time: Joi.string(),
     end_time: Joi.string(),
     service_id: Joi.string(),
@@ -62,17 +64,20 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
       throw err
     }
 
-    const date = req.body.date
+    const dateReserved = req.body.date_reserved
     const startTime = req.body.start_time
     const endTime = req.body.end_time
 
     const service = await ServiceModel.findByServiceId(req.body.service_id)
     const price = service.price_per_hour * (parseInt(endTime) * 1.0 / 100 - parseInt(startTime) * 1.0 / 100)
 
+    const dateCreated = Moment().format('YYYY-MM-DD')
+
     await ReserveServ.makeDepositPayment(user.user_id, price, req.body.payment_number)
 
     const body = Object.assign({}, req.body, {
-      date,
+      date_reserved: dateReserved,
+      date_created: dateCreated,
       start_time: startTime,
       end_time: endTime,
       paid_status: 'deposit-paid',
@@ -81,6 +86,8 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
       employee_id: req.body.employee_id
     })
     const reserve = await ReserveModel.createReservation(body)
+    const receiptInput = Object.assign({ reservation_id: reserve.reserve_id, payment_date: body.date_reserved, payment_type: 'deposit-paid', price: price }, body)
+    await ReceiptModel.createReceipt(receiptInput)
     res.json(reserve)
     await EmailServ.mailConfirmReservation(reserve.reserve_id)
   } catch (error) {
@@ -99,7 +106,10 @@ router.get('/:id/cancel', AuthServ.isAuthenticated, async (req, res, next) => {
 
 router.post('/:id/make-full-payment', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
+    const reserve = await ReserveModel.findByReservationId(req.params.id)
     await ReserveServ.makeFullPayment(req.user.user_id, req.params.id, req.body.payment_number)
+    const receiptInput = Object.assign({ customer_id: req.user.user_id, reservation_id: reserve.reserve_id, payment_type: 'full-paid', price: reserve.price, payment_date: reserve.date_reserved })
+    await ReceiptModel.createReceipt(receiptInput)
     res.json({ success: true })
   } catch (error) {
     next(error)
