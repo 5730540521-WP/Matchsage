@@ -752,7 +752,7 @@ describe('API tests', () => {
 
   // add receipt test
   describe('# receipt', () => {
-    it('should be able to create new receipt', () => {
+    /* it('should be able to create new receipt', () => {
       return request(app)
       .post(`/api/receipts/new`)
       .set('Accept', 'application/json')
@@ -764,6 +764,7 @@ describe('API tests', () => {
         expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
       })
     })
+    new receipt move to created on new reservation*/
     it('should list all receipts', () => {
       return request(app)
       .get(`/api/receipts/`)

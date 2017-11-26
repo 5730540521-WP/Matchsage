@@ -23,7 +23,7 @@ router.get('/', AuthServ.isAuthenticated, async(req, res, next) => {
 
 // create new receipt
 router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
-  body:{
+  body: {
     customer_id: Joi.string().required(),
     reservation_id: Joi.string().required(),
     price: Joi.number().optional(),
