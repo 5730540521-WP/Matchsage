@@ -7,11 +7,8 @@ import { Input,Slider } from 'antd';
 import ServiceOwnerItem from './ServiceOwnerItem';
 import CreateServiceModal from '../Common/Modal/CreateServiceModal';
 import {OwnerActions} from '../../actions';
-
 import {Row,Col, Button} from 'antd';
 import * as JWT from 'jwt-decode';
-
-
 
 class Owner extends React.Component{
 	constructor(props){
@@ -36,7 +33,7 @@ class Owner extends React.Component{
 		this.setState({isCreateServiceModalActive: false})			
 	}
 
-	 deleteService = async (service) =>{
+	deleteService = async (service) =>{
 		const res = await this.props.deleteService(service.service_id);		
 		console.log(res)
 		this.props.fetchServices()
@@ -74,6 +71,7 @@ class Owner extends React.Component{
 	render(){
 		
 		return(
+			<div>
 			<div className="columns">				
 				<div className="column is-one-quarter">
 					<Button type="primary" onClick={()=>this.toggleCreateServiceModal(true)}>
@@ -91,6 +89,7 @@ class Owner extends React.Component{
 					onCloseModal={()=>this.toggleCreateServiceModal(false)}					
 					aftersubmit = {this.aftersubmit}
 				/>							
+			</div>
 			</div>
 		);
 	}

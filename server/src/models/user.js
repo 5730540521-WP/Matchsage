@@ -69,6 +69,10 @@ UserSchema.statics = {
     return User.findOne({email, is_delete: false})
   },
 
+  findDeletedByUserId: function (userId) {
+    return User.findOne({user_id: userId, is_delete: true})
+  },
+
   findByUserId: function (userId) {
     return User.findOne({user_id: userId, is_delete: false})
   },
@@ -81,7 +85,6 @@ UserSchema.statics = {
         { last_name: new RegExp(keyword, 'i') }
       ]
     })
-    filter.is_delete = false
     return User.find(filter).sort({ user_id: 1 })
   },
 

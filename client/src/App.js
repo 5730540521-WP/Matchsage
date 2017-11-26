@@ -12,7 +12,7 @@ import Team from './components/Team';
 import AdminLogin from './components/Admin/AdminLogin';
 import Owner from './components/Owner/Owner';
 import OwnerServiceDetail from './components/Owner/OwnerServiceDetail';
-import AdminSearch from './components/Admin/AdminSearch';
+import Admin from './components/Admin/Admin';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
 // import ServiceReservation from 'components/Service/ServiceReservation';
@@ -90,16 +90,16 @@ class App extends React.Component {
 					}} />
 					<Route exact path='/admin/login' render={() => {
 						if (localStorage.admin) {
-							return (<Redirect to='/admin/users/search' />)
+							return (<Redirect to='/admin/' />)
 						} else {
 							return (<AdminLogin />)
 						}
 					}} />
-					<Route exact path="/admin/users/search" render={() => {
+					<Route exact path="/admin/" render={() => {
 						if (!localStorage.admin) {
 							return (<Redirect to='/admin/login' />)
 						} else {
-							return (<AdminSearch />)
+							return (<Admin />)
 						}
 					}} />
 					<Route exact path="/team" component={Team} />
