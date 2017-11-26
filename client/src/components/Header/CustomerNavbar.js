@@ -41,11 +41,11 @@ class CustomerNavbar extends React.Component{
 					</div>
 					<div className="dropdown-menu" id="dropdown-menu" role="menu" style={{minWidth:'11rem'}}>
 						<div className="dropdown-content" style={{textAlign:'left'}}>
-							<a className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}} onClick={()=>history.push('/reservedServices')}>
+							<a className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}} onClick={()=>history.push('/ReservedServices')}>
 								<Icon type="exclamation-circle-o" style={{marginRight:'20px'}}/>
 								   บริการที่จองไว้
 							</a>
-							<a className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}>
+							<a className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}} onClick={()=>history.push('/ReservationHistory')}>
 								<Icon type="clock-circle-o" style={{marginRight:'20px'}}/>
 								   ประวัติการจอง
 							</a>
