@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { userActions } from '../../actions';
-import { Row, Col, Input } from 'antd';
+import { Row, Col, Input, Button } from 'antd';
 import styled from 'styled-components';
 import * as JWT from 'jwt-decode';
 
@@ -19,9 +19,8 @@ const Aleft = styled.div`
 `
 
 const Bspace = styled.div`
-word-spacing: 60px;
+	word-spacing: 60px;
 
-   
 `
 
 
@@ -37,9 +36,10 @@ class Profile extends React.Component {
 			last_name: '',
 			address: '',
 			contact: '',
-			password: '',
-			new_pwd: '',
-			conf_pwd: '',
+			// password: '',
+			// new_pwd: '',
+			// conf_pwd: '',
+			update: '',
 
 		};
 
@@ -56,11 +56,13 @@ class Profile extends React.Component {
 	}
 
 	async componentDidMount() {
+		
 
-		const { user } = await userActions.fetchUserProfile(JWT(localStorage.getItem('user')).user_id);
+		const id = JWT(localStorage.getItem('user')).user_id;
+		const { user } = await userActions.fetchUserProfile(id);
 		console.log(user);
 		this.setState({ user }, () => {
-			console.log(userActions.fetchUserProfile(JWT(localStorage.getItem('user')).user_id));
+			console.log(userActions.fetchUserProfile(id));
 
 			if (this.state.user.user_type === 'owner') this.setState({ isOwner: true });
 			else if (this.state.user.user_type === 'customer') this.setState({ isCustomer: true });
@@ -74,8 +76,27 @@ class Profile extends React.Component {
 	}
 
 
-	onEditSubmit = (e) => {
+	onEditSubmit = async (e) => {
+			const update = { 
+				first_name: this.state.first_name,
+				last_name: this.state.last_name,
+				address: this.state.address,
+				contact: this.state.contact,
+				// password: this.state.password,
+				// new_pwd: this.state.new_pwd,
+				// conf_pwd: this.state.conf_pwd,
+			}
 
+			const id = JWT(localStorage.getItem('user')).user_id;
+
+			const res = await userActions.editProfile(id,update);
+			if( res.success ) {
+				console.log('YES~ edit successs')
+				alert('Edit success')
+			}
+
+
+			
 	}
 
 
@@ -144,7 +165,7 @@ class Profile extends React.Component {
 								<Input disabled value={this.state.user ? this.state.user.email : false} />
 							</Col>
 						</Row>
-						<Row>
+						{/* <Row>
 							<Col span={6}>
 							</Col>
 							<Col span={2}><Aright>รหัสผ่านเดิม</Aright></Col>
@@ -170,7 +191,7 @@ class Profile extends React.Component {
 								<Input name="conf_pwd" type="password" value={this.state.conf_pwd}
 									onChange={(e) => this.onInputChange(e)} />
 							</Col>
-						</Row>
+						</Row> */}
 						<Row>
 							<Col span={6}>
 							</Col>
@@ -185,7 +206,9 @@ class Profile extends React.Component {
 							<Col span={8}>
 							</Col>
 							<Col span={8}>
-								<button type="button">บันทึกข้อมูล</button>
+								<Button type="button"
+									onClick={(e) => this.onEditSubmit(e)}>
+								บันทึกข้อมูล</Button>
 							</Col>
 						</Row>
 					</div>
@@ -198,4 +221,15 @@ class Profile extends React.Component {
 	}
 }
 
-export default connect()(Profile);
+// function mapDispatchToProps(dispatch){
+// 	//const editProfile = (id,update)=>userActions.editProfile(id,update) ;
+// 	return {
+// 		editProfile: (id,update)=>{
+// 			dispatch(userActions.editProfile(id,update));
+// 		}
+		
+// 	}
+// }
+
+
+export default connect(null)(Profile);

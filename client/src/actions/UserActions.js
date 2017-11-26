@@ -11,6 +11,7 @@ export const userActions = {
 	logout,
 	register,
 	fetchUserProfile,
+	editProfile
 }
 
 // Use case:
@@ -123,7 +124,17 @@ async function fetchUserProfile(id){
 
 // Use case:
 // Status: 
-async function editProfile(){
+async function editProfile(id,update){
+  const data = update;
+	const headers = authHeader();
+  const user = await axios.post(API_URL + `/api/users/${id}/update`  , data, {headers})
+  .catch(err => {
+	console.log(err);
+	alert('ERROR EDITING PROFILE')
+    return { success: false }
+  });
+
+  return { success: true }
 	
 }
 
