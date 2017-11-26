@@ -5,7 +5,8 @@ import {API_URL} from '../constants/ConfigConstants';
 import withQuery from 'with-query';
 
 export const AdminActions = {	
-	restrictPrivilege,
+	reviveUser,
+	killUser,
 	login,
 	getUsers,
 	fetchComplaints	
@@ -88,7 +89,36 @@ async function fetchComplaints(){
 	}	
 }
 
-// Use case: 30
-function restrictPrivilege(){
+async function killUser(id){
+	const res = await axios.get(API_URL + '/api/users/'+id+'/delete', {
+		headers: {		
+			"Authorization": 'JWT ' + localStorage.getItem('admin'),		
+			"Content-Type": "application/json"		
+		}
+	})
+	.catch(err => {
+		console.log(err);	
+	});	
+	
+	return{		
+		type: userConstants.ADMIN_KILL_USER,
+		payload: res	
+	}	
+}
 
+async function reviveUser(id){
+	const res = await axios.get(API_URL + '/api/users/'+id+'/revive', {
+		headers: {		
+			"Authorization": 'JWT ' + localStorage.getItem('admin'),		
+			"Content-Type": "application/json"		
+		}
+	})
+	.catch(err => {
+		console.log(err);	
+	});	
+	
+	return{		
+		type: userConstants.ADMIN_REVIVE_USER,
+		payload: res	
+	}	
 }
