@@ -2,19 +2,24 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { userActions } from '../../actions';
+import {history} from '../../helpers';
 import { Row, Col, Input, Button } from 'antd';
 import styled from 'styled-components';
 import * as JWT from 'jwt-decode';
 
 
 const Aright = styled.div`
-        text-align:right;
-        padding: 5px
+	text-align:right;	
+	font-size: 15px;
+        
+	padding: 8px
+		
            
-    `
+ `
 const Aleft = styled.div`
-    text-align:left;
-    padding: 5px
+	text-align:left;
+	font-size: 15px;
+    padding: 8px
        
 `
 
@@ -22,6 +27,19 @@ const Bspace = styled.div`
 	word-spacing: 60px;
 
 `
+
+const PadSpace = styled.div`
+	padding: 5px
+
+`
+
+const MarginSpace = styled.div`
+	margin-left: 10px;
+	margin-right: 10px;
+
+`
+
+
 
 
 class Profile extends React.Component {
@@ -76,6 +94,8 @@ class Profile extends React.Component {
 	}
 
 
+
+
 	onEditSubmit = async (e) => {
 			const update = { 
 				first_name: this.state.first_name,
@@ -121,94 +141,119 @@ class Profile extends React.Component {
 						</Row>
 						<Row>
 						</Row>
+						<PadSpace>
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>ชื่อ</Aright></Col>
+								<Col span={8}>
+									<Input name='first_name' value={this.state.first_name} style={{fontSize:'15px'}} size="large"
+										onChange={(e) => this.onInputChange(e)} />
+								</Col>
+							</Row>
+						</PadSpace>
+						<PadSpace>	
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>นามสกุล</Aright></Col>
+								<Col span={8}>
+									<Input name='last_name' value={this.state.last_name} style={{fontSize:'15px'}} size="large"
+										onChange={(e) => this.onInputChange(e)} />
+								</Col>
+							</Row>
+						</PadSpace>
+						<PadSpace>	
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>ที่อยู่</Aright></Col>
+								<Col span={8}>
+									<Input name='address' value={this.state.address} style={{fontSize:'15px'}} size="large"
+										onChange={(e) => this.onInputChange(e)} />
+								</Col>
+							</Row>
+						</PadSpace>
+						<PadSpace>
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>เบอร์โทรศัพท์</Aright></Col>
+								<Col span={8}>
+									<Input name='contact' value={this.state.contact} style={{fontSize:'15px'}} size="large"
+										onChange={(e) => this.onInputChange(e)} />
+								</Col>
+							</Row>
+
+						</PadSpace>
+						<PadSpace>	
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>อีเมล์</Aright></Col>
+								<Col span={8}>
+									<Input disabled value={this.state.user ? this.state.user.email : false}  
+									style={{fontSize:'15px'}} size="large"/> 
+								</Col>
+							</Row>
+						</PadSpace>
+						<PadSpace>
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>รหัสผ่าน</Aright></Col>
+								<Col span={2}>
+									<Button type="button"
+										onClick={(e)=>history.push('/')} style={{fontSize:'13px'}}  >
+										เปลี่ยนรหัสผ่าน
+										</Button>
+								</Col>
+							</Row>
+							{/*
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>รหัสผ่านใหม่</Aright></Col>
+								<Col span={8}>
+									<Input name="new_pwd" type="password" value={this.state.new_pwd}
+										onChange={(e) => this.onInputChange(e)} />
+								</Col>
+							</Row>
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>ยืนยันรหัส</Aright></Col>
+								<Col span={8}>
+									<Input name="conf_pwd" type="password" value={this.state.conf_pwd}
+										onChange={(e) => this.onInputChange(e)} />
+								</Col>
+							</Row> */}
+							<Row>
+								<Col span={6}>
+								</Col>
+								<Col span={2}><Aright>ประเภทสมาชิก</Aright> </Col>
+								<Col span={6}><Bspace><Aleft>{this.state.isCustomer ? ": ผู้รับบริการ" : this.state.isOwner ? ": ผู้ให้บริการ" : ": ผู้ดูแลระบบ"}</Aleft></Bspace> </Col>
+							</Row>
+						</PadSpace>
 						<Row>
-							<Col span={6}>
-							</Col>
-							<Col span={2}><Aright>ชื่อ</Aright></Col>
-							<Col span={8}>
-								<Input name='first_name' value={this.state.first_name}
-									onChange={(e) => this.onInputChange(e)} />
-							</Col>
 						</Row>
 						<Row>
-							<Col span={6}>
-							</Col>
-							<Col span={2}><Aright>นามสกุล</Aright></Col>
-							<Col span={8}>
-								<Input name='last_name' value={this.state.last_name}
-									onChange={(e) => this.onInputChange(e)} />
-							</Col>
 						</Row>
 						<Row>
-							<Col span={6}>
+							<Col span={10}>
 							</Col>
-							<Col span={2}><Aright>ที่อยู่</Aright></Col>
-							<Col span={8}>
-								<Input name='address' value={this.state.address}
-									onChange={(e) => this.onInputChange(e)} />
-							</Col>
-						</Row>
-						<Row>
-							<Col span={6}>
-							</Col>
-							<Col span={2}><Aright>เบอร์โทรศัพท์</Aright></Col>
-							<Col span={8}>
-								<Input name='contact' value={this.state.contact}
-									onChange={(e) => this.onInputChange(e)} />
-							</Col>
-						</Row>
-						<Row>
-							<Col span={6}>
-							</Col>
-							<Col span={2}><Aright>อีเมล์</Aright></Col>
-							<Col span={8}>
-								<Input disabled value={this.state.user ? this.state.user.email : false} />
-							</Col>
-						</Row>
-						{/* <Row>
-							<Col span={6}>
-							</Col>
-							<Col span={2}><Aright>รหัสผ่านเดิม</Aright></Col>
-							<Col span={8}>
-								<Input name="password" type="password" value={this.state.password}
-									onChange={(e) => this.onInputChange(e)} />
-							</Col>
-						</Row>
-						<Row>
-							<Col span={6}>
-							</Col>
-							<Col span={2}><Aright>รหัสผ่านใหม่</Aright></Col>
-							<Col span={8}>
-								<Input name="new_pwd" type="password" value={this.state.new_pwd}
-									onChange={(e) => this.onInputChange(e)} />
-							</Col>
-						</Row>
-						<Row>
-							<Col span={6}>
-							</Col>
-							<Col span={2}><Aright>ยืนยันรหัส</Aright></Col>
-							<Col span={8}>
-								<Input name="conf_pwd" type="password" value={this.state.conf_pwd}
-									onChange={(e) => this.onInputChange(e)} />
-							</Col>
-						</Row> */}
-						<Row>
-							<Col span={6}>
-							</Col>
-							<Col span={2}><Aright>ประเภทสมาชิก</Aright> </Col>
-							<Col span={6}><Bspace><Aleft>{this.state.isCustomer ? ": ผู้รับบริการ" : this.state.isOwner ? ": ผู้ให้บริการ" : ": ผู้ดูแลระบบ"}</Aleft></Bspace> </Col>
-						</Row>
-						<Row>
-						</Row>
-						<Row>
-						</Row>
-						<Row>
-							<Col span={8}>
-							</Col>
-							<Col span={8}>
+							<Col span={2}>
+								
+								<Button type="button" 
+									onClick={(e) => this.onEditSubmit(e)} style={{fontSize:'13px'}}>
+								บันทึกข้อมูล</Button> 
+							</Col>	
+							<Col span={2}>	
 								<Button type="button"
-									onClick={(e) => this.onEditSubmit(e)}>
-								บันทึกข้อมูล</Button>
+									onClick={()=> history.push('/')} style={{fontSize:'13px'}}>
+								ย้อนกลับ</Button>
+								
+								
 							</Col>
 						</Row>
 					</div>
