@@ -85,7 +85,7 @@ class AdminComplaint extends React.Component{
 					pagination={false}/>:<div>no reservetions for this sevice now...</div>	}
 
 				<Modal
-					title="คำร้องเรียน"
+					title={"คำร้องเรียนหมายเลข: " + this.state.ComplaintModaldata.complaint_id}
 					visible={this.state.isComplaintModalActive}
 					closable = {false}
 					footer={[
@@ -96,7 +96,29 @@ class AdminComplaint extends React.Component{
 						OK</Button>			
 					  ]}
 					>	
-						{JSON.stringify(this.state.ComplaintModaldata)}
+					<h2><strong>หัวข้อ </strong> {this.state.ComplaintModaldata.title}</h2>
+					<br/>
+					<h2><strong>ผู้รายงาน </strong> {this.state.ComplaintModaldata.customer_id}</h2>
+					<br/>
+					{this.state.ComplaintModaldata.complaint_type == 'service' ?
+						<div>
+							<h2><strong>ประเภท </strong> รายงานบริการ</h2>
+							<br/>
+							<h2><strong>บริการที่ถูกรายงาน </strong> {this.state.ComplaintModaldata.service_id}</h2>							
+						</div> :
+						<div>
+							<h2><strong>ประเภท </strong> รายงานพนักงาน</h2>
+							<br/>
+							<h2><strong>พนักงานที่ถูกรายงาน </strong> {this.state.ComplaintModaldata.employee_id}</h2>
+						</div> 
+					}
+					<br/>
+					<h2><strong>เนื้อหา</strong>
+					<br/>
+					<br/>
+					{this.state.ComplaintModaldata.note}</h2>
+					<br/>
+					{JSON.stringify(this.state.ComplaintModaldata)}
 				</Modal>
 
 				</div>		
