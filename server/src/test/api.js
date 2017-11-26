@@ -107,6 +107,7 @@ describe('API tests', () => {
   let cusToken2 = ''
   let ownerToken2 = ''
   let cusTokenTestDel = ''
+  let payment1 = {number: '1', amount: 10000000, company: 'Task world'}
 
   before(async () => {
     owner1 = await UserModel.createUser(owner1)
@@ -338,6 +339,55 @@ describe('API tests', () => {
     })
   })
 
+  describe('# add payment', () => {
+    it('should be able to add credit card', () => {
+      return request(app)
+      .post(`/api/users/${customer1.user_id}/add-credit-card`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customer1.user_id)
+        const card = await PaymentAccountModel.findByNumber('xxxxxxxxxxxxxxxx')
+        expect(card.user_id).to.equal(customer1.user_id)
+        expect(card.amount).to.equal(5000)
+        expect(user.payment_accounts[0]).to.equal('xxxxxxxxxxxxxxxx')
+        payment1 = await PaymentAccountModel.findByNumber(user.payment_accounts[0])
+        customer1 = await UserModel.findByUserId(customer1.user_id)
+      })
+    })
+    it('should be able to add bank account', () => {
+      return request(app)
+      .post(`/api/users/${customer1.user_id}/add-bank-account`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customer1.user_id)
+        const account = await PaymentAccountModel.findByNumber('yyyyyyyyyyyyyyyy')
+        expect(account.user_id).to.equal(customer1.user_id)
+        expect(account.company).to.equal('kasikorn')
+        expect(account.amount).to.equal(7000)
+        expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
+      })
+    })
+  })
+
+  describe('# get payment accounts', () => {
+    it('Should list all correct payment accounts of a user', () => {
+      return request(app)
+      .get(`/api/users/${customer1.user_id}/payment_accounts`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.payment_accounts.length).to.equal(2)
+      })
+    })
+  })
+
   describe('# create service', () => {
     it('Should create a new service', () => {
       return request(app)
@@ -519,12 +569,14 @@ describe('API tests', () => {
   describe('# create reservation', () => {
     it('Should create a new reservation', () => {
       console.log(customer1)
+      const tmpAmount = payment1.amount
       const body = {
         service_id: service1.service_id,
         employee_id: employee1.employee_id,
         start_time: '0100',
         end_time: '0300',
-        date: '29-12-2017'
+        date: '29-12-2017',
+        payment_number: payment1.number
       }
       return request(app)
       .post(`/api/reservations/new`)
@@ -537,7 +589,8 @@ describe('API tests', () => {
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
         expect(res.body.employee_id).to.equal(employee1.employee_id)
-        
+        payment1 = await PaymentAccountModel.findByNumber(payment1.number)
+        expect(payment1.amount).to.equal(tmpAmount - res.body.price * 0.3)
       })
     })
   })
@@ -646,53 +699,6 @@ describe('API tests', () => {
       .expect(200)
       .then(async res => {
         expect(res.body.complaint[0].complaint_id).to.equal('match-com-1')
-      })
-    })
-  })
-
-  describe('# add payment', () => {
-    it('should be able to add credit card', () => {
-      return request(app)
-      .post(`/api/users/${customer1.user_id}/add-credit-card`)
-      .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
-      .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
-      .expect(200)
-      .then(async res => {
-        const user = await UserModel.findByUserId(customer1.user_id)
-        const card = await PaymentAccountModel.findByNumber('xxxxxxxxxxxxxxxx')
-        expect(card.user_id).to.equal(customer1.user_id)
-        expect(card.amount).to.equal(5000)
-        expect(user.payment_accounts[0]).to.equal('xxxxxxxxxxxxxxxx')
-      })
-    })
-    it('should be able to add bank account', () => {
-      return request(app)
-      .post(`/api/users/${customer1.user_id}/add-bank-account`)
-      .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
-      .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
-      .expect(200)
-      .then(async res => {
-        const user = await UserModel.findByUserId(customer1.user_id)
-        const account = await PaymentAccountModel.findByNumber('yyyyyyyyyyyyyyyy')
-        expect(account.user_id).to.equal(customer1.user_id)
-        expect(account.company).to.equal('kasikorn')
-        expect(account.amount).to.equal(7000)
-        expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
-      })
-    })
-  })
-
-  describe('# get payment accounts', () => {
-    it('Should list all correct payment accounts of a user', () => {
-      return request(app)
-      .get(`/api/users/${customer1.user_id}/payment_accounts`)
-      .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
-      .expect(200)
-      .then(async res => {
-        expect(res.body.payment_accounts.length).to.equal(2)
       })
     })
   })
