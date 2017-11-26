@@ -16,11 +16,17 @@ class EmployeeList extends React.PureComponent{
 	}
 
 	componentDidMount(){
-		const {employees,haha,onSelectEmployee} = this.props;
+		// const {employees,haha,onSelectEmployee} = this.props;
 
-		employees.map( (employee,idx) => {
-			console.log(employee);
-		});
+		// employees.map( (employee,idx) => {
+		// 	console.log(employee);
+		// });
+		const {service_id, date, start_time, end_time} = this.state;
+		const payload = {
+			service_id: this.props.service_id,
+
+		}
+		this.props.fetchEmployees();
 	}
 	// renderEmployees = ()=>{
 		

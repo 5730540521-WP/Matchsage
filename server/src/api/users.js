@@ -4,7 +4,6 @@ const UserServ = require('../services/user')
 const UserModel = require('../models/user')
 const PaymentAccountModel = require('../models/payment-account')
 const _ = require('lodash')
-const ServiceModel = require('../models/service')
 
 const ExpressJoi = require('express-joi-validator')
 const Joi = require('joi')
@@ -30,7 +29,7 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/:id/add-credit-card', AuthServ.isAuthenticated , ExpressJoi({
+router.post('/:id/add-credit-card', AuthServ.isAuthenticated, ExpressJoi({
   body: {
     number: Joi.string(),
     amount: Joi.number(),
@@ -99,6 +98,21 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
+router.get('/:id/revive', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
+  try {
+    const user = await UserModel.findDeletedByUserId(req.params.id)
+    if (!user) {
+      const error = new Error('Not a deleted user')
+      error.status = 404
+      throw error
+    }
+    await UserModel.findOneAndUpdate({user_id: req.params.id}, { is_delete: false })
+    res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const user = await UserModel.findByUserId(req.user.user_id)
@@ -130,4 +144,4 @@ router.get('/:id/delete', AuthServ.isAuthenticatedAdmin, async (req, res, next) 
 
 module.exports = router
 
-//Done validate
+// Done validate
