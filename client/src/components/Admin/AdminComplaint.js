@@ -9,6 +9,7 @@ class AdminComplaint extends React.Component{
 			super(props);
 			this.state = {			
 				isComplaintModalActive: false,
+				current: 'all',
 				ComplaintModaldata: []
 			};		
 		}
@@ -26,9 +27,22 @@ class AdminComplaint extends React.Component{
 			this.toggleComplaintModalModal(true)
 			this.setState({ComplaintModaldata: record})
 		}
+
+		handleTabClick  = (e) =>{
+			this.setState({
+                current: e.key,
+            });
+		}
 	
 	
 		render(){		
+
+			let data = this.props.complaints
+
+			if(this.state.current == 'service')
+				data = this.props.complaints.filter((record) => record.complaint_type === 'service')
+			else if(this.state.current == 'employee')
+				data = this.props.complaints.filter((record) => record.complaint_type === 'employee')
 			const columns = [{
 				title: 'complaint_id',
 				dataIndex: 'complaint_id',
@@ -44,10 +58,28 @@ class AdminComplaint extends React.Component{
 			  }];	
 
 			return (
-				<div>			
+				<div>	
+					<h1 style={{marginBottom:'10px', textAlign:'left'}}>คำร้องเรียน</h1>
+
+					<Menu			
+							onClick={this.handleTabClick}								
+							mode="horizontal"
+							selectedKeys={[this.state.current]}
+							style={{color:'#402900'}}>
+							<Menu.Item key="all">
+								ทั้งหมด
+							</Menu.Item>
+							<Menu.Item key="service">
+								คำร้องเรียนบริการ
+							</Menu.Item>								
+							<Menu.Item key="employee">
+								คำร้องเรียนพนักงาน
+							</Menu.Item>													
+						</Menu>	
+
 					{this.props.complaints ?
 					<Table
-					dataSource={this.props.complaints}
+					dataSource={data}
 					onRowClick={this.onComplaintClick}
 					columns={columns}						  
 					pagination={false}/>:<div>no reservetions for this sevice now...</div>	}
