@@ -23,8 +23,17 @@ async function getReserveListByCustomer (userId) {
 }
 
 async function deleteUser (userId) {
-  await ReserveModel.update({owner_id: userId}, {is_delete: true}, {multi: true})
-  await ServiceModel.update({owner_id: userId}, {is_delete: true}, {multi: true})
+  const user = await UserModel.findByUserId(userId)
+  if (user.user_type === 'owner') {
+    const services = await ServiceModel.find({owner_id: userId})
+
+    _.forEach(services, async function (serv) {
+      await ReserveModel.update({service_id: serv.service_id}, {is_delete: true}, {multi: true})
+    })
+    await ServiceModel.update({owner_id: userId}, {is_delete: true}, {multi: true})
+  } else if (user.user_type === 'customer') {
+    await ReserveModel.update({customer_id: userId}, {is_delete: true}, {multi: true})
+  }
   await UserModel.findOneAndUpdate({user_id: userId}, {is_delete: true})
 }
 
