@@ -15,8 +15,7 @@ class Owner extends React.Component{
 		super(props);
 		this.state = {			
 			isCreateServiceModalActive: false,		
-			editService: [],		
-			isServiceLoaded: false,				
+			editService: []
 		};		
 	}	
 
@@ -40,10 +39,7 @@ class Owner extends React.Component{
 	}	
 	
 	renderServices(){
-		// this.setState({services:this.props.services});	
-		if(!this.state.isServiceLoaded && this.props.services.length > 0) {
-			this.setState({ services: this.props.services, isServiceLoaded: true })
-		}	
+		
 		return <Row gutter={24}>
 				<Col span={12}>{this.props.services.map( (service,index) =>{
 					return index%2==0?
@@ -73,6 +69,8 @@ class Owner extends React.Component{
     }
 
 	render(){
+
+		if(! this.props.alreadyFetch) this.props.fetchServices();
 		
 		return(	
 			<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
@@ -100,8 +98,8 @@ class Owner extends React.Component{
 	}
 }
 function mapStateToProps({OwnerReducer}){
-	const {services} = OwnerReducer;
-	return {services};
+	const {services, alreadyFetch} = OwnerReducer;
+	return {services, alreadyFetch};
 }
 
 function mapDispatchToProps(dispatch){
