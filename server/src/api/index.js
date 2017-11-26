@@ -31,7 +31,9 @@ api.post('/signup', ExpressJoi({
     first_name: Joi.string().required(),
     last_name: Joi.string().required(),
     gender: Joi.string().valid('male', 'female').required(),
-    user_type: Joi.string().valid('owner', 'customer').required()
+    user_type: Joi.string().valid('owner', 'customer').required(),
+    contact: Joi.string().optional(),
+    address: Joi.string().optional()
   }
 }), async (req, res, next) => {
   try {
