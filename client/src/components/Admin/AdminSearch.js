@@ -61,17 +61,17 @@ class AdminSearch extends Component {
 
   onClickKill = (id) => {    
     this.props.killUser(id)
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.props.fetchUsers(this.state.param)
-    }, 500);             
+    }, 500);     */        
     console.log('killl')
   }
 
   onClickRevive = async (id) => {
     const res = await this.props.reviveUser(id)    
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.props.fetchUsers(this.state.param)
-    }, 500);  
+    }, 500);  */
     console.log('revivee')
   }
 
@@ -111,8 +111,9 @@ class AdminSearch extends Component {
   
     
   render() {
-    console.log(this.props.users)    
-
+    
+    if(!this.props.alreadyFetch) 
+      this.props.fetchUsers(this.state.param)
     const columns = [{
         title: 'First Name',
         dataIndex: 'first_name',
@@ -160,7 +161,8 @@ class AdminSearch extends Component {
 
 function mapStateToProps(state){
 	return {		
-		users: state.AdminReducer.users.users
+    users: state.AdminReducer.users.users,
+    alreadyFetch: state.AdminReducer.alreadyFetch
 	}
 }
 

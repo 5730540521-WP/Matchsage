@@ -30,8 +30,10 @@ class Admin extends React.Component{
     }	
     
     handleSidebarClick = (e) => {
-        if (e.key == 'back')
-            history.push('/')
+        if (e.key == 'logout'){
+			localStorage.removeItem('admin');
+			history.push('/admin')
+		}			
         else
             this.setState({
                 current: e.key,
@@ -54,9 +56,9 @@ class Admin extends React.Component{
 							<Menu.Item key="compaint">
 								คำร้องเรียน
 							</Menu.Item>								
-							<Menu.Item key="back">
+							<Menu.Item key="logout">
 								<Button type="primary" >
-									<span>กลับสู่หน้าหลัก</span>
+									<span>ออกจากระบบ</span>
 								</Button>	
 							</Menu.Item>													
 						</Menu>													
