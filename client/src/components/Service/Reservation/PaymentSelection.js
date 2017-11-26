@@ -17,7 +17,7 @@ const columns	 =[{
 	title: 'ประเภทของบัตร',
 	dataIndex: 'card_type'
 },{
-	title: 'เลขลงท้าย',
+	title: 'เลขบัญชี',
 	dataIndex: 'end_num'
 },{
 	title: 'วันหมดอายุ',
@@ -35,50 +35,45 @@ class PaymentSelection extends React.PureComponent{
 			data:[],
 			selectedCard:-1
 		};
+		this.props.fetchPaymentAccount();
 	}
 
 	componentDidMount(){
 		console.log('Yoyo');
-		this.props.fetchPaymentAccount();
-		this.setState({payment_accounts: this.props.payment_accounts},()=>{
-			const data = [];
-			this.state.payment_accounts.map((payment_account,i)=>{
-				data.push({
-					key: (i+1).toString(),
-					card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
-					end_num: this.markPaymentAccount(payment_account),
-					exp_date: '2018/01',
-					choice: <Checkbox/>
-				});
+		console.log(this.props.payment_accounts);
+		const data = [];
+		// const payment_accounts = this.props.payment_accounts;
+		this.props.payment_accounts.map((payment_account,i)=>{
+			data.push({
+				key: (i+1).toString(),
+				card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
+				end_num: this.markPaymentAccount(payment_account),
+				exp_date: '2018/01',
+				choice: <Checkbox onChange={(e)=>this.onCheckboxChange(e,payment_account)}/>
 			});
-			// const data = [{
-			// 	key:'1',
-			// 	card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
-			// 	end_num: '5555',
-			// 	exp_date: '2018/01',
-			// 	choice: <Checkbox/>
-			// },{
-			// 	key:'2',
-			// 	card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
-			// 	end_num: '6666',
-			// 	exp_date: '2018/01',
-			// 	choice: <Checkbox/>
-			// }];
-			this.setState({data});
 		});
+		this.setState({data});
+		console.log(this.props.payment_accounts);
+
 	}
 
-	onSelectaCard(){
-		this.props.onSelectaCard
-	}
+	// onSelectaCard(){
+	// 	this.props.onSelectaCard
+	// }
 
 	markPaymentAccount(paymentAccountNumber){
 		const len = paymentAccountNumber.length;
-		return '*'.repeat(12) + paymentAccountNumber.slice(len-5,len-1);
+		return ('****-'.repeat(3)) + paymentAccountNumber.slice(len-5,len-1);
+	}
+
+	onCheckboxChange = (e,payment_account)=>{
+		if(e.target.checked) this.props.selectPaymentAccountReservation(payment_account);
+		else this.props.selectPaymentAccountReservation('');
 	}
 
 	render(){
-		return <PaymentSelectionTable dataSource={this.state.data} columns={columns}/>;
+		
+	return <PaymentSelectionTable dataSource={this.state.data} columns={columns}/>;
 	}
 }
 
@@ -89,7 +84,8 @@ function mapStateToProps({reservation}){
 
 function mapDispatchToProps(dispatch){
 	const fetchPaymentAccount = CustomerActions.fetchPaymentAccount;
-	return bindActionCreators({fetchPaymentAccount} ,dispatch);
+	const selectPaymentAccountReservation = CustomerActions.selectPaymentAccountReservation;
+	return bindActionCreators({fetchPaymentAccount,selectPaymentAccountReservation} ,dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(PaymentSelection);
+export default connect(mapStateToProps, mapDispatchToProps)(PaymentSelection);

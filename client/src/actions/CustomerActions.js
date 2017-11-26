@@ -15,6 +15,7 @@ export const CustomerActions = {
 	fetchEmployees,
 	selectEmployeeReservation,
 	fetchPaymentAccount,
+	selectPaymentAccountReservation,
 	// END Reserve
 	cancelReserveService,
 	rateService,
@@ -138,6 +139,13 @@ async function fetchPaymentAccount(){
 	return{
 		type: customerConstants.CUSTOMER_FETCH_PAYMENT_RESERVATION,
 		payment_accounts
+	}
+}
+
+function selectPaymentAccountReservation(payment_account){
+	return{
+		type: customerConstants.CUSTOMER_SELECT_PAYMENT_ACCOUNT_RESERVATION,
+		payment_account
 	}
 }
 

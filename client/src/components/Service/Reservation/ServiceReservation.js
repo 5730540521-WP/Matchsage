@@ -249,13 +249,13 @@ class ServiceReservation extends React.PureComponent{
           {
             this.state.current === steps.length - 1
             &&
-            <Button style={{ marginLeft: 8 }} type="primary" 
-							disabled={!(isSelectDate && isSelectTime && 
-								isSelectEmployee && isSelectPaymentAccount && isConfirmAgreement)}
+            {/* <Button style={{ marginLeft: 8 }} type="primary" 
+							// disabled={!(isSelectDate && isSelectTime && 
+							// 	isSelectEmployee && isSelectPaymentAccount && isConfirmAgreement)}
 							onClick={() => message.success('การจองบริการสำเร็จ')}
 						> 
-							เสร็จสิ้นการจอง
-						</Button>
+							จองบริการ
+						</Button> */}
           }
           
 				</StepsAction>

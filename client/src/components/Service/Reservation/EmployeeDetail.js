@@ -17,7 +17,12 @@ const EmployeeCard = styled(Card)`
 class EmployeeDetail extends React.PureComponent{
 
 	onSelectEmployee = (employee_id)=>{
-		this.props.selectEmployeeReservation(employee_id);
+		console.log(employee_id);
+		const {employees} = this.props;
+		const employee = employees.find(employee=>employee.employee_id===employee_id);
+		console.log('Hmm');
+		console.log(employee);
+		this.props.selectEmployeeReservation(employee);
 	}
 	
 	render(){
@@ -39,14 +44,14 @@ class EmployeeDetail extends React.PureComponent{
 	}
 }
 
-// function mapStateToProps({reservation}){
-// 	const {employee} = reservation;
-// 	return {employee};
-// }
+function mapStateToProps({reservation}){
+	const {employees} = reservation;
+	return {employees};
+}
 
 function mapDispatchToProps(dispatch){
 	const selectEmployeeReservation = CustomerActions.selectEmployeeReservation;
 	return bindActionCreators({selectEmployeeReservation},dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(EmployeeDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeDetail);
