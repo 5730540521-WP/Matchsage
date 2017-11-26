@@ -98,6 +98,21 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
+router.get('/:id/revive', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
+  try {
+    const user = await UserModel.findDeletedByUserId(req.params.id)
+    if (!user) {
+      const error = new Error('Not a deleted user')
+      error.status = 404
+      throw error
+    }
+    await UserModel.findOneAndUpdate({user_id: req.params.id}, { is_delete: false })
+    res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const user = await UserModel.findByUserId(req.user.user_id)

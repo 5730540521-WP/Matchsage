@@ -69,6 +69,10 @@ UserSchema.statics = {
     return User.findOne({email, is_delete: false})
   },
 
+  findDeletedByUserId: function (userId) {
+    return User.findOne({user_id: userId, is_delete: true})
+  },
+
   findByUserId: function (userId) {
     return User.findOne({user_id: userId, is_delete: false})
   },

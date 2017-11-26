@@ -338,6 +338,20 @@ describe('API tests', () => {
     })
   })
 
+  describe('# revive user', () => {
+    it('Admin should be able to revive deleted user', () => {
+      return request(app)
+      .get(`/api/users/${customerTestDel.user_id}/revive`)
+      .set('Accept', 'appication/json')
+      .set('Authorization', adminToken)
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customerTestDel.user_id)
+        expect(user.user_id).to.equal(customerTestDel.user_id)
+      })
+    })
+  })
+
   describe('# create service', () => {
     it('Should create a new service', () => {
       return request(app)
