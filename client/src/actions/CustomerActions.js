@@ -12,6 +12,7 @@ export const CustomerActions = {
 	selectServiceReservation,
 	selectDateTimeReservation,
 	fetchEmployees,
+	fetchPaymentAccount,
 	// END Reserve
 	cancelReserveService,
 	rateService,
@@ -68,11 +69,13 @@ function reserveService(){
 	
 }
 
-function selectServiceReservation(service_id){
-	console.log('In action: ' + service_id);
+function selectServiceReservation(service_id, price_per_hour){
 	return{
 		type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
-		service_id
+		payload:{
+			service_id,
+			price_per_hour
+		}
 	}
 }	
 
@@ -104,6 +107,19 @@ function selectEmployeeReservation(employee_id){
 	return{
 		// type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
 		employee_id
+	}
+}
+
+async function fetchPaymentAccount(user_id){
+	const data ={};
+	const headers = authHeader();
+	const res = await axios.post(`${API_URL}/api/user${user_id}`, data, {headers});
+	const user = res.data;
+	console.log(user);
+	// const paymentAccount = user....
+	return{
+		type: customerConstants.CUSTOMER_FETCH_PAYMENT_RESERVATIONม
+		// paymentAccount
 	}
 }
 

@@ -41,6 +41,7 @@ class EmployeeList extends React.PureComponent{
 		const {employees, onSelectEmployee} = this.props;
 		
 		// employess[this.state.selectedEmployeeIdx]. = 1
+		
 		return(
 			<div>
 				<Row gutter={16}>

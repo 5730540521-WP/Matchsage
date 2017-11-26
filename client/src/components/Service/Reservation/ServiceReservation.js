@@ -68,8 +68,7 @@ class ServiceReservation extends React.PureComponent{
 	}
 
 	componentDidMount(){
-		console.log(this.props.service_id);
-		this.props.selectServiceReservation(this.props.service_id);
+		// this.props.selectServiceReservation(this.props.service_id);
 
 		console.log('DidMount');
 		const steps = [{

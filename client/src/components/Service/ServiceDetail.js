@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
 import NotFound from '../NotFound';
 import styled from 'styled-components';
@@ -52,6 +53,8 @@ class ServiceDetail extends React.Component{
 	}
 
 	onClickReservation = ()=>{
+		this.props.selectServiceReservation(this.props.serviceState.service.service_id,
+			this.props.serviceState.service.price_per_hour);
 		this.setState({isReservation:true});
 	}
 
@@ -71,8 +74,7 @@ class ServiceDetail extends React.Component{
 				}}>ยกเลิก</Button>,
 				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
 					this.setState({ loading: true });
-					console.log(this.props.serviceState
-		)
+					console.log(this.props.serviceState);
 					await this.props.sendComplaint(this.props.serviceState
 			.service.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
 					this.setState({ loading: false,showServiceComplaint:false });
@@ -240,15 +242,19 @@ function mapStateToProps(state){
 }
 
 function mapDispatchToProps(dispatch){
-	return {
-		loadService: (id)=>{
-			dispatch(CustomerActions.fetchService(id))
-		},
-		sendComplaint:(service_id,topic,content)=>{
-			dispatch(CustomerActions.sendServiceComplaint(service_id,topic,content))
-		}
-	}
-}
+	// return {
+	// 	loadService: (id)=>{
+	// 		dispatch(CustomerActions.fetchService(id))
+	// 	},
+	// 	sendComplaint:(service_id,topic,content)=>{
+	// 		dispatch(CustomerActions.sendServiceComplaint(service_id,topic,content))
+	// 	},
 
+	// }
+	const loadService = CustomerActions.fetchService;
+	const sendComplaint = CustomerActions.sendServiceComplaint;
+	const selectServiceReservation = CustomerActions.selectServiceReservation;
+	return bindActionCreators({loadService,sendComplaint,selectServiceReservation}, dispatch);
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceDetail);

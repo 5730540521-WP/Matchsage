@@ -1,4 +1,9 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+import {CustomerActions} from 'actions/CustomerActions';
+
 import styled from 'styled-components';
 
 import {Table, Checkbox} from 'antd';
@@ -33,7 +38,7 @@ class PaymentSelection extends React.PureComponent{
 	}
 
 	componentDidMount(){
-			
+		this.props.fetchPaymentAccount();
 		const data = [{
 			key:'1',
 			card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
@@ -59,4 +64,9 @@ class PaymentSelection extends React.PureComponent{
 	}
 }
 
-export default PaymentSelection;
+function mapDispatchToProps(dispatch){
+	const fetchPaymentAccount = CustomerActions.fetchPaymentAccount;
+	return bindActionCreators({fetchPaymentAccount} ,dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(PaymentSelection);
