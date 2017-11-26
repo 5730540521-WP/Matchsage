@@ -5,42 +5,23 @@ import './ReservedServices.css';
 import {userActions} from 'actions/UserActions';
 import * as JWT from 'jwt-decode';
 import {connect} from 'react-redux';
-import history from 'helpers/history';
+import { history } from 'helpers';
 
 class ReservedServices extends React.Component{
   componentDidMount(){
     this.props.fetchReserved(JWT(localStorage.getItem('user')).user_id);
   }
-  getListData =(value) =>{
-    let listData;
-    switch (value.date()) {
-      case 8:
-        listData = [
-          { type: 'warning', content: 'This is warning event.' },
-          { type: 'normal', content: 'This is usual event.' },
-        ]; break;
-      case 10:
-        listData = [
-          { type: 'warning', content: 'This is warning event.' },
-          { type: 'normal', content: 'This is usual event.' },
-          { type: 'error', content: 'This is error event.' },
-        ]; break;
-      case 15:
-        listData = [
-          { type: 'warning', content: 'This is warning event' },
-          { type: 'normal', content: 'This is very long usual event。。....' },
-          { type: 'error', content: 'This is error event 1.' },
-          { type: 'error', content: 'This is error event 2.' },
-          { type: 'error', content: 'This is error event 3.' },
-          { type: 'error', content: 'This is error event 4.' },
-        ]; break;
-      default:
-    }
-    return listData || [];
-  }
   
   dateCellRender = (value)=>{
-    const listData = this.getListData(value);
+    let listData = [];
+    if(this.props.customerReservations){this.props.customerReservations.map((reservation)=>{
+      const reservationDate = new Date(reservation.date);
+      if(reservationDate.getDate() === value.date() && reservationDate.getMonth()===value.month() && reservationDate.getFullYear()===value.year()) listData = [...listData,{
+        type:'normal',
+        content:'มีนัดนวด'
+      }]
+    })}
+    
     return (
       <ul className="events">
         {
@@ -57,7 +38,7 @@ class ReservedServices extends React.Component{
   
   getMonthData = (value)=> {
     if (value.month() === 8) {
-      return 1394;
+      return 0;
     }
   }
   
@@ -78,7 +59,9 @@ class ReservedServices extends React.Component{
   },{
     title: 'ชื่อร้าน',
     dataIndex: 'name',
-    render: text => <div onClick={()=>history.push(`/service/${text}`)}>{text}</div>,
+    render: (text,record) => (
+      <div onClick={()=>history.push(`/service/${record.service_id}`)}>{text}</div>
+    ),
   }, {
     title: 'ประเภทบริการ',
     dataIndex: 'service_type',
@@ -97,8 +80,10 @@ class ReservedServices extends React.Component{
   }];
 
   render(){
+    
     return <LocaleProvider locale={thTH}>
-        <Row>
+      <div style={{paddingLeft:'24px',paddingRight:'24px'}}>
+        <Row gutter={24}>
           <Col span={10}>
             <Calendar dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender} />
           </Col>
@@ -107,7 +92,8 @@ class ReservedServices extends React.Component{
             <Table columns={this.columns} dataSource={this.props.customerReservations} />
           </Col>
         </Row>
-      </LocaleProvider>
+      </div>
+    </LocaleProvider>
   }
 }
 

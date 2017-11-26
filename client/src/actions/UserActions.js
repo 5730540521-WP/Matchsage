@@ -125,21 +125,20 @@ async function fetchUserProfile(id){
 async function fetchReservations(customer_id){
 	const headers = authHeader();
 	const resFetchReservations = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
-	console.log(resFetchReservations.data);
-	
 	let formattedReservationsData = [];
-	resFetchReservations.data.reservations.map((reservation)=>{
+	await Promise.all(resFetchReservations.data.reservations.map(async(reservation)=>{
+		const headers = authHeader();
+		const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
 		formattedReservationsData = [...formattedReservationsData,{
 			reserve_id: reservation.reserve_id,
-			name: reservation.service_id,
+			name: resServiceDetail.data.service_name,
 			service_type: '',
 			date: reservation.date,
 			time: `${reservation.start_time.toString().substr(0,2)}:${reservation.start_time.toString().substr(2,2)} ถึง ${reservation.end_time.toString().substr(0,2)}:${reservation.end_time.toString().substr(0,2)}`,
-			action: '',
-			paid_status: reservation.paid_status+'s'
+			paid_status: reservation.paid_status,
+			service_id: reservation.service_id
 		}]
-	});
-	console.log(formattedReservationsData);
+	}));
 	return {
 		type:userConstants.FETCH_USER_RESERVATIONS,
 		customerReservations:formattedReservationsData
