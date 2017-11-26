@@ -6,7 +6,6 @@ import {connect} from 'react-redux';
 import { Input,Slider } from 'antd';
 import ServiceOwnerItem from './ServiceOwnerItem';
 import CreateServiceModal from '../Common/Modal/CreateServiceModal';
-import EditServiceModal from '../Common/Modal/EditServiceModal';
 import {OwnerActions} from '../../actions';
 
 import {Row,Col, Button} from 'antd';
@@ -17,12 +16,10 @@ import * as JWT from 'jwt-decode';
 class Owner extends React.Component{
 	constructor(props){
 		super(props);
-		this.state = {
-			owner_id: JWT(localStorage.getItem('user')).user_id,
-			isCreateServiceModalActive: false,
-			isEditServiceModalActive: false,			
+		this.state = {			
+			isCreateServiceModalActive: false,		
 			editService: [],		
-			isServiceLoaded: false	
+			isServiceLoaded: false,				
 		};		
 	}	
 
@@ -33,27 +30,17 @@ class Owner extends React.Component{
 
 	toggleCreateServiceModal(modalValue){
 		this.setState({isCreateServiceModalActive: modalValue})
-	}
-
-	toggleEditServiceModal(modalValue){
-		this.setState({isEditServiceModalActive: modalValue})
-	}
+	}		
 
 	aftersubmit = () => {		
-		this.setState({isCreateServiceModalActive: false, isEditServiceModalActive: false})			
+		this.setState({isCreateServiceModalActive: false})			
 	}
 
 	 deleteService = async (service) =>{
 		const res = await this.props.deleteService(service.service_id);		
 		console.log(res)
 		this.props.fetchServices()
-	}
-
-	editService = (service) =>{
-		console.log(service.price_per_hour)
-		this.setState({editService: service})
-		this.toggleEditServiceModal(true)
-	}
+	}	
 	
 	renderServices(){
 		// this.setState({services:this.props.services});	
@@ -103,14 +90,7 @@ class Owner extends React.Component{
 					modalState={this.state.isCreateServiceModalActive} 
 					onCloseModal={()=>this.toggleCreateServiceModal(false)}					
 					aftersubmit = {this.aftersubmit}
-				/>
-
-				<EditServiceModal 
-					modalState={this.state.isEditServiceModalActive} 
-					onCloseModal={()=>this.toggleEditServiceModal(false)}	
-					editService = {this.state.editService}									
-					aftersubmit = {this.aftersubmit}
-				/>
+				/>							
 			</div>
 		);
 	}

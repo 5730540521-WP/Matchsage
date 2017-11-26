@@ -5,6 +5,9 @@ const UserModel = require('../models/user')
 const PaymentAccountModel = require('../models/payment-account')
 const _ = require('lodash')
 
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
+
 let router = Router()
 const filters = require('../config/filter')
 
@@ -26,7 +29,13 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/:id/add-credit-card', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/:id/add-credit-card', AuthServ.isAuthenticated, ExpressJoi({
+  body: {
+    number: Joi.string(),
+    amount: Joi.number(),
+    company: Joi.string().optional()
+  }
+}), async (req, res, next) => {
   try {
     if (req.user.user_id !== req.params.id) {
       const error = new Error('Unauthorized')
@@ -40,7 +49,13 @@ router.post('/:id/add-credit-card', AuthServ.isAuthenticated, async (req, res, n
   }
 })
 
-router.post('/:id/add-bank-account', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/:id/add-bank-account', AuthServ.isAuthenticated, ExpressJoi({
+  body: {
+    number: Joi.string(),
+    amount: Joi.number(),
+    company: Joi.string().optional()
+  }
+}), async (req, res, next) => {
   try {
     if (req.user.user_id !== req.params.id) {
       const error = new Error('Unauthorized')
@@ -103,4 +118,15 @@ router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next)
   }
 })
 
+router.get('/:id/delete', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
+  try {
+    await UserServ.deleteUser(req.params.id)
+    res.json({success: true})
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = router
+
+// Done validate

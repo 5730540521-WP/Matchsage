@@ -7,6 +7,9 @@ const UserModel = require('../models/user')
 const ServiceModel = require('../models/service')
 const EmailServ = require('../services/email')
 
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
+
 // Reservations api
 let router = Router()
 
@@ -40,16 +43,31 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
+  body: {
+    date: Joi.string(),
+    start_time: Joi.string(),
+    end_time: Joi.string(),
+    service_id: Joi.string(),
+    employee_id: Joi.string()
+  }
+}), async (req, res, next) => {
   try {
-    const date = req.body.date || '2000-12-20'
-    const startTime = req.body.start_time || '2500'
-    const endTime = req.body.end_time || '2500'
-    const paidStatus = req.body.paid_status || 'pending'
+    const date = req.body.date
+    const startTime = req.body.start_time
+    const endTime = req.body.end_time
+    const paidStatus = 'pending'
 
     const service = await ServiceModel.findByServiceId(req.body.service_id)
     const price = service.price_per_hour * (parseInt(endTime) * 1.0 / 100 - parseInt(startTime) * 1.0 / 100)
-    const body = Object.assign({}, req.body, { date, start_time: startTime, end_time: endTime, paid_status: paidStatus, customer_id: req.user.user_id, price })
+    const body = Object.assign({}, req.body, { date,
+      start_time: startTime,
+      end_time: endTime,
+      paid_status: paidStatus,
+      customer_id: req.user.user_id,
+      price,
+      employee_id: req.body.employee_id
+    })
     const reserve = await ReserveModel.createReservation(body)
     res.json(reserve)
     await EmailServ.mailConfirmReservation(reserve.reserve_id)

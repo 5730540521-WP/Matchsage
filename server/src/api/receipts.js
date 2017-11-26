@@ -5,6 +5,9 @@ const ReceiptModel = require('../models/receipt')
 const UserModel = require('../models/user')
 const ReceiptService = require('../services/receipt')
 
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
+
 let router = Router()
 
 // show list of receipt of those user
@@ -19,7 +22,14 @@ router.get('/', AuthServ.isAuthenticated, async(req, res, next) => {
 })
 
 // create new receipt
-router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
+  body:{
+    customer_id: Joi.string().required(),
+    reservation_id: Joi.string().required(),
+    price: Joi.number().optional(),
+    payment_date: Joi.string().optional()
+  }
+}), async (req, res, next) => {
   try {
     // console.log(req)
     const receipt = await ReceiptModel.createReceipt(req.body)
@@ -48,7 +58,6 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
 router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const receipt = await ReceiptModel.findByReservationId(req.params.id)
-    
     if (receipt.customer_id !== req.user.user_id) {
       const error = new Error('Only customer who make this reservation can download this receipt')
       error.status = 400
@@ -63,3 +72,6 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
 })
 
 module.exports = router
+
+
+//Done Validate

@@ -44,6 +44,11 @@ const ReservationSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 500
+  },
+  is_delete: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 })
 
@@ -53,7 +58,7 @@ ReservationSchema.methods = {
 ReservationSchema.statics = {
 
   findByReservationId: function (reserveId) {
-    return Reservation.findOne({ reserve_id: reserveId })
+    return Reservation.findOne({ reserve_id: reserveId, is_delete: false })
   },
 
   createReservation: async function (values) {

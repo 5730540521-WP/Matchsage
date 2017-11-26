@@ -1,4 +1,7 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {customerConstants} from 'constants/CustomerConstants'
 import axios from 'axios';
 import {API_URL} from 'constants/ConfigConstants';
 import {authHeader} from 'helpers';
@@ -6,11 +9,18 @@ import { Steps, Icon,Button, message, DatePicker, TimePicker} from 'antd';
 import moment from 'moment';
 import styled from 'styled-components';
 
+import EmployeeList from './EmployeeList';
+import PaymentSelection from './PaymentSelection';
+import ReservationConfirmation from './ReservationConfirmation';
+
 const Step = Steps.Step;
 
 const loader = styled.div.attrs({
 	className: 'is-loading'
-})``;
+})`
+	max-width: 50px;
+	max-height: 50px;
+`;
 
 const StepsContent = styled.div.attrs({
 	className: 'steps-content'
@@ -29,7 +39,7 @@ const StepsAction = styled.div.attrs({
 })`
 	margin-top: 24px;
 `;
-class ServiceReservation extends React.Component{
+class ServiceReservation extends React.PureComponent{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -44,6 +54,7 @@ class ServiceReservation extends React.Component{
 			isSelectEmployee: false,
 			isSelectPaymentAccount: false,
 			isConfirmAgreement: false,
+			price:0,
 			// for send to server
 			service_id:'',
 			date:'',
@@ -53,7 +64,9 @@ class ServiceReservation extends React.Component{
 		}
 	}
 
-	componentDidMount(){
+	async componentDidMount(){
+		// const fetchE = await this.fetchEmployees(this.props.service_id);
+		// if(fetchE){
 		const steps = [{
 			title: 'เลือกวันเวลา',
 			content: this.renderSelectDateAndTime(),
@@ -65,9 +78,10 @@ class ServiceReservation extends React.Component{
 			content: this.renderSelectPaymentAccount(),
 		},{
 			title: 'ยอมรับเงื่อนไขการให้บริการ',
-			content: 'eiei'
+			content: this.renderConfirmReservation()
 		}];
-		this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id})
+		this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id});
+		// }
 	}
 
 	next() {
@@ -85,63 +99,88 @@ class ServiceReservation extends React.Component{
 		return(
 			<div>
 				เลือกวันที่ต้องการ
-				<DatePicker onChange={this.onSelectDate} defaultValue={moment('2015/01/01', dateFormat)} format={dateFormat} />
+				<DatePicker onChange={this.onSelectDate} defaultValue={moment('2017/01/01', dateFormat)} format={dateFormat} />
 				เลือกเวลาที่ต้องการ
-				<TimePicker onChange={this.onSelectTime} defaultOpenValue={moment('00:00:00', 'HH:mm:ss')} />,			
+				<TimePicker onChange={this.onSelectStartTime} defaultOpenValue={moment('00:00', 'HH:mm')} />,			
+				<TimePicker onChange={this.onSelectEndTime} defaultOpenValue={moment('00:00', 'HH:mm')} />,			
 			</div>
 		);
 	}
 
 	onSelectDate = ({_d}='')=>{
-		// console.log(_d);
-		// const date = _d ....
-		// this.setState({date});
-		this.setState({date:_d, isSelectDate: true});
+		// const date = _d.toISOString().split('T')[0]; 
+		const date = _d.toLocaleDateString('en-GB').split('/').reverse().join('-');//.replace(/\//g,'-');
+		console.log(date);
+		this.setState({date, isSelectDate: true});
 	}
 
-	onSelectTime = (t)=>{
-		console.log(t);
-		this.setState({isSelectTime: true});
+	onSelectStartTime = ({_d})=>{
+		console.log(_d);
+		// const start_time = _d.toISOString().split('T')[1].split('.')[0];
+		// const start_time = _d.toLocaleTimeString();//toISOString();
+		const start_time = _d.toISOString();
+		console.log(start_time);
+		this.setState({start_time, isSelectTime: true});
+	}
+
+	onSelectEndTime = ({_d})=>{
+		const end_time = _d;
+		this.setState({end_time, isSelectTime: true});
 	}
 	// ===== END Step1: choose day =====
 
 	// ===== START Step2: choose employee =====
 	renderSelectEmployee = ()=>{
-		<div>
-			{this.state.isEmployeesLoaded? loader : loader}
-		</div>
+		// console.log(5555);
+		// console.log(this.state.employees);
+		return(
+			<div>
+				{/* <EmployeeList employees={}/> */}
+				{/* {this.state.isEmployeesLoaded? <EmployeeList/> : loader} */}
+				<EmployeeList onSelectEmployee={this.onSelectEmployee}/>
+				{/* <EmployeeList employees={this.state.employees}/> */}
+			</div>
+		);	
 	}
 
-	fetchEmployees = async ()=>{
+	fetchEmployees = async (service_id)=>{
+		const {date, start_time, end_time} = this.state;
 		const data = {
-			
+			date, start_time, end_time
 		};
 		const headers = authHeader();
-		const res = await axios.post(`${API_URL}/api/services/${this.state.service_id}/avai_employees`, data, {headers});
-		// const employess = 
-		// this.setState({employees, isEmployeesL	oaded: true});
-		this.setState({isEmployeesLoaded: true});		
+		const res = await axios.post(`${API_URL}/api/services/${service_id}/avai_employees`, data, {headers});
+
+		const employees = res.data;
+		this.setState({employees, isEmployeesLoaded: true});
+		return 1;
 	}
 
 	onSelectEmployee = (employee)=>{
-		// this.setState({employee, isSelectEmployee: true});
-		this.setState({isSelectEmployee: true});
+		this.setState({employee, isSelectEmployee: true},()=>console.log(this.state.employee));
 	}
 	// ===== END Step2: choose employee =====
 
 	// ===== Step3: choose payment account =====
 	renderSelectPaymentAccount = ()=>{
 		return(
-			<div/>
+			<PaymentSelection onSelectPaymentAccount/>
 		);
 	}
 
 	onSelectPaymentAccount = ()=>{
-		this.setState({isSelectPaymentAccount:true});
+		const price = 1;
+		this.setState({isSelectPaymentAccount:true,price});
 	}
 	// ===== END Step3: payment account =====
 
 	// ===== START Step4: confirm reservation =====
+
+	renderConfirmReservation = ()=>{
+		// this.onConfirmReservation();
+		return <ReservationConfirmation price={this.state.price}/>;
+	}
+
 	onConfirmReservation = async () =>{
 		const data = {
 			service_id: this.props.service_id ,
@@ -204,4 +243,13 @@ class ServiceReservation extends React.Component{
 	}
 }
 
-export default ServiceReservation;
+function mapStateToProps({service}){
+	return {service};
+}
+
+function mapDispatchToProps(dispatch){
+	const fetchEmployees = customerConstants.CUSTOMER_FETCH_EMPLOYEES_RESERVATION;
+	return bindActionCreators({ fetchEmployees },dispatch);
+}
+
+export default connect(mapStateToProps)(ServiceReservation);

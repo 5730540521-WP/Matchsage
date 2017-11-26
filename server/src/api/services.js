@@ -1,6 +1,9 @@
 const { Router } = require('express')
 const _ = require('lodash')
 
+const ExpressJoi = require('express-joi-validator')
+const Joi = require('joi')
+
 const AuthServ = require('../services/auth')
 const ServiceServ = require('../services/service')
 const RatingServ = require('../services/rating')
@@ -35,7 +38,14 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
+  body: {
+    service_name: Joi.string().required(),
+    contact_number: Joi.string(),
+    address: Joi.string(),
+    price_per_hour: Joi.number()
+  }
+}), async (req, res, next) => {
   try {
     const user = await UserModel.findByUserId(req.user.user_id)
     if (user.user_type !== 'owner') {
@@ -52,7 +62,13 @@ router.post('/new', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/:id/avai_employees', AuthServ.isAuthenticated, async (req, res) => {
+router.post('/:id/avai_employees', AuthServ.isAuthenticated, ExpressJoi({
+  body: {
+    date: Joi.string().optional(),
+    start_time: Joi.string().optional(),
+    end_time: Joi.string().optional()
+  }
+}), async (req, res) => {
   const date = req.body.date || '2000-12-20'
   const startTime = req.body.start_time || '2500'
   const endTime = req.body.end_time || '2500'
@@ -70,8 +86,8 @@ router.get('/:id/employees', AuthServ.isAuthenticated, async(req, res) => {
 
 router.post('/:id/add_employee', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    await ServiceServ.addEmployee(req.params.id, req.body)
-    res.json({ success: true })
+    const emp = await ServiceServ.addEmployee(req.params.id, req.body)
+    res.json({ employee_id: emp.employee_id, success: true })
   } catch (error) {
     next(error)
   }
@@ -86,7 +102,12 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
   }
 })
 
-router.post('/:id/rate', AuthServ.isAuthenticated, async (req, res, next) => {
+router.post('/:id/rate', AuthServ.isAuthenticated, ExpressJoi({
+  body: {
+    score: Joi.number(),
+    rating_type: Joi.string().valid('service').required()
+  }
+}), async (req, res, next) => {
   try {
     const opts = Object.assign(req.body, { service_id: req.params.id, customer_id: req.user.user_id })
     await RatingServ.rate(opts)
@@ -123,21 +144,5 @@ router.get('/:id/reservations', AuthServ.isAuthenticated, async (req, res, next)
     next(error)
   }
 })
-
-/* async function validate (req) {
-  if (req.admin) return
-  const user = await UserModel.findByUserId(req.user.user_id)
-  const service = await ServiceModel.findByServiceId(req.params.id)
-  if (user.user_type !== 'owner') {
-    const err = new Error('Unauthorized. Invalid user type.')
-    err.status = 401
-    throw err
-  }
-  if (user.user.id !== service.owner_id) {
-    const err = new Error('Unauthorized. Only owner of this service can access this information.')
-    err.status = 401
-    throw err
-  }
-} */
 
 module.exports = router

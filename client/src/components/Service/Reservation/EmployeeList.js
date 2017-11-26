@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
 
 import {Row, Col} from 'antd';
@@ -10,38 +11,63 @@ class EmployeeList extends React.PureComponent{
 	constructor(props){
 		super(props);
 		this.state = {
-	
+			selectedEmployeeIdx:-1
 		};
 	}
 
-	renderEmployeeList = () =>{
-		const {employees} = this.props;
-		// employees.push();
-		return(
-			<Row gutter={16}>
-				<Col span={8}>
-					{employees.map( (employee,idx) => {
-						return (idx%3==0 && <EmployeeDetail key={employee.id}/>);
-					})}
-				</Col>
-				<Col span={8}>
-					{employees.map( (employee,idx) => {
-						return (idx%3==1 && <EmployeeDetail key={employee.id}/>);
-					})}
-				</Col>
-				<Col span={8}>
-					{employees.map( (employee,idx) => {
-						return (idx%3==2 && <EmployeeDetail key={employee.id}/>);
-					})}
-				</Col>
-			</Row>
-	
-		);
+	componentDidMount(){
+		// const {employees,haha,onSelectEmployee} = this.props;
+
+		// employees.map( (employee,idx) => {
+		// 	console.log(employee);
+		// });
+		const {service_id, date, start_time, end_time} = this.state;
+		const payload = {
+			service_id: this.props.service_id,
+
+		}
+		this.props.fetchEmployees();
 	}
+	// renderEmployees = ()=>{
+		
+	// 	return(
+			
+	// 	);
+	// }
 
 	render(){
-		{this.renderEmployeeList()}
+		const {employees,haha,onSelectEmployee} = this.props;
+		// employess[this.state.selectedEmployeeIdx]. = 1
+		return(
+			<div>
+				<Row gutter={16}>
+					<Col span={8}>
+						{employees.map( (employee,idx) => {
+							return ( idx%3==0 && <EmployeeDetail onSelectEmployee={onSelectEmployee}
+								key={employee.employee_id} employee={employee}/>);
+						})}
+					</Col>
+					<Col span={8}>
+						{employees.map( (employee,idx) => {
+							return (idx%3==1 && <EmployeeDetail onSelectEmployee={onSelectEmployee}
+								key={employee.employee_id} employee={employee}/>);
+						})}
+					</Col>
+					<Col span={8}>
+						{employees.map( (employee,idx) => {
+							return (idx%3==2 && <EmployeeDetail onSelectEmployee={onSelectEmployee}
+								key={employee.employee_id} employee={employee}/>);
+						})}
+					</Col>
+				</Row>
+			</div>
+		);
 	}
 }
 
-export default EmployeeList;
+function mapStateToProps({reservation}){
+	const {employees} = reservation;
+	return {employees};
+}
+
+export default connect(mapStateToProps)(EmployeeList);
