@@ -40,7 +40,6 @@ async function fetchService(service_id){
 	const service = await axios.get(API_URL + `/api/services/${service_id}`, {headers});
 	const ownerDetail = await axios.get(API_URL + `/api/users/${service.data.owner_id}`,{headers});
 	const employees = await axios.get(API_URL + `/api/services/${service_id}/employees` , {headers});
-	console.log(employees)
 	return{
 		type: customerConstants.CUSTOMER_FETCH_SERVICE,
 		service: service,
@@ -158,7 +157,8 @@ async function sendServiceComplaint(service_id,topic,content){
 	const data = {
 		service_id,
 		title:topic,
-		note:content
+		note:content,
+		complaint_type: 'service'
 	}
 	const headers = authHeader();
 	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
@@ -172,7 +172,8 @@ async function sendEmployeeComplaint(service_id,employee_id,topic,content){
 		service_id,
 		employee_id,
 		title:topic,
-		note:content
+		note:content,
+		complaint_type: 'employee'
 	}
 	const headers = authHeader();
 	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{

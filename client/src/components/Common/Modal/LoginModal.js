@@ -53,7 +53,8 @@ class LoginForm extends React.Component{
 				const { email, password } = values;
 				this.props.login(email, password);
 			} else {
-				console.log(values);
+				alert('Login Error!!')
+				console.log(err);
 			}
 		})
 	}
