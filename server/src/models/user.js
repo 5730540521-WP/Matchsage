@@ -85,7 +85,6 @@ UserSchema.statics = {
         { last_name: new RegExp(keyword, 'i') }
       ]
     })
-    filter.is_delete = false
     return User.find(filter).sort({ user_id: 1 })
   },
 

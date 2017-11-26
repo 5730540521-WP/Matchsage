@@ -17,7 +17,7 @@ router.get('/', AuthServ.isAuthenticated, async (req, res) => {
   let opts = req.query
   delete opts.keyword
   const users = await UserModel.findWithRegexp(keyword, opts)
-  res.json({ users: _.map(users, user => _.pick(user, filters.user)) })
+  res.json({ users: _.map(users, user => _.pick(user, _.concat(filters.user, ['is_delete']))) })
 })
 // get user detail
 router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {

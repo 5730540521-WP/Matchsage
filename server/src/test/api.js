@@ -274,6 +274,7 @@ describe('API tests', () => {
       .expect(200)
       .then(async res => {
         expect(res.body.users.length).to.equal(2)
+        expect(res.body.users[0].is_delete).to.equal(false)
       })
     })
   })

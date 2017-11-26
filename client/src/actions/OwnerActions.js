@@ -32,7 +32,6 @@ async function createService(data){
 		type: ownerConstants.OWNER_CREATE_SERVICE,
 		payload: res	
 	}	
-
 }
 
 async function deleteService(service_id){
