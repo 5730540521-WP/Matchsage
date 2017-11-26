@@ -48,7 +48,7 @@ class ReservationConfirmation extends React.PureComponent{
 	reserveService = async()=>{
 		const {service_id, employee_id, start_time, end_time, date, payment_account} = this.props;
 		const data = {
-			service_id, employee_id, start_time, end_time, date_reserved:date, payment_account
+			service_id, employee_id, start_time, end_time, date_reserved:date, payment_number:payment_account
 		}
 		const headers = authHeader();
 		const res = await axios.post(`${API_URL}/api/reservations/new`, data, {headers})
@@ -57,9 +57,9 @@ class ReservationConfirmation extends React.PureComponent{
 			});
 
 		message.success('การจองบริการสำเร็จ');
-		// setTimeout(()=>{
-		// 	history.push('/user/reserved-services');
-		// },2000);
+		setTimeout(()=>{
+			history.push('/user/reserved-services');
+		},2000);
 		
 	}
 
