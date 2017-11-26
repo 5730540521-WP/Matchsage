@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as JWT from 'jwt-decode';
 import {customerConstants} from '../constants/CustomerConstants';
 import {API_URL, AUTH_HEADER} from '../constants/ConfigConstants';
 import {authHeader} from '../helpers';
@@ -110,16 +111,18 @@ function selectEmployeeReservation(employee_id){
 	}
 }
 
-async function fetchPaymentAccount(user_id){
-	const data ={};
+async function fetchPaymentAccount(){
+	console.log('Action fetchPaymentAccount');
+	const user_id = JWT(localStorage.getItem('user')).user_id;
 	const headers = authHeader();
-	const res = await axios.post(`${API_URL}/api/user${user_id}`, data, {headers});
+	const res = await axios.get(`${API_URL}/api/users/${user_id}`, {headers});
+	console.log('Action fetchPaymentAccount 2');
 	const user = res.data;
-	console.log(user);
-	// const paymentAccount = user....
+	const paymentAccount = user.payment_accounts;
+	console.log(paymentAccount);
 	return{
-		type: customerConstants.CUSTOMER_FETCH_PAYMENT_RESERVATIONม
-		// paymentAccount
+		type: customerConstants.CUSTOMER_FETCH_PAYMENT_RESERVATION,
+		paymentAccount
 	}
 }
 

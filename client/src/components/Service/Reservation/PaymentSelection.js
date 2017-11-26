@@ -38,6 +38,7 @@ class PaymentSelection extends React.PureComponent{
 	}
 
 	componentDidMount(){
+		console.log('Yoyo');
 		this.props.fetchPaymentAccount();
 		const data = [{
 			key:'1',
@@ -48,7 +49,7 @@ class PaymentSelection extends React.PureComponent{
 		},{
 			key:'2',
 			card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
-			end_num: '5555',
+			end_num: '6666',
 			exp_date: '2018/01',
 			choice: <Checkbox/>
 		}];

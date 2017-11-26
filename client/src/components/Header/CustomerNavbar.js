@@ -41,7 +41,7 @@ class CustomerNavbar extends React.Component{
 					</div>
 					<div className="dropdown-menu" id="dropdown-menu" role="menu" style={{minWidth:'11rem'}}>
 						<div className="dropdown-content" style={{textAlign:'left'}}>
-							<a className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}} onClick={()=>history.push('/reservedServices')}>
+							<a className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}} onClick={()=>history.push('/user/reserved-services')}>
 								<Icon type="exclamation-circle-o" style={{marginRight:'20px'}}/>
 								   บริการที่จองไว้
 							</a>
@@ -51,7 +51,7 @@ class CustomerNavbar extends React.Component{
 							</a>
 
 							<a className="dropdown-item" style={{marginLeft:'0px',paddingRight:'0px'}}
-								onClick={()=> history.push('/Profile')}>
+								onClick={()=> history.push('/user/profile')}>
 								<Icon type="user" style={{marginRight:'20px'}}/>
 								   แก้ไขข้อมูลส่วนตัว
 
