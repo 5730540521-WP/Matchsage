@@ -39,7 +39,7 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
 })
 
 router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
-  Body: {
+  body: {
     service_name: Joi.string().required(),
     contact_number: Joi.string(),
     address: Joi.string(),
@@ -63,10 +63,10 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
 })
 
 router.post('/:id/avai_employees', AuthServ.isAuthenticated, ExpressJoi({
-  Body: {
+  body: {
     date: Joi.string().optional(),
-    startTime: Joi.string().optional(),
-    endTime: Joi.string().optional()
+    start_time: Joi.string().optional(),
+    end_time: Joi.string().optional()
   }
 }), async (req, res) => {
   const date = req.body.date || '2000-12-20'
@@ -103,7 +103,7 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
 })
 
 router.post('/:id/rate', AuthServ.isAuthenticated, ExpressJoi({
-  Body: {
+  body: {
     score: Joi.number(),
     rating_type: Joi.string().valid('service').required()
   }
