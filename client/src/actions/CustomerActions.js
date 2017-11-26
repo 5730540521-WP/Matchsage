@@ -7,7 +7,12 @@ export const CustomerActions = {
 	fetchServices,
 	fetchService,
 	searchService,
+	//START Reserve
 	reserveService,
+	selectServiceReservation,
+	selectDateTimeReservation,
+	fetchEmployees,
+	// END Reserve
 	cancelReserveService,
 	rateService,
 	addAccountNumber,
@@ -61,23 +66,35 @@ async function searchService(keyword){
 
 // Use case: 8
 function reserveService(){
-
+	
 }
 
 function selectServiceReservation(service_id){
+	console.log('In action: ' + service_id);
 	return{
 		type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
 		service_id
 	}
 }	
 
-async function fetchEmployees({service_id, date, start_time, end_time}){
+function selectDateTimeReservation(date, start_time, end_time){
+	return{
+		type: customerConstants.CUSTOMER_SELECT_DATE_TIME_RESERVATION,
+		payload:{
+			date,start_time,end_time
+		}
+	}
+}
+
+async function fetchEmployees(service_id,date, start_time, end_time){
 	const data = {
 		date, start_time, end_time
 	};
+	console.log(data);
 	const headers = authHeader();
 	const res = await axios.post(`${API_URL}/api/services/${service_id}/avai_employees`, data, {headers});
 	const employees = res.data;
+	console.log(employees);
 	return{
 		type: customerConstants.CUSTOMER_FETCH_EMPLOYEES_RESERVATION,
 		employees
@@ -86,7 +103,7 @@ async function fetchEmployees({service_id, date, start_time, end_time}){
 
 function selectEmployeeReservation(employee_id){
 	return{
-		type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
+		// type: customerConstants.CUSTOMER_SELECT_SERVICE_RESERVATION,
 		employee_id
 	}
 }

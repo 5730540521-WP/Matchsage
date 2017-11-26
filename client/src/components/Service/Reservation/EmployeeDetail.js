@@ -11,7 +11,7 @@ const EmployeeCard = styled(Card)`
 export default ({employee, onSelectEmployee})=>{
 	const {first_name, last_name, gender, rating} = employee;
 	return(
-		<EmployeeCard onClick={onSelectEmployee}>		
+		<EmployeeCard>		
 			<div className="custom-image">
 				<img alt="example" width="100%" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
 			</div>

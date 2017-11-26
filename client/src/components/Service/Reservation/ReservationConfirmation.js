@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {connect} from 'react-redux';
 
 class ReservationConfirmation extends React.PureComponent{
 	constructor(props){
@@ -23,5 +23,4 @@ class ReservationConfirmation extends React.PureComponent{
 	}
 }
 
-
-export default ReservationConfirmation;
+export default connect()(ReservationConfirmation);
