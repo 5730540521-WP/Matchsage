@@ -28,21 +28,6 @@ class ReservationConfirmation extends React.PureComponent{
 		// return price_per_hour*();
 	}
 
-	createReservation = async()=>{
-		const {service_id, employee_id, start_time, end_time, date} = this.props;
-		const {price} = this.state;
-		const data = {
-			service_id, employee_id, start_time, end_time, date, price 
-		}
-		const headers = authHeader();
-		const res = await axios.post(`${API_URL}/api/reservations/new`, data, {headers})
-			.catch(err=>{
-				history.push(`/service/${service_id}`);
-			});
-		// history('/reserved-resevation');
-		history('/reservedResevation');
-	}
-
 	render(){
 		return(
 			<div>
@@ -64,6 +49,7 @@ function mapStateToProps({reservation}){
 
 function mapDispatchToProps(dispatch){
 	const reserveService = CustomerActions.reserveService;
+	
 	return bindActionCreators({reserveService},dispatch);
 }
 

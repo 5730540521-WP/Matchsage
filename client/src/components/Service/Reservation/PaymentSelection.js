@@ -40,6 +40,7 @@ class PaymentSelection extends React.PureComponent{
 	componentDidMount(){
 		console.log('Yoyo');
 		this.props.fetchPaymentAccount();
+		this.setState({payment_accounts: this.props.payment_accounts});
 		const data = [{
 			key:'1',
 			card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
@@ -60,9 +61,18 @@ class PaymentSelection extends React.PureComponent{
 		this.props.onSelectaCard
 	}
 
+	markPaymentAccount(paymentAccountNumber){
+		
+	}
+
 	render(){
 		return <PaymentSelectionTable dataSource={this.state.data} columns={columns}/>;
 	}
+}
+
+function mapStateToProps({reservation}){
+	const {payment_accounts} = reservation;
+	return {payment_accounts};
 }
 
 function mapDispatchToProps(dispatch){
