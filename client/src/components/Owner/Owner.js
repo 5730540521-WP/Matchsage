@@ -7,7 +7,7 @@ import { Input,Slider } from 'antd';
 import ServiceOwnerItem from './ServiceOwnerItem';
 import CreateServiceModal from '../Common/Modal/CreateServiceModal';
 import {OwnerActions} from '../../actions';
-import {Row,Col, Button} from 'antd';
+import {Row, Col, Button, Menu} from 'antd';
 import * as JWT from 'jwt-decode';
 
 class Owner extends React.Component{
@@ -68,29 +68,34 @@ class Owner extends React.Component{
 		;
 	}	
 
+	handleSidebarClick = (e) => {
+        this.toggleCreateServiceModal(true)
+    }
+
 	render(){
 		
-		return(
-			<div>
-			<div className="columns">				
-				<div className="column is-one-quarter">
-					<Button type="primary" onClick={()=>this.toggleCreateServiceModal(true)}>
+		return(	
+			<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
+				<Col span={5} style={{paddingLeft:'0px'}}>
+					<Menu onClick={this.handleSidebarClick}	>
+					<Button type="primary">
 						<span>สร้างบริการใหม่</span>
 					</Button>
-				</div>				
-				<div className="column">
-					<div className="rows" style={{paddingLeft:'24px',paddingRight:'24px'}}>						
+					</Menu>
+				</Col>				
+				<Col span={19} > 	
+				<h1 style={{marginBottom:'10px', textAlign:'left'}}>บริการของฉัน</h1>
+				<div className="rows" style={{paddingLeft:'24px',paddingRight:'24px'}}>						
 						{this.renderServices()}
 					</div>
-				</div>
+				</Col>
 
 				<CreateServiceModal 
 					modalState={this.state.isCreateServiceModalActive} 
 					onCloseModal={()=>this.toggleCreateServiceModal(false)}					
 					aftersubmit = {this.aftersubmit}
 				/>							
-			</div>
-			</div>
+			</Row>			
 		);
 	}
 }

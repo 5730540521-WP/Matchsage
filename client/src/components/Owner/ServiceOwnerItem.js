@@ -10,18 +10,21 @@ export default withRouter((props)=>{
 		<div className="box">
 			<article className="media">
 			  <div className="media-left">
-					<figure className="image is-64x64" onClick={()=>props.history.push(`/service/edit/${service.service_id}`)}>
+					<figure className="image is-64x64" onClick={()=>props.history.push(`/service/edit/${service.service_id}`)}
+					style={{cursor: 'pointer'}}>
 						<img src="https://bulma.io/images/placeholders/128x128.png" alt="Image"/>
 					</figure>
 				</div>
 				<div className="media-content">
 					<div className="content">
 						<p>
-							<strong onClick={()=>props.history.push(`/service/edit/${service.service_id}`)}>
+							<strong onClick={()=>props.history.push(`/service/edit/${service.service_id}`)}
+							style={{cursor: 'pointer'}}>
 								{service.service_name}
-							</strong> Rating: <small>{service.rating}</small>							
+							</strong> 
+							<dev style={{ marginLeft: '5px'}}> <small> Rating: {service.rating}</small></dev>							
 							<br/>
-							{service.price_per_hour}
+							{service.contact_number}
 						</p>
 					</div>
 					<nav className="level is-mobile">
