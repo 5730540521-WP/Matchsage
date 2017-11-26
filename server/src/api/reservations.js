@@ -49,21 +49,33 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
     start_time: Joi.string(),
     end_time: Joi.string(),
     service_id: Joi.string(),
-    employee_id: Joi.string()
+    employee_id: Joi.string(),
+    payment_number: Joi.string()
   }
 }), async (req, res, next) => {
   try {
+    const user = await UserModel.findByUserId(req.user.user_id)
+    console.log(user.payment_accounts, req.body.payment_number)
+    if (!_.includes(user.payment_accounts, req.body.payment_number)) {
+      const err = new Error('Invalid payment number')
+      err.status = 400
+      throw err
+    }
+
     const date = req.body.date
     const startTime = req.body.start_time
     const endTime = req.body.end_time
-    const paidStatus = 'pending'
 
     const service = await ServiceModel.findByServiceId(req.body.service_id)
     const price = service.price_per_hour * (parseInt(endTime) * 1.0 / 100 - parseInt(startTime) * 1.0 / 100)
-    const body = Object.assign({}, req.body, { date,
+
+    await ReserveServ.makeDepositPayment(user.user_id, price, req.body.payment_number)
+
+    const body = Object.assign({}, req.body, {
+      date,
       start_time: startTime,
       end_time: endTime,
-      paid_status: paidStatus,
+      paid_status: 'deposit-paid',
       customer_id: req.user.user_id,
       price,
       employee_id: req.body.employee_id
