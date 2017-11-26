@@ -56,6 +56,9 @@ class Header extends Component{
 		// const {isLogin} = this.props;
 		// const {userType} = this.props;
 		const user = localStorage.getItem('user');
+		const location = history.location.pathname
+		console.log(location)
+		if (location.substring(0,6) === '/admin') return null
 		return(
 			<NavBar>
 				<div className="navbar-brand">

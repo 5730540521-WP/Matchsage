@@ -90,7 +90,7 @@ const WrappedNormalLoginForm = Form.create({})(NormalLoginForm)
 class AdminLogin extends Component {
   render() {
     return (
-      <div className="fuck">
+      <div className="fuck" style={{ margin: 50 }}>
         <WrappedNormalLoginForm />
       </div>
     )

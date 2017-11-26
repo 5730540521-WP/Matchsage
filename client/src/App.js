@@ -115,7 +115,7 @@ class App extends React.Component {
 					{/* <Route path="/posts/:id" component={}/> */}
 					<Route component={NotFound} />
 
-				</Switch>
+					</Switch>
 				</Wrap>
 			</Router>
 		)
