@@ -9,13 +9,17 @@ import * as JWT from 'jwt-decode';
 
 
 const Aright = styled.div`
-        text-align:right;
-        padding: 5px
+		text-align:right;	
+		font-size: 15px;
+        
+		padding: 8px
+		
            
     `
 const Aleft = styled.div`
-    text-align:left;
-    padding: 5px
+	text-align:left;
+	font-size: 15px;
+    padding: 8px
        
 `
 
@@ -34,6 +38,8 @@ const MarginSpace = styled.div`
 	margin-right: 10px;
 
 `
+
+
 
 
 class Profile extends React.Component {
@@ -88,6 +94,8 @@ class Profile extends React.Component {
 	}
 
 
+
+
 	onEditSubmit = async (e) => {
 			const update = { 
 				first_name: this.state.first_name,
@@ -139,7 +147,7 @@ class Profile extends React.Component {
 								</Col>
 								<Col span={2}><Aright>ชื่อ</Aright></Col>
 								<Col span={8}>
-									<Input name='first_name' value={this.state.first_name}
+									<Input name='first_name' value={this.state.first_name} style={{fontSize:'15px'}} size="large"
 										onChange={(e) => this.onInputChange(e)} />
 								</Col>
 							</Row>
@@ -150,7 +158,7 @@ class Profile extends React.Component {
 								</Col>
 								<Col span={2}><Aright>นามสกุล</Aright></Col>
 								<Col span={8}>
-									<Input name='last_name' value={this.state.last_name}
+									<Input name='last_name' value={this.state.last_name} style={{fontSize:'15px'}} size="large"
 										onChange={(e) => this.onInputChange(e)} />
 								</Col>
 							</Row>
@@ -161,7 +169,7 @@ class Profile extends React.Component {
 								</Col>
 								<Col span={2}><Aright>ที่อยู่</Aright></Col>
 								<Col span={8}>
-									<Input name='address' value={this.state.address}
+									<Input name='address' value={this.state.address} style={{fontSize:'15px'}} size="large"
 										onChange={(e) => this.onInputChange(e)} />
 								</Col>
 							</Row>
@@ -172,7 +180,7 @@ class Profile extends React.Component {
 								</Col>
 								<Col span={2}><Aright>เบอร์โทรศัพท์</Aright></Col>
 								<Col span={8}>
-									<Input name='contact' value={this.state.contact}
+									<Input name='contact' value={this.state.contact} style={{fontSize:'15px'}} size="large"
 										onChange={(e) => this.onInputChange(e)} />
 								</Col>
 							</Row>
@@ -184,20 +192,24 @@ class Profile extends React.Component {
 								</Col>
 								<Col span={2}><Aright>อีเมล์</Aright></Col>
 								<Col span={8}>
-									<Input disabled value={this.state.user ? this.state.user.email : false} />
+									<Input disabled value={this.state.user ? this.state.user.email : false}  
+									style={{fontSize:'15px'}} size="large"/> 
 								</Col>
 							</Row>
 						</PadSpace>
 						<PadSpace>
-							{/* <Row>
+							<Row>
 								<Col span={6}>
 								</Col>
-								<Col span={2}><Aright>รหัสผ่านเดิม</Aright></Col>
-								<Col span={8}>
-									<Input name="password" type="password" value={this.state.password}
-										onChange={(e) => this.onInputChange(e)} />
+								<Col span={2}><Aright>รหัสผ่าน</Aright></Col>
+								<Col span={2}>
+									<Button type="button"
+										onClick={(e)=>history.push('/')} style={{fontSize:'13px'}}  >
+										เปลี่ยนรหัสผ่าน
+										</Button>
 								</Col>
 							</Row>
+							{/*
 							<Row>
 								<Col span={6}>
 								</Col>
@@ -233,12 +245,12 @@ class Profile extends React.Component {
 							<Col span={2}>
 								
 								<Button type="button" 
-									onClick={(e) => this.onEditSubmit(e)}>
+									onClick={(e) => this.onEditSubmit(e)} style={{fontSize:'13px'}}>
 								บันทึกข้อมูล</Button> 
 							</Col>	
 							<Col span={2}>	
 								<Button type="button"
-									onClick={()=> history.push('/')}>
+									onClick={()=> history.push('/')} style={{fontSize:'13px'}}>
 								ย้อนกลับ</Button>
 								
 								
