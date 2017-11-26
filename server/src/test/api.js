@@ -4,6 +4,7 @@ const _ = require('lodash')
 const mongoose = require('mongoose')
 const Promise = require('bluebird')
 const jwt = require('jsonwebtoken')
+const Moment = require('moment')
 
 const app = require('../')
 const UserModel = require('../models/user')
@@ -133,7 +134,8 @@ describe('API tests', () => {
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
-      date: '2048-13-32'
+      date_reserved: '2048-13-32',
+      date_created: Moment().format('YYYY-MM-DD')
     })
     reserve3 = await ReserveModel.createReservation({
       customer_id: customer2.user_id,
@@ -141,7 +143,8 @@ describe('API tests', () => {
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
-      date: '2048-13-32'
+      date_reserved: '2048-13-32',
+      date_created: Moment().format('YYYY-MM-DD')
     })
     serviceTestRemovewUser.owner_id = customerTestDel.user_id
     serviceTestRemovewUser = await ServiceModel.createService(serviceTestRemovewUser)
@@ -153,7 +156,8 @@ describe('API tests', () => {
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
-      date: '2048-13-32'
+      date_reserved: '2048-13-32',
+      date_created: Moment().format('YYYY-MM-DD')
     })
     reserveTestRemovewUser2 = await ReserveModel.createReservation({
       customer_id: customerTestDel.user_id,
@@ -161,7 +165,8 @@ describe('API tests', () => {
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
-      date: '2048-13-32'
+      date_reserved: '2048-13-32',
+      date_created: Moment().format('YYYY-MM-DD')
     })
   })
 
@@ -590,7 +595,7 @@ describe('API tests', () => {
         employee_id: employee1.employee_id,
         start_time: '0100',
         end_time: '0300',
-        date: '29-12-2017',
+        date_reserved: '29-12-2017',
         payment_number: payment1.number
       }
       return request(app)
