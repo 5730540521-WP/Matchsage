@@ -7,7 +7,7 @@ module.exports = {
     'end_time', 'date', 'is_cancel', 'paid_status', 'price'],
 
   user: ['user_id', 'email', 'first_name', 'last_name', 'gender', 'user_type',
-    'address', 'contact'],
+    'address', 'contact', 'payment_accounts'],
 
   payment: ['number', 'method', 'company']
 
