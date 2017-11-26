@@ -623,13 +623,40 @@ describe('API tests', () => {
     })
   })
 
+  describe('# make full payment for reservation', () => {
+    it('UnAuthorized customer should not be able to pay for other\'s reservation', () => {
+      return request(app)
+      .post(`/api/reservations/${reserve1.reserve_id}/make-full-payment`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .send({payment_number: customer1.payment_accounts[0]})
+      .expect(401)
+    })
+
+    it('Authorized customer should be able to pay for his own reservation', () => {
+      const tmpAmount = payment1.amount
+      return request(app)
+      .post(`/api/reservations/${reserve1.reserve_id}/make-full-payment`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({payment_number: customer1.payment_accounts[0]})
+      .expect(200)
+      .then(async () => {
+        const reserve = await ReserveModel.findByReservationId(reserve1.reserve_id)
+        expect(reserve.paid_status).to.equal('fully-paid')
+        payment1 = await PaymentAccountModel.findByNumber(payment1.number)
+        expect(payment1.amount).to.equal(tmpAmount - reserve.price * 0.7)
+      })
+    })
+  })
+
   describe('# cancel reservation', () => {
     it('UnAuthorized customer should not be able to cancel other reservation', () => {
       return request(app)
       .get(`/api/reservations/${reserve1.reserve_id}/cancel`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
-      .expect(400)
+      .expect(401)
     })
 
     it('Authorized customer should be able to cancel his own reservation', () => {

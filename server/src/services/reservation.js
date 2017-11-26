@@ -8,7 +8,7 @@ async function cancelReservation (userId, reserveId) {
   const user = await UserModel.findByUserId(userId)
   if (reserve.customer_id !== user.user_id) {
     const error = new Error('Only customer who make this reservation can cancel the reservation.')
-    error.status = 400
+    error.status = 401
     throw error
   }
   await ReserveModel.cancelReservation(reserveId)
@@ -19,12 +19,12 @@ async function makeFullPayment (userId, reserveId, paymentNumber) {
   const user = await UserModel.findByUserId(userId)
   if (reserve.customer_id !== user.user_id) {
     const error = new Error('Only customer who make this reservation can make payment on this reservation.')
-    error.status = 400
+    error.status = 401
     throw error
   }
   if (_.includes(user.payment_accounts, paymentNumber) === false) {
     const error = new Error('Wrong credit-card/bank-account number.')
-    error.status = 401
+    error.status = 400
     throw error
   }
   const paymentAccount = await PaymentAccountModel.findByNumber(paymentNumber)
@@ -42,7 +42,7 @@ async function makeDepositPayment (userId, price, paymentNumber) {
 
   if (_.includes(user.payment_accounts, paymentNumber) === false) {
     const error = new Error('Wrong credit-card/bank-account number.')
-    error.status = 401
+    error.status = 400
     throw error
   }
   const paymentAccount = await PaymentAccountModel.findByNumber(paymentNumber)
