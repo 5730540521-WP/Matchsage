@@ -61,7 +61,7 @@ class Header extends Component{
 		if (location.substring(0,6) === '/admin') return null
 		return(
 		<Affix>
-			<NavBar style={{boxShadow:'0px 0.1px'}}>
+			<NavBar style={{}}>
 				<div className="navbar-brand">
 					<a className="navbar-item" onClick={()=>history.push('/')} style={{padding:'0px',paddingLeft:'1vw'}}>
 						{/* <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"/> */}
