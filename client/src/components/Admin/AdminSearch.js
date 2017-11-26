@@ -15,8 +15,7 @@ class AdminSearch extends Component {
           isMale: false,
           isFemale: false,
           isOwner: false,
-          isCustomer: false,
-          users: undefined
+          isCustomer: false,          
         }
       }
 
@@ -24,25 +23,18 @@ class AdminSearch extends Component {
       let user_type = undefined
       let gender = undefined
 
-
-
       if(this.state.isMale && !this.state.isFemale) gender = 'male'
       if(!this.state.isMale && this.state.isFemale) gender = 'female'
      
       if(this.state.isOwner && !this.state.isCustomer) user_type = 'owner'
       if(!this.state.isOwner && this.state.isCustomer) user_type = 'customer'     
 
-
-      const res = await AdminActions.getUsers({keyword: this.state.keyword ,gender:gender ,user_type:user_type})
-      const list = res.users.map((r) =>({
-          first_name: r.first_name ? r.first_name : '-', 
-          last_name: r.last_name ? r.last_name : '-', 
-          email: r.email ? r.email : '-', 
-          user_type: r.user_type,
-          gender: r.gender ? r.gender : '-'
-        }))
-      this.setState({ users: list })
-
+      const param = {
+        keyword: this.state.keyword,
+        gender: gender,
+        user_type: user_type
+      }
+      this.props.fetchUsers(param)   
   }
 
   onChangeMale = () => {
@@ -101,7 +93,7 @@ class AdminSearch extends Component {
   
     
   render() {
-    console.log(this.state.users)
+    console.log(this.props.users)    
 
     const columns = [{
         title: 'First Name',
@@ -126,9 +118,9 @@ class AdminSearch extends Component {
         <div className="fuck">
             {this.renderSearchBar()}        
         </div>        
-        {this.state.users && 
+        {this.props.users && 
         <div>
-            <Table className="tableja" dataSource={this.state.users} columns={columns} pagination={false}/>
+            <Table className="tableja" dataSource={this.props.users} columns={columns} pagination={false}/>
         </div>
         }
       </div>
@@ -136,4 +128,18 @@ class AdminSearch extends Component {
   }
 }
 
-export default connect()(AdminSearch)
+function mapStateToProps(state){
+	return {		
+		users: state.AdminReducer.users.users
+	}
+}
+
+function mapDispatchToProps(dispatch){
+	return {
+		fetchUsers: (params)=>{
+			dispatch(AdminActions.getUsers(params))
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminSearch);
