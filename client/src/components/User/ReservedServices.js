@@ -1,5 +1,5 @@
 import React from 'react';
-import { Radio,Modal,Icon,Table,Calendar,LocaleProvider,Row,Col,Button } from 'antd';
+import { message,Radio,Modal,Icon,Table,Calendar,LocaleProvider,Row,Col,Button } from 'antd';
 import thTH from 'antd/lib/locale-provider/th_TH';
 import './ReservedServices.css';
 import {CustomerActions} from 'actions/CustomerActions';
@@ -67,8 +67,7 @@ class ReservedServices extends React.Component{
   
   columns = [{
     title: 'หมายเลขการจอง',
-    dataIndex: 'reserve_id',
-    key: 'reserve_id'
+    dataIndex: 'reserve_id'
   },{
     title: 'ชื่อร้าน',
     dataIndex: 'name',
@@ -92,11 +91,18 @@ class ReservedServices extends React.Component{
     ),
   }];
 
-  handleOk = () => {
+  handleOk = async () => {
     this.setState({ loading: true });
-    let isPaymentSuccess = CustomerActions.payService(this.state.selectedPaymentNumber,this.state.clickedReserved);
-    if(isPaymentSuccess) this.setState({ loading: false, visible: false });
-    else this.setState({ loading: false, visible: false })
+    const isPaymentSuccess = await CustomerActions.payService(this.state.selectedPaymentNumber,this.state.clickedReserved);
+    if(isPaymentSuccess===true) {
+      this.setState({ loading: false, visible: false });
+      this.props.fetchReserved(JWT(localStorage.getItem('user')).user_id);
+      message.success('Payment Successful.');
+    }
+    else {
+      this.setState({ loading: false, visible: false });
+      message.error(isPaymentSuccess);
+    }
   }
   handleCancel = () => {
     this.setState({ visible: false });
@@ -130,7 +136,15 @@ class ReservedServices extends React.Component{
         case('bank-account'):
           switch(record.company){
             case('Krungsri'):
+              return '/images/KRUNGSRI.png';
+            case('Krungthai'):
               return '/images/KTB.png';
+            case('Kbank'):
+              return '/images/KBANK.png';
+            case('SCB'):
+              return '/images/SCB.png';
+            case('Bangkok'):
+              return '/images/BKK.png'
             default:
               return null;
           }
@@ -177,7 +191,7 @@ class ReservedServices extends React.Component{
           </Col>
           <Col span={14}>
             <h1>บริการที่จองไว้</h1>
-            <Table columns={this.columns} dataSource={this.props.customerReservations} />
+            <Table rowKey="reserve_id" columns={this.columns} dataSource={this.props.customerReservations} />
             {this.renderChoosePaymentAccountModal()}
           </Col>
         </Row>

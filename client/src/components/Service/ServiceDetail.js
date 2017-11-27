@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
+import { message,Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
+=======
 import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input,Rate } from 'antd';
+>>>>>>> e08fcc9262b3a62577613c1490d0e8f578d88aeb
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
@@ -116,9 +120,13 @@ class ServiceDetail extends React.Component{
 				}}>ยกเลิก</Button>,
 				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
 					this.setState({ loading: true });
-					console.log(this.props.serviceState);
-					await this.props.sendComplaint(this.props.serviceState
+					const hasError = await CustomerActions.sendServiceComplaint(this.props.serviceState
 			.service.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
+						if(hasError){
+							message.error('Error.');
+						}else {
+							message.success('Sending Complaint Successful.');
+						}
 					this.setState({ loading: false,showServiceComplaint:false });
 				}}>
 					ส่ง
@@ -327,9 +335,8 @@ function mapDispatchToProps(dispatch){
 
 	// }
 	const loadService = CustomerActions.fetchService;
-	const sendComplaint = CustomerActions.sendServiceComplaint;
 	const selectServiceReservation = CustomerActions.selectServiceReservation;
-	return bindActionCreators({loadService,sendComplaint,selectServiceReservation}, dispatch);
+	return bindActionCreators({loadService,selectServiceReservation}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceDetail);
