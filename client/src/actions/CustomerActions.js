@@ -338,8 +338,9 @@ async function sendEmployeeComplaint(service_id,employee_id,topic,content){
 		complaint_type: 'employee'
 	}
 	const headers = authHeader();
-	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
+	const res = await axios.post(API_URL + '/api/complaints/new', data,).catch(error=>{
 		return console.log(error);
 	});
+	console.log(res)
 	return res;
 }

@@ -63,7 +63,7 @@ class ReservationHistory extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		reservationHistory: state.ServiceRecieverReducer.reservationHistory
+		reservationHistory: state.CustomerReducer.reservationHistory
 	}
 }
 

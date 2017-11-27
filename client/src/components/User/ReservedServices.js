@@ -188,8 +188,8 @@ class ReservedServices extends React.Component{
 
 function mapStateToProps(state){
 	return {
-    customerReservations: state.ServiceRecieverReducer.customerReservations,
-    paymentAccounts:state.ServiceRecieverReducer.paymentAccounts
+    customerReservations: state.CustomerReducer.customerReservations,
+    paymentAccounts:state.CustomerReducer.paymentAccounts
 	}
 }
 
