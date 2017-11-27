@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button,Input } from 'antd';
+import { message,Modal, Button,Input } from 'antd';
 import {CustomerActions} from '../../../actions/CustomerActions';
 import {connect} from 'react-redux';
 
@@ -11,7 +11,8 @@ class ReportEmployeeModal extends React.Component{
   }
   handleOk = async () => {
     this.setState({ loading: true });
-    await this.props.sendComplaint(this.props.serviceStore.service_id,this.props.employee.employee_id,this.props.topic,this.props.content);
+    const hasError = await CustomerActions.sendEmployeeComplaint(this.props.serviceStore.service_id,this.props.employee.employee_id,this.props.topic,this.props.content);
+    hasError?message.error('Error.'):message.success('Sending Complaint Successful.')
     this.setState({loading:false});
     this.props.close();
   }
@@ -48,9 +49,6 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
 	return {
-		sendComplaint: (service_id,employee_id,topic,content)=>{
-			dispatch(CustomerActions.sendEmployeeComplaint(service_id,employee_id,topic,content));
-		}
 	}
 }
 

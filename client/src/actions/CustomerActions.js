@@ -4,6 +4,8 @@ import {customerConstants} from '../constants/CustomerConstants';
 import {API_URL, AUTH_HEADER} from '../constants/ConfigConstants';
 import {authHeader, history} from '../helpers';
 import {message} from 'antd';
+import { log, error } from 'util';
+import promise from 'bluebird';
 
 export const CustomerActions = {
 	fetchServices,
@@ -231,7 +233,7 @@ async function fetchReservedServices(customer_id){
 	const headers = authHeader();
 	const resFetchReservedServices = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
 	let formattedReservationsData = [];
-	await Promise.all(resFetchReservedServices.data.reservations.map(async(reservation)=>{
+	await promise.mapSeries(resFetchReservedServices.data.reservations,(async(reservation)=>{
 		if(reservation.paid_status==='deposit-paid'){
 			const headers = authHeader();
 			const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
@@ -248,7 +250,6 @@ async function fetchReservedServices(customer_id){
 	const resPaymentAccounts = await axios.get(API_URL + `/api/users/${customer_id}/payment_accounts` , {headers} );
 	let formattedPaymentAccounts = [];
 	resPaymentAccounts.data.payment_accounts.map((payment_account,index)=>{
-		console.log(payment_account)
 		formattedPaymentAccounts = [...formattedPaymentAccounts,{
 			choice : index,
 			payment_method : payment_account.method,
@@ -269,7 +270,7 @@ async function informReservationHistory(customer_id){
 	const headers = authHeader();
 	const resFetchReservedServices = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
 	let reservationHistory=[];
-	await Promise.all(resFetchReservedServices.data.reservations.map(async(reservation)=>{
+	await promise.mapSeries(resFetchReservedServices.data.reservations,(async(reservation)=>{
 		if(reservation.paid_status==='fully-paid'){
 			const headers = authHeader();
 			const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
@@ -294,16 +295,24 @@ async function payService(payment_number,reserve_id){
 	const data = {
 		payment_number
 	}
-	const res = await axios.post(API_URL + `/api/reservations/${reserve_id}/make-full-payment`,data,{headers});
-	return res.data.success
+	let hasError = false;
+	let errorMessage='';
+	const res = await axios.post(API_URL + `/api/reservations/${reserve_id}/make-full-payment`,data,{headers}).catch(error=>{hasError=true;errorMessage=error.response.data.error})
+	if(hasError) return errorMessage
+	else return res.data.success
 }
 
 // Use case: 16
 async function informBillDetail(reserve_id){
 	const headers = authHeader();
 	const res = await axios.get(API_URL + `/api/receipts/${reserve_id}`,{headers});
-	console.log(res.data)
-	return;
+	let billDetail = res.data;
+	const user = await axios.get(API_URL + `/api/users/${billDetail.customer_id}` , {headers} );
+	billDetail = {...billDetail,first_name:user.data.first_name,last_name:user.data.last_name}
+	return {
+		type:customerConstants.CUSTOMER_FETCH_BILL_DETAIL,
+		billDetail
+	}
 }
 
 // Use case: 17
@@ -338,10 +347,11 @@ async function sendServiceComplaint(service_id,topic,content){
 		complaint_type: 'service'
 	}
 	const headers = authHeader();
+	let hasError = false;
 	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
-		return console.log(error);
+		hasError = true;
 	});
-	return res;
+	return hasError;
 }
 
 async function sendEmployeeComplaint(service_id,employee_id,topic,content){
@@ -353,9 +363,9 @@ async function sendEmployeeComplaint(service_id,employee_id,topic,content){
 		complaint_type: 'employee'
 	}
 	const headers = authHeader();
+	let hasError = false;
 	const res = await axios.post(API_URL + '/api/complaints/new', data,{headers}).catch(error=>{
-		return console.log(error);
+		hasError = true;
 	});
-	console.log(res)
-	return res;
+	return hasError;
 }

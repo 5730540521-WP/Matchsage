@@ -335,17 +335,6 @@ class Profile extends React.Component {
 								</PadSpace>
 								<PadSpace>
 									<Row>
-										<Col span={6}>
-										</Col>
-										<Col span={2}><Aright>รหัสผ่าน</Aright></Col>
-										<Col span={2}>
-											<Button type="button"
-												onClick={(e) => history.push('/')} style={{ fontSize: '13px' }}  >
-												เปลี่ยนรหัสผ่าน
-												</Button>
-										</Col>
-									</Row>
-									<Row>
 										<Col span={4}>
 										</Col>
 										<Col span={4}><Aright>ประเภทสมาชิก</Aright> </Col>
@@ -379,7 +368,34 @@ class Profile extends React.Component {
 								return (
 									<Card title={method+title} bordered={true} style={{ width: 300, margin: 10 }}>
 										<p>ชำระผ่าน: {account.method}</p>
-										<p>ช่องทางการชำระเงิน: <img src="../../images/visa.png" style={{ maxHeight: '15px' }} /></p>
+										<p>ช่องทางการชำระเงิน: <img src={(() => {
+											switch (account.method) {
+												case ('credit-card'):
+													switch (account.company) {
+														case ('visa'):
+															return '/images/visa.png';
+														default:
+															return null;
+													}
+												case ('bank-account'):
+													switch (account.company) {
+														case ('Krungsri'):
+															return '/images/KRUNGSRI.png';
+														case ('Krungthai'):
+															return '/images/KTB.png';
+														case ('Kbank'):
+															return '/images/KBANK.png';
+														case ('SCB'):
+															return '/images/SCB.png';
+														case ('Bangkok'):
+															return '/images/BKK.png'
+														default:
+															return null;
+													}
+												default:
+													return null;
+											}
+										})()} style={{ maxHeight: '15px' }} /></p>
 									</Card>
 								)
 							}) : <h1>ท่านยังไม่มีบัญชีการเงินใดๆ</h1> : null

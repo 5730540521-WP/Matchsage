@@ -3,6 +3,7 @@ const AuthServ = require('../services/auth')
 const ReceiptModel = require('../models/receipt')
 const UserModel = require('../models/user')
 const ReceiptService = require('../services/receipt')
+const path = require('path')
 
 const ExpressJoi = require('express-joi-validator')
 const Joi = require('joi')
@@ -63,8 +64,20 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
       next(error)
     }
     await ReceiptService.downloadReceipt(req.user.user_id, receipt.reservation_id)
-
-    res.download('receipt.pdf')
+    // res.setHeader({'Content-disposition': 'attachment; filename=receipt.pdf'})
+    //console.log(__dirname+ '/../../tmp/')
+    var file = path.join(__dirname + '/../../tmp/receipt.pdf')
+    res.download(file, function (err) {
+      if (err) {
+        console.log('Error')
+        console.log(err)
+      } else {
+        console.log('success')
+      }
+    })
+    
+    //res.download(__dirname + '/../../tmp/receipt.pdf')
+    //console.log('success')
   } catch (error) {
     next(error)
   }

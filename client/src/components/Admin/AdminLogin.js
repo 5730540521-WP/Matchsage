@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import propTypes from 'prop-types'
-import { Form, Icon, Input, Button, Menu, Dropdown } from 'antd'
+import { Form, Icon, Input, Button, Menu, Dropdown, Modal } from 'antd'
 import { AdminActions } from '../../actions/AdminActions';
 import './AdminLogin.css'
 // import { pushRoute } from '../../helpers/router'
@@ -24,7 +24,10 @@ class NormalLoginForm extends React.Component {
         AdminActions.login({ email: values.userName, password: values.password })
           .then(() => {
             this.setState({ loginState: false })
-            alert('Login successful!')
+            Modal.success({
+              title: 'Login success!',
+              content: 'Let`s ban some users.'
+            });
             history.push('/admin')
           })
           .catch(e => {

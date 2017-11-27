@@ -65,7 +65,7 @@ class Header extends Component{
 				<div className="navbar-brand">
 					<a className="navbar-item" onClick={()=>history.push('/')}>
 						{/* <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"/> */}
-						<img src="../images/Picture1.png" style={{maxHeight:'36px'}}/>
+						<img src="/images/Picture1.png" style={{maxHeight:'36px'}}/>
 						{/* <h1>Matchsage</h1> */}
 					</a>
 					{/* <a className="navbar-item is-hidden-desktop" href="https://github.com/jgthms/bulma" target="">

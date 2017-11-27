@@ -72,7 +72,8 @@ class Owner extends React.Component{
 
 		if(! this.props.alreadyFetch) this.props.fetchServices();
 		
-		return(	
+		return(
+			<div>
 			<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 				<Col span={5} style={{paddingLeft:'0px'}}>
 					<Menu onClick={this.handleSidebarClick}	>
@@ -93,7 +94,8 @@ class Owner extends React.Component{
 					onCloseModal={()=>this.toggleCreateServiceModal(false)}					
 					aftersubmit = {this.aftersubmit}
 				/>							
-			</Row>			
+			</Row>
+			</div>		
 		);
 	}
 }
