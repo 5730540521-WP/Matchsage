@@ -206,9 +206,22 @@ async function fetchReservedServices(customer_id){
 			}]
 		}
 	}));
+	const resPaymentAccounts = await axios.get(API_URL + `/api/users/${customer_id}/payment_accounts` , {headers} );
+	let formattedPaymentAccounts = [];
+	resPaymentAccounts.data.payment_accounts.map((payment_account,index)=>{
+		console.log(payment_account)
+		formattedPaymentAccounts = [...formattedPaymentAccounts,{
+			choice : index,
+			payment_method : payment_account.method,
+			payment_number : payment_account.number,
+			expire_date : '2018/01',
+			company : payment_account.company
+		}]
+	})
 	return {
 		type:customerConstants.FETCH_CUSTOMER_RESERVATIONS,
-		customerReservations:formattedReservationsData
+		customerReservations:formattedReservationsData,
+		paymentAccounts:formattedPaymentAccounts
 	}
 }
 
@@ -237,22 +250,20 @@ function payDeposit(){
 }
 
 // Use case: 15
-async function payService(user_id,reserve_id){
+async function payService(payment_number,reserve_id){
 	const headers = authHeader();
-	const user = await axios.get(API_URL + `/api/users/${user_id}/payment_accounts` , {headers} );
 	const data = {
-		payment_number: user.data.payment_accounts[0].number
+		payment_number
 	}
 	const res = await axios.post(API_URL + `/api/reservations/${reserve_id}/make-full-payment`,data,{headers});
-	console.log(res.data)
-	return;
+	return res.data.success
 }
 
 // Use case: 16
 async function informBillDetail(reserve_id){
 	const headers = authHeader();
 	const res = await axios.get(API_URL + `/api/receipts/${reserve_id}`,{headers});
-	console.log(res)
+	console.log(res.data)
 	return;
 }
 
