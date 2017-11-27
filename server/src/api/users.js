@@ -32,7 +32,6 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
 router.post('/:id/add-credit-card', AuthServ.isAuthenticated, ExpressJoi({
   body: {
     number: Joi.string(),
-    amount: Joi.number(),
     company: Joi.string().optional()
   }
 }), async (req, res, next) => {
@@ -52,7 +51,6 @@ router.post('/:id/add-credit-card', AuthServ.isAuthenticated, ExpressJoi({
 router.post('/:id/add-bank-account', AuthServ.isAuthenticated, ExpressJoi({
   body: {
     number: Joi.string(),
-    amount: Joi.number(),
     company: Joi.string().optional()
   }
 }), async (req, res, next) => {

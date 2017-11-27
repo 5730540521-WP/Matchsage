@@ -3,6 +3,7 @@ import * as JWT from 'jwt-decode';
 import {customerConstants} from '../constants/CustomerConstants';
 import {API_URL, AUTH_HEADER} from '../constants/ConfigConstants';
 import {authHeader, history} from '../helpers';
+import {message} from 'antd';
 
 export const CustomerActions = {
 	fetchServices,
@@ -16,10 +17,11 @@ export const CustomerActions = {
 	selectEmployeeReservation,
 	fetchPaymentAccount,
 	selectPaymentAccountReservation,
+	fetchMyPaymentAccount,
+	addPaymentAccount,
 	// END Reserve
 	cancelReserveService,
 	rateService,
-	addAccountNumber,
 	addCreditCard,
 	informReservationHistory,
 	payDeposit,
@@ -28,7 +30,7 @@ export const CustomerActions = {
 	downloadBillDetail,
 	sendServiceComplaint,
 	sendEmployeeComplaint,
-	fetchReservedServices,
+	fetchReservedServices
 }
 
 async function fetchServices(){
@@ -69,12 +71,10 @@ async function searchService(keyword){
 }
 
 // Use case: 8
-async function reserveService(){
+async function reserveService(service_id, employee_id, start_time, end_time, date_reserved, payment_number){
 
-	const {service_id, employee_id, start_time, end_time, date} = this.props;
-	const {price} = this.state;
 	const data = {
-		service_id, employee_id, start_time, end_time, date, price 
+		service_id, employee_id, start_time, end_time, date_reserved, payment_number
 	}
 	const headers = authHeader();
 	const res = await axios.post(`${API_URL}/api/reservations/new`, data, {headers})
@@ -82,8 +82,26 @@ async function reserveService(){
 			history.push(`/service/${service_id}`);
 			return failure(err);
 		});
-	history.push('/reserved-resevations');
+
+	message.success('การจองบริการสำเร็จ');
+	setTimeout(()=>{
+		history.push('/user/reserved-services');
+	},2000);
 	return success();
+
+	// const {service_id, employee_id, start_time, end_time, date} = this.props;
+	// const {price} = this.state;
+	// const data = {
+	// 	service_id, employee_id, start_time, end_time, date, price 
+	// }
+	// const headers = authHeader();
+	// const res = await axios.post(`${API_URL}/api/reservations/new`, data, {headers})
+	// 	.catch(err=>{
+	// 		history.push(`/service/${service_id}`);
+	// 		return failure(err);
+	// 	});
+	// history.push('/reserved-resevations');
+	// return success();
 
 	function success(){return{type:customerConstants.CUSTOMER_RESERVE_SUCCESS}};
 	function failure(error){return{type:customerConstants.CUSTOMER_RESERVE_FAILURE,error}};
@@ -133,12 +151,25 @@ function selectEmployeeReservation(employee){
 async function fetchPaymentAccount(){
 	const user_id = JWT(localStorage.getItem('user')).user_id;
 	const headers = authHeader();
-	const res = await axios.get(`${API_URL}/api/users/${user_id}`, {headers});
-	const user = res.data;
-	const payment_accounts = user.payment_accounts;
+	const res = await axios.get(`${API_URL}/api/users/${user_id}/payment_accounts`, {headers});
+	// const user = res.data;
+	// const payment_accounts = user.payment_accounts;
+	const payment_accounts = res.data.payment_accounts;
+	console.log(payment_accounts);
 	return{
 		type: customerConstants.CUSTOMER_FETCH_PAYMENT_RESERVATION,
 		payment_accounts
+	}
+}
+
+async function fetchMyPaymentAccount(){
+	const user_id = JWT(localStorage.getItem('user')).user_id;
+	const headers = authHeader();
+	const res = await axios.get(`${API_URL}/api/users/${user_id}/payment_accounts`, { headers });
+	const accounts = res.data
+	return {
+		type: 'FETCH_PAYMENT_ACCOUNT',
+		payload: accounts
 	}
 }
 
@@ -175,8 +206,20 @@ async function rateService(service_id,score,rating_type){
 }
 
 // Use case: 11
-function addAccountNumber(){
-
+async function addPaymentAccount({ number, method, company }){
+	const user_id = JWT(localStorage.getItem('user')).user_id;
+	const headers = authHeader();
+	const data = {
+		number, company
+	}
+	const methodString = method === 'credit-card' ? 'add-credit-card' : 'add-bank-account'
+	await axios.post(`${API_URL}/api/users/${user_id}/${methodString}`, data, { headers });
+	const accs = await axios.get(`${API_URL}/api/users/${user_id}/payment_accounts`, { headers });
+	const accounts = accs.data
+	return {
+		type: 'FETCH_PAYMENT_ACCOUNT',
+		payload: accounts
+	}
 }
 
 // Use case: 12
@@ -189,21 +232,35 @@ async function fetchReservedServices(customer_id){
 	const resFetchReservedServices = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
 	let formattedReservationsData = [];
 	await Promise.all(resFetchReservedServices.data.reservations.map(async(reservation)=>{
-		const headers = authHeader();
-		const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
-		formattedReservationsData = [...formattedReservationsData,{
-			reserve_id: reservation.reserve_id,
-			name: resServiceDetail.data.service_name,
-			service_type: '',
-			date: reservation.date_reserved,
-			time: `${reservation.start_time.toString().substr(0,2)}:${reservation.start_time.toString().substr(2,2)} ถึง ${reservation.end_time.toString().substr(0,2)}:${reservation.end_time.toString().substr(0,2)}`,
-			paid_status: reservation.paid_status,
-			service_id: reservation.service_id
-		}]
+		if(reservation.paid_status==='deposit-paid'){
+			const headers = authHeader();
+			const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
+			formattedReservationsData = [...formattedReservationsData,{
+				reserve_id: reservation.reserve_id,
+				name: resServiceDetail.data.service_name,
+				service_type: '',
+				date: reservation.date_reserved,
+				time: `${reservation.start_time.toString().substr(0,2)}:${reservation.start_time.toString().substr(2,2)} ถึง ${reservation.end_time.toString().substr(0,2)}:${reservation.end_time.toString().substr(0,2)}`,
+				service_id: reservation.service_id
+			}]
+		}
 	}));
+	const resPaymentAccounts = await axios.get(API_URL + `/api/users/${customer_id}/payment_accounts` , {headers} );
+	let formattedPaymentAccounts = [];
+	resPaymentAccounts.data.payment_accounts.map((payment_account,index)=>{
+		console.log(payment_account)
+		formattedPaymentAccounts = [...formattedPaymentAccounts,{
+			choice : index,
+			payment_method : payment_account.method,
+			payment_number : payment_account.number,
+			expire_date : '2018/01',
+			company : payment_account.company
+		}]
+	})
 	return {
 		type:customerConstants.FETCH_CUSTOMER_RESERVATIONS,
-		customerReservations:formattedReservationsData
+		customerReservations:formattedReservationsData,
+		paymentAccounts:formattedPaymentAccounts
 	}
 }
 
@@ -213,10 +270,12 @@ async function informReservationHistory(customer_id){
 	const resFetchReservedServices = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
 	let reservationHistory=[];
 	await Promise.all(resFetchReservedServices.data.reservations.map(async(reservation)=>{
-		const headers = authHeader();
-		const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
-		reservationHistory = [...reservationHistory,{...reservation,service_name:resServiceDetail.data.service_name
-		}]
+		if(reservation.paid_status==='fully-paid'){
+			const headers = authHeader();
+			const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
+			reservationHistory = [...reservationHistory,{...reservation,service_name:resServiceDetail.data.service_name
+			}]
+		}
 	}));
 	return {
 		type:customerConstants.FETCH_CUSTOMER_RESERVATION_HISTORY,
@@ -230,23 +289,43 @@ function payDeposit(){
 }
 
 // Use case: 15
-function payService(){
-
+async function payService(payment_number,reserve_id){
+	const headers = authHeader();
+	const data = {
+		payment_number
+	}
+	const res = await axios.post(API_URL + `/api/reservations/${reserve_id}/make-full-payment`,data,{headers});
+	return res.data.success
 }
 
 // Use case: 16
 async function informBillDetail(reserve_id){
 	const headers = authHeader();
 	const res = await axios.get(API_URL + `/api/receipts/${reserve_id}`,{headers});
-	console.log(res)
+	console.log(res.data)
 	return;
 }
 
 // Use case: 17
 async function downloadBillDetail(reserve_id){
 	const headers = authHeader();
+	let newWindow = window.open('', '_blank');
 	const res = await axios.get(API_URL + `/api/receipts/${reserve_id}/download`,{headers});
-	console.log(res)
+	let uriContent = "data:application/pdf," + encodeURIComponent(res.data);
+	//window.open(uriContent, 'neuesDokument')
+	newWindow.location.href = uriContent;
+	// var pom = document.createElement('a');
+	// pom.setAttribute('href', 'data:application/pdf,' + encodeURIComponent(res.data));
+	// pom.setAttribute('download', 'receipt.pdf');
+
+	// if (document.createEvent) {
+	// 		var event = document.createEvent('MouseEvents');
+	// 		event.initEvent('click', true, true);
+	// 		pom.dispatchEvent(event);
+	// }
+	// else {
+	// 		pom.click();
+	// }
 	return;
 }
 
@@ -274,8 +353,9 @@ async function sendEmployeeComplaint(service_id,employee_id,topic,content){
 		complaint_type: 'employee'
 	}
 	const headers = authHeader();
-	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
+	const res = await axios.post(API_URL + '/api/complaints/new', data,{headers}).catch(error=>{
 		return console.log(error);
 	});
+	console.log(res)
 	return res;
 }

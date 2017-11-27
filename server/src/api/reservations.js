@@ -87,7 +87,13 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
     })
     const reserve = await ReserveModel.createReservation(body)
     const paymentAccount = await PaymentAccountModel.findByNumber(req.body.payment_number)
-    const receiptInput = Object.assign({ payment_method: paymentAccount.method, reservation_id: reserve.reserve_id, payment_date: body.date_reserved, payment_type: 'deposit-paid', price: price }, body)
+    const receiptInput = {
+      customer_id: body.customer_id,
+      reservation_id: reserve.reserve_id,
+      payment_type: 'deposit-paid',
+      payment_method: paymentAccount.method,
+      price: body.price * 0.3,
+      payment_date: body.date_created}
     await ReceiptModel.createReceipt(receiptInput)
     res.json(reserve)
     await EmailServ.mailConfirmReservation(reserve.reserve_id)
@@ -108,8 +114,16 @@ router.get('/:id/cancel', AuthServ.isAuthenticated, async (req, res, next) => {
 router.post('/:id/make-full-payment', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const reserve = await ReserveModel.findByReservationId(req.params.id)
+    const paymentAccount = await PaymentAccountModel.findByNumber(req.body.payment_number)
     await ReserveServ.makeFullPayment(req.user.user_id, req.params.id, req.body.payment_number)
-    const receiptInput = Object.assign({ customer_id: req.user.user_id, reservation_id: reserve.reserve_id, payment_type: 'full-paid', price: reserve.price, payment_date: reserve.date_reserved })
+    const receiptInput = {
+      customer_id: req.user.user_id,
+      reservation_id: reserve.reserve_id,
+      payment_type: 'full-paid',
+      payment_method: paymentAccount.method,
+      price: reserve.price * 0.7,
+      payment_date: reserve.date_reserved}
+    console.log(receiptInput)
     await ReceiptModel.createReceipt(receiptInput)
     res.json({ success: true })
   } catch (error) {

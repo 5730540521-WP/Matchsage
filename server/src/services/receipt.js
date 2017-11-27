@@ -21,15 +21,30 @@ async function downloadReceipt (userId, reserveId) {
     error.status = 400
     throw Error
   }
-  var tempReceipt = new Pdf()
-  tempReceipt.pipe(fs.createWriteStream('receipt.pdf'))
 
-  tempReceipt.font('Times-Roman')
+  var tempReceipt = new Pdf()
+  return new Promise((resolve, reject) => {
+    let pendingStepCount = 2
+
+    const stepFinished = () => {
+      if (--pendingStepCount === 0) {
+        resolve()
+      }
+    }
+
+    var ws = fs.createWriteStream('receipt.pdf')
+    ws.on('close', stepFinished)
+    tempReceipt.pipe(ws)
+
+    tempReceipt.font('Times-Roman')
     .fontSize(30)
     .text(`Receipt No. ${receipt.receipt_id} \nValue Customer:  ${user.first_name}   ${user.last_name}\nService : ${receipt.reservation_id}\nPrice: ${receipt.price}`, 100, 100)
-  tempReceipt.end()
-  
-  return tempReceipt
+    tempReceipt.end()
+
+    stepFinished()
+    ws.on('close', () => {
+    })
+  })
 }
 
 module.exports = {

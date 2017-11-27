@@ -6,13 +6,17 @@ const _ = require('lodash')
 const filteredReserveKeys = require('../config/filter').reservation
 
 async function addCreditCard (userId, values) {
-  const opts = Object.assign({}, values, { user_id: userId, method: 'credit-card' })
+  const opts = Object.assign({}, values, {user_id: userId,
+    method: 'credit-card',
+    amount: Math.random() * 10000 + 2000})
   const newCreditCard = await PaymentAccountModel.createPayment(opts)
   await UserModel.findOneAndUpdate({ user_id: userId }, { $push: { payment_accounts: newCreditCard.number } })
 }
 
 async function addBankAccount (userId, values) {
-  const opts = Object.assign({}, values, { user_id: userId, method: 'bank-account' })
+  const opts = Object.assign({}, values, {user_id: userId,
+    method: 'bank-account',
+    amount: Math.random() * 10000 + 2000})
   const newBankAccount = await PaymentAccountModel.createPayment(opts)
   await UserModel.findOneAndUpdate({ user_id: userId }, { $push: { payment_accounts: newBankAccount.number } })
 }
