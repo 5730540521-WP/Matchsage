@@ -17,10 +17,11 @@ export const CustomerActions = {
 	selectEmployeeReservation,
 	fetchPaymentAccount,
 	selectPaymentAccountReservation,
+	fetchMyPaymentAccount,
+	addPaymentAccount,
 	// END Reserve
 	cancelReserveService,
 	rateService,
-	addAccountNumber,
 	addCreditCard,
 	informReservationHistory,
 	payDeposit,
@@ -29,7 +30,7 @@ export const CustomerActions = {
 	downloadBillDetail,
 	sendServiceComplaint,
 	sendEmployeeComplaint,
-	fetchReservedServices,
+	fetchReservedServices
 }
 
 async function fetchServices(){
@@ -161,6 +162,17 @@ async function fetchPaymentAccount(){
 	}
 }
 
+async function fetchMyPaymentAccount(){
+	const user_id = JWT(localStorage.getItem('user')).user_id;
+	const headers = authHeader();
+	const res = await axios.get(`${API_URL}/api/users/${user_id}/payment_accounts`, { headers });
+	const accounts = res.data
+	return {
+		type: 'FETCH_PAYMENT_ACCOUNT',
+		payload: accounts
+	}
+}
+
 function selectPaymentAccountReservation(payment_account){
 	return{
 		type: customerConstants.CUSTOMER_SELECT_PAYMENT_ACCOUNT_RESERVATION,
@@ -179,8 +191,20 @@ function rateService(){
 }
 
 // Use case: 11
-function addAccountNumber(){
-
+async function addPaymentAccount({ number, method, company }){
+	const user_id = JWT(localStorage.getItem('user')).user_id;
+	const headers = authHeader();
+	const data = {
+		number, company
+	}
+	const methodString = method === 'credit-card' ? 'add-credit-card' : 'add-bank-account'
+	await axios.post(`${API_URL}/api/users/${user_id}/${methodString}`, data, { headers });
+	const accs = await axios.get(`${API_URL}/api/users/${user_id}/payment_accounts`, { headers });
+	const accounts = accs.data
+	return {
+		type: 'FETCH_PAYMENT_ACCOUNT',
+		payload: accounts
+	}
 }
 
 // Use case: 12
