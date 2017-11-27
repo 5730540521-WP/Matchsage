@@ -8,11 +8,35 @@ import {authHeader, history} from 'helpers';
 import {API_URL} from 'constants/ConfigConstants';
 
 import styled from 'styled-components';
-import {Button, message} from 'antd';
+import {Button, Card, Row, Col, message} from 'antd';
+
+
+const Agreement = styled.div`
+	border: 2px solid grey;
+	border-radius: 10px;
+	margin: 0px 25px 50px 25px;
+`;
+
+const Price = styled.div`
+	
+`;
 
 const EmployeeImg = styled.img`
-	border-radius: 50%;
+	width:100%;
 `;
+
+const Employee = styled(Card)`
+	width: 250px;
+	height: 250px;
+	margin-left: 100px;
+	margin-top: 100px;
+`;
+
+const ReserveButton = styled(Button)`
+	widht: 150px;
+	height: 100px;
+`;
+
 class ReservationConfirmation extends React.PureComponent{
 	constructor(props){
 		super(props);
@@ -47,46 +71,70 @@ class ReservationConfirmation extends React.PureComponent{
 
 	reserveService = async()=>{
 		const {service_id, employee_id, start_time, end_time, date, payment_account} = this.props;
-		const data = {
-			service_id, employee_id, start_time, end_time, date_reserved:date, payment_number:payment_account
-		}
-		const headers = authHeader();
-		const res = await axios.post(`${API_URL}/api/reservations/new`, data, {headers})
-			.catch(err=>{
-				history.push(`/service/${service_id}`);
-			});
+		
+		this.props.reserveService(service_id, employee_id, start_time, end_time, date, payment_account);
+		// const data = {
+		// 	service_id, employee_id, start_time, end_time, date_reserved:date, payment_number:payment_account
+		// }
+		// const headers = authHeader();
+		// const res = await axios.post(`${API_URL}/api/reservations/new`, data, {headers})
+		// 	.catch(err=>{
+		// 		history.push(`/service/${service_id}`);
+		// 	});
 
-		message.success('การจองบริการสำเร็จ');
-		setTimeout(()=>{
-			history.push('/user/reserved-services');
-		},2000);
+		// message.success('การจองบริการสำเร็จ');
+		// setTimeout(()=>{
+		// 	history.push('/user/reserved-services');
+		// },2000);
 		
 	}
 
 	render(){
+		const {employee} = this.props;
+		const {first_name, last_name} = employee;
 		return(
 			<div>
+				<Agreement>
 					เงื่อนไข & ข้อตกลง
+					<br/>
 					1. ทางผู้รับบริการจะรับผิดชอบค่าเสียหาย
+					<br/>
 					2. ทางผู้รับบริการจะรับผิดชอบค่าเสียหาย
-				<div>
-					{/* ค่าบริการทั้งหมด <h3>{this.props.price}</h3> */}
-					ค่าบริการทั้งหมด <h3>{this.state.price}</h3>
-					<Button onClick={this.reserveService}> จองบริการ </Button>
-				</div>
+				</Agreement>
+				<Row gutter={16}>
+					<Col span={8}>
+						<Employee>
+							<div className="custom-image">
+								<EmployeeImg alt="example" src="http://upic.me/i/r0/yqm18.jpg"/>
+							</div>
+							<div className="custom-card">
+								<h3>ชื่อ: {first_name} {last_name}</h3>
+							</div>
+						</Employee>
+					</Col>
+					<Col span={8}>
+						<Price>
+							{/* ค่าบริการทั้งหมด <h3>{this.props.price}</h3> */}
+							ค่าบริการทั้งหมด: <strong><h3>{this.state.price}</h3></strong>
+							<br/>
+							<ReserveButton onClick={this.reserveService}> จองบริการ </ReserveButton>
+						</Price>
+					</Col>
+				</Row>
 			</div>
 		);
 	}
 }
 
 function mapStateToProps({reservation}){
-	const {price_per_hour, date, start_time, end_time, service_id, employee_id, payment_account} = reservation;
-	return {price_per_hour, date, start_time, end_time, service_id, employee_id, payment_account};
+	const {price_per_hour, date, start_time, end_time, 
+		service_id, employee_id, payment_account, employee} = reservation;
+	return {price_per_hour, date, start_time, end_time, 
+		service_id, employee_id, payment_account, employee};
 }	
 
 function mapDispatchToProps(dispatch){
 	const reserveService = CustomerActions.reserveService;
-	
 	return bindActionCreators({reserveService},dispatch);
 }
 
