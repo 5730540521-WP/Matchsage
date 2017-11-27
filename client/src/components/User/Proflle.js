@@ -337,17 +337,6 @@ class Profile extends React.Component {
 									<Row>
 										<Col span={6}>
 										</Col>
-										<Col span={2}><Aright>รหัสผ่าน</Aright></Col>
-										<Col span={2}>
-											<Button type="button"
-												onClick={(e) => history.push('/')} style={{ fontSize: '13px' }}  >
-												เปลี่ยนรหัสผ่าน
-												</Button>
-										</Col>
-									</Row>
-									<Row>
-										<Col span={6}>
-										</Col>
 										<Col span={2}><Aright>ประเภทสมาชิก</Aright> </Col>
 										<Col span={6}><Bspace><Aleft>{this.state.isCustomer ? ": ผู้รับบริการ" : this.state.isOwner ? ": ผู้ให้บริการ" : ": ผู้ดูแลระบบ"}</Aleft></Bspace> </Col>
 									</Row>
