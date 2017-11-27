@@ -196,13 +196,13 @@ class ServiceDetail extends React.Component{
 							<H2>คะแนนบริการ</H2>
 							<Lalign>
 								{/* {Service Rate} */}
-							<Rate disabled  defaultValue={this.props.serviceState.service.rating} style={{backgroundColor : '#bfbfbf'}} />
+									<Rate disabled defaultValue={this.props.serviceState.service.rating} style={{}} />
 							</Lalign>
 
 
 							<H2 style={{marginLeft:'20px',marginTop:'15px', fontSize:'15px'}}>ให้คะแนนบริการนี้</H2>
 							<Lalign>
-							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px', backgroundColor : '#ccffcc'}}/>
+							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px' }}/>
 							<Button type='primary' 
 								onClick={(e) => this.onRatingService(e)} style={{fontSize:'13px',marginLeft:'10px'}}>>
 								ส่ง</Button>
