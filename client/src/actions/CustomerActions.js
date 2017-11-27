@@ -186,7 +186,22 @@ function cancelReserveService(){
 }
 
 // Use case: 10
-function rateService(){
+async function rateService(service_id,score,rating_type){
+	const data ={
+		score, rating_type
+	};
+
+	const headers = authHeader();
+	await axios.post(`${API_URL}/api/services/${service_id}/rate`, data, {headers});
+	// const service = await axios.get(API_URL + `/api/services/${service_id}`, {headers});
+	// const ownerDetail = await axios.get(API_URL + `/api/users/${service.data.owner_id}`,{headers});
+	// const employees = await axios.get(API_URL + `/api/services/${service_id}/employees` , {headers});
+	// return{
+	// 	type: customerConstants.CUSTOMER_FETCH_SERVICE,
+	// 	service: service,
+	// 	ownerDetail: ownerDetail,
+	// 	employees: employees
+	// }
 
 }
 
