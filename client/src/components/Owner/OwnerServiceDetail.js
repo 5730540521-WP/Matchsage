@@ -118,7 +118,7 @@ class OwnerServiceDetail extends React.Component{
 						<H1>ที่อยู่</H1>
 						<P>{this.props.serviceReducer.service.address}<br/></P>
 						<P>เบอร์ {this.props.serviceReducer.service.contact_number}</P>
-						<P>อีเมล์ {this.props.serviceReducer.ownerDetail.email}</P>
+						<P>อีเมล {this.props.serviceReducer.ownerDetail.email}</P>
 						<H1>คะแนน</H1>
 						<P>{this.props.serviceReducer.service.rating}</P>
 						<H1>ราคา</H1>
@@ -198,7 +198,8 @@ class OwnerServiceDetail extends React.Component{
 		let loaded = this.props.serviceReducer.service;
 		return (
 			loaded?this.props.serviceReducer.service.service_id?
-			<div style={{color:'#402900'}}>				
+			<div style={{color:'#402900'}}>	
+				<img src="/images/banner.jpg" style={{ width: '100%', height: 400 }} />			
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu			

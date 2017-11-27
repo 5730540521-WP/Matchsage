@@ -15,7 +15,7 @@ export default (props)=>{
 				<div className="media-content">
 					<div className="content">
 						<p>
-							<strong style={{color:'#402900'}}>{service.service_name}</strong> Rating: <small>{service.rating}</small>
+							<strong style={{color:'#402900'}}>{service.service_name}</strong> Rating: <small>{parseFloat(service.rating).toFixed(2)}</small>
 							<br/>
 							{service.contact_number}
 							<br/>

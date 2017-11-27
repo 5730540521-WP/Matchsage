@@ -21,6 +21,9 @@ initializeDb()
 // logger
 app.use(morgan('dev'))
 
+//tmp file
+app.use(express.static(path.join('tmp')));
+
 // 3rd party middleware
 app.use(cors({
   exposedHeaders: config.corsHeaders

@@ -32,7 +32,8 @@ async function downloadReceipt (userId, reserveId) {
       }
     }
 
-    var ws = fs.createWriteStream('receipt.pdf')
+    var ws = fs.createWriteStream('tmp/receipt.pdf')
+    
     ws.on('close', stepFinished)
     tempReceipt.pipe(ws)
 

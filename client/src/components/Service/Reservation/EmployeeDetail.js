@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from 'actions/CustomerActions';
 import styled from 'styled-components';
-import {Card} from 'antd';
+import {Card, Icon} from 'antd';
 
 const EmployeeCard = styled(Card)`
 	max-width: 240px;
@@ -13,6 +13,13 @@ const EmployeeCard = styled(Card)`
 		cursor: pointer;
 	}
 `;
+
+const IconChecked = styled(Icon).attrs({
+	type: 'check-circle'
+})`
+	color: #08c;
+`;
+
 
 class EmployeeDetail extends React.PureComponent{
 
@@ -34,15 +41,14 @@ class EmployeeDetail extends React.PureComponent{
 		const {first_name, last_name, gender, rating, employee_id} = this.props.employee;
 		const selected_employee = this.props.employee_id;
 		return(
-			<EmployeeCard onClick={this.onSelectEmployee} 
-				bordered={selected_employee===employee_id}>
+			<EmployeeCard onClick={this.onSelectEmployee} >
 				<div className="custom-image">
 					<img alt="example" src="http://upic.me/i/r0/yqm18.jpg" />
 				</div>
 				<div className="custom-card">
 					<h3>ชื่อ: {first_name} {last_name}</h3>
 					<h3>เพศ: {gender}</h3>
-					<h3>คะแนน: {rating}</h3>
+					<h3>คะแนน: {rating}</h3> {selected_employee===employee_id && <IconChecked/>}
 				</div>
 			</EmployeeCard>		
 		);

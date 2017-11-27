@@ -1,8 +1,13 @@
 import React from 'react';
+<<<<<<< HEAD
 import { message,Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
+=======
+import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input,Rate } from 'antd';
+>>>>>>> e08fcc9262b3a62577613c1490d0e8f578d88aeb
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
+import {history} from '../../helpers';
 import NotFound from '../NotFound';
 import styled from 'styled-components';
 import MapComponent from './MapComponent';
@@ -16,17 +21,29 @@ const H1 = styled.h1`
 	color:#402900
 `
 
+const H2 = styled.h2`
+text-align:left;
+font-size: 18px;
+color:#402900
+`
+
 const P = styled.p`
 	text-align:left;
 	text-indent:30px;
 	color:#402900
 `
 
+const Lalign = styled.div`
+text-align:left;
+`
+
+
 class ServiceDetail extends React.Component{
 	state={
 		current :'detail',
 		current2 : 'overall',
 		isReservation: false,
+		//isRate: false,
 		showReportEmployeeModal: false,
 		selectedReportEmployee:'',
 		reportEmployeeTopic:'',
@@ -34,7 +51,10 @@ class ServiceDetail extends React.Component{
 		showServiceComplaint: false,
 		sendServiceComplaintLoading:false,
 		serviceComplaint_topic:'',
-		serviceComplaint_content:''
+		serviceComplaint_content:'',
+		serviceRating: 3,
+		//serviceCurrentRate:''
+		
 	}
 	handleClick = (e) => {
 		if(e.key === 'detail' || e.key === 'employee'){
@@ -47,9 +67,35 @@ class ServiceDetail extends React.Component{
 				current2: e.key,
 			});
 		}
+	}
+	
+	handleChange = (value) => {
+    this.setState({ serviceRating:value });	
   }
+
 	componentDidMount(){
 		this.props.loadService(this.props.match.params.id);
+		// this.setState
+	}
+
+	onRatingService = (e) =>{ 
+		CustomerActions.rateService(this.props.serviceState.service.service_id, this.state.serviceRating,"service")
+		const modal = Modal.success({
+			title: 'Rate success!',
+			content: 'close this modal to proceed.'
+		});
+		this.setState({serviceCurrentRate:this.props.serviceState.service.rating});
+		this.state.isRate=true;
+		setTimeout(() => {
+			modal.destroy()
+			window.location.reload()
+		}, 1000)
+		
+		
+	}
+
+	get2Dec(number){
+		return parseFloat(number).toFixed(2);
 	}
 
 	onClickReservation = ()=>{
@@ -100,7 +146,7 @@ class ServiceDetail extends React.Component{
 			<div>
 				{this.state.current==='detail'?<div>
 					<Row>
-						<H1 style={{display:'inline',float:'left'}}>ชื่อร้าน {this.props.serviceState
+						<H1 style={{display:'inline',float:'left'}}>ชื่อบริการ {this.props.serviceState
 				.service.service_name}</H1>
 						<Button icon="exclamation-circle" type="danger" onClick={()=>this.setState({showServiceComplaint:true,serviceComplaint_topic:'',serviceComplaint_content:''})}
 						style={{display:'inline',float:'right'}}>รายงานบริการนี้</Button>
@@ -135,22 +181,56 @@ class ServiceDetail extends React.Component{
 						</Menu.Item>
 					</Menu>
 					</Row>
-					{this.state.current2==='overall'?<div>
-						<H1>คำอธิบายร้าน</H1>
-						<P>บลา บลา บลา</P>
-						<H1>เจ้าของ</H1>
-						<P>{this.props.serviceState
-				.ownerDetail.first_name} {this.props.serviceState
-				.ownerDetail.last_name}</P>
-						<H1>ที่อยู่</H1>
-						<P>555/555 บลา บลา บลา<br/></P>
-						<P>เบอร์ {this.props.serviceState
-				.service.contact_number}</P>
-						<P>อีเมล์ {this.props.serviceState
-				.ownerDetail.email}</P>
-						<H1>คะแนน</H1>
-						<Rate allowHalf disabled defaultValue={this.props.serviceState.service.rating} style={{float:'left',marginLeft:'30px'}}/>
-					</div>
+					{this.state.current2==='overall'?
+					<div>
+					<Col span={12}>					
+						
+							<H1>คำอธิบายบริการ</H1>
+							<P>บริการนี้สามารถลดหย่อนภาษีได้ ตามนโยบายของภาครัฐ</P>
+							<H1>เจ้าของบริการ</H1>
+							<P>{this.props.serviceState
+					.ownerDetail.first_name} {this.props.serviceState
+					.ownerDetail.last_name}</P>
+							<H1>ที่อยู่</H1>
+							<P>555/555 เขต รัชดา กทม<br/></P>
+							<P>เบอร์ {this.props.serviceState
+					.service.contact_number}</P>
+							<P>อีเมล์ {this.props.serviceState
+					.ownerDetail.email}</P>
+							<H1>คะแนน</H1>
+							<P>{this.get2Dec(this.props.serviceState
+					.service.rating)}</P>
+						
+				</Col>
+				<Col span={12}>
+					
+							<H1>คะแนนความพึงพอใจ</H1>
+							
+							<H2>คะแนนบริการ</H2>
+							<Lalign>
+								{/* {Service Rate} */}
+									<Rate disabled defaultValue={this.props.serviceState.service.rating} style={{}} />
+							</Lalign>
+
+
+							<H2 style={{marginLeft:'20px',marginTop:'15px', fontSize:'15px'}}>ให้คะแนนบริการนี้</H2>
+							<Lalign>
+							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px' }}/>
+							<Button type='primary' 
+								onClick={(e) => this.onRatingService(e)} style={{fontSize:'13px',marginLeft:'10px'}}>>
+								ส่ง</Button>
+							
+							</Lalign>
+
+							{/* <H1>ที่อยู่</H1>
+							<P>555/555 บลา บลา บลา<br/></P>
+							<P>เบอร์ {this.props.serviceState.service.contact_number}</P>
+							<P>อีเมล์ {this.props.serviceState.ownerDetail.email}</P>
+							<H1>คะแนน</H1>
+							<P>{this.props.serviceState.service.rating}</P> */}
+						
+				</Col>
+				</div>	
 					:
 					<div>
 						
@@ -184,12 +264,12 @@ class ServiceDetail extends React.Component{
 		return <div style={{paddingBottom:'2vw'}}>
 		<Card style={{ width: '22vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
 			<div>
-				<img src="../images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
+				<img src="/images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
 			</div>
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
 				<br/>เพศ {employee.gender==='male'?'ชาย':'หญิง'}
-				<br/>คะแนน<Rate allowHalf disabled defaultValue={employee.rating} style={{paddingLeft:'12px'}}/>
+				<br/>คะแนน {employee.rating}
 				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>{
 					this.setState({showReportEmployeeModal:true,selectedReportEmployee:employee,reportEmployeeTopic:'',reportEmployeeContent:''})
 				}}>รายงานพนักงานคนนี้</Button>
@@ -204,7 +284,7 @@ class ServiceDetail extends React.Component{
 			loaded?this.props.serviceState
 .service.service_id?
 			<div style={{color:'#402900'}}>
-				<img src="../images/banner.jpg" style={{width:'100%',height:'12vw'}}/>
+				<img src="/images/banner.jpg" style={{width:'100%',height:400}}/>
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu
