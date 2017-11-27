@@ -4,6 +4,7 @@ import NavBarReducer from './NavbarReducer';
 import UserReducer from './UserReducer';
 import OwnerReducer from './OwnerReducer';
 import ServiceRecieverReducer from './ServiceRecieverReducer';
+import PaymentAccounts from './PaymentReducer'
 import AdminReducer from './AdminReducer';
 import {registration} from './RegistrationReducer';
 import {authentication} from './AuthenticationReducer';
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
 	registration,
 	authentication,
 	service,
-	reservation
+	reservation,
+	payment_accounts: PaymentAccounts
 });
 
 export default rootReducer;

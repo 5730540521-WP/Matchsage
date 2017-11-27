@@ -1,11 +1,13 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { userActions } from '../../actions';
+import { userActions, CustomerActions } from '../../actions';
 import {history} from '../../helpers';
-import { Row, Col, Input, Button, Menu } from 'antd';
+import { Row, Col, Input, Button, Menu, Card, Select, Form, Cascader, Modal } from 'antd';
 import styled from 'styled-components';
 import * as JWT from 'jwt-decode';
+const FormItem = Form.Item
+const Option = Select.Option
 
 const Aright = styled.div`
 	text-align:right;	
@@ -37,6 +39,154 @@ const MarginSpace = styled.div`
 	margin-right: 10px;
 
 `
+const accountMethod = [{
+	value: 'credit-card',
+	label: 'เครดิต'
+}, {
+	value: 'owner',
+	label: 'บัญชีธนาคาร'
+}];
+
+class AddPaymentAccountForm extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			number: '',
+			company: '',
+			method: '',
+			autoCompleteResult: [],
+		}
+	}
+
+	onFieldChange = (e) => {
+		e.preventDefault();
+		// console.log(e.target.name);
+		const { name, value } = e.target;
+		this.setState({ [name]: value }, () => console.log(this.state));
+	}
+
+	onAddPaymentSubmit = (e) => {
+		e.preventDefault();
+		this.props.form.validateFieldsAndScroll((err, values) => {
+			if (!err) {
+				// console.log('Received values of form: ', values);
+				const { number, company, method } = values;
+				this.props.addPaymentAccount({number, company, method});
+				this.props.closeModal()
+			} else {
+				console.log(values);
+			}
+		});
+
+	}
+
+	render() {
+		const { getFieldDecorator } = this.props.form;
+		const { autoCompleteResult } = this.state;
+
+		const formItemLayout = {
+			labelCol: {
+				xs: { span: 24 },
+				sm: { span: 6 },
+			},
+			wrapperCol: {
+				xs: { span: 24 },
+				sm: { span: 14 },
+			},
+		};
+
+		const tailFormItemLayout = {
+			wrapperCol: {
+				xs: {
+					span: 24,
+					offset: 0,
+				},
+				sm: {
+					span: 14,
+					offset: 9,
+				},
+			},
+		};
+
+		const prefixSelector = getFieldDecorator('prefix', {
+			initialValue: '86',
+		})(
+			<Select style={{ width: 60 }}>
+				<Option value="86">+86</Option>
+				<Option value="87">+87</Option>
+			</Select>
+			);
+
+		return (
+			<Form onSubmit={this.onAddPaymentSubmit}>
+				<FormItem
+					{...formItemLayout}
+					label="เลขบัตร"
+					hasFeedback
+				>
+					{getFieldDecorator('number', {
+						rules: [{ required: true, message: 'โปรดใส่เลขบัตร', whitespace: true }],
+					})(
+						<Input />
+						)}
+				</FormItem>
+
+				<FormItem
+					{...formItemLayout}
+					label="รหัสหลังบัตร"
+					hasFeedback
+				>
+					{getFieldDecorator('CCV', {
+						rules: [{ required: true, message: 'โปรดใส่รหัสหลังบัตร', whitespace: true }],
+					})(
+						<Input />
+						)}
+				</FormItem>
+
+				<FormItem
+					{...formItemLayout}
+					label="บริษัท"
+					hasFeedback
+				>
+					{getFieldDecorator('company', {
+						rules: [{ required: true, message: 'โปรดใส่บริษัทบนบัตร', whitespace: true }],
+					})(
+						<Input />
+						)}
+				</FormItem>
+
+				<FormItem
+					{...formItemLayout}
+					label="ที่อยู่"
+					hasFeedback
+				>
+				<Input />
+				</FormItem>
+
+				<FormItem
+					{...formItemLayout}
+					label="ประเภทบัญชี"
+				>
+					{getFieldDecorator('method', {
+						initialValue: ['credit-card', 'bank-account'],
+						rules: [{ type: 'array', required: true, message: 'โปรดเลือกประเภทของบัญชี' }],
+					})(
+						<Cascader options={accountMethod} />
+						)}
+
+				</FormItem>
+
+				<FormItem {...tailFormItemLayout}>
+					<Button type="primary" htmlType="submit">เพิ่มบัญชี</Button>
+				</FormItem>
+
+			</Form>
+		);
+	}
+}
+
+const WrappedAddPaymentAccountForm = Form.create()(AddPaymentAccountForm);
+
 class Profile extends React.Component {
 	constructor(props) {
 		super(props);
@@ -53,10 +203,17 @@ class Profile extends React.Component {
 			// new_pwd: '',
 			// conf_pwd: '',
 			update: '',
+			visible: false,
 			current: 'profile'
 
 		};
 
+	}
+
+	handleClick = (e) => {
+		this.setState({
+			current: e.key
+		});
 	}
 
 	onInputChange(e) {
@@ -69,11 +226,16 @@ class Profile extends React.Component {
 		// console.log(e.target.value);
 	}
 
+	onAddPaymentButtonClick = () => {
+		this.setState({ visible: true })
+	}
+
 	async componentDidMount() {
 		
 
 		const id = JWT(localStorage.getItem('user')).user_id;
 		const { user } = await userActions.fetchUserProfile(id);
+		this.props.fetchPaymentAccount()
 		console.log(user);
 		this.setState({ user }, () => {
 			console.log(userActions.fetchUserProfile(id));
@@ -202,7 +364,28 @@ class Profile extends React.Component {
 							</div>
 						</div>
 					</div> :
-					<p>fuck</p>
+					<div>
+						<Row style={{ textAlign: 'left' }}>
+							<Button
+								onClick={this.onAddPaymentButtonClick} type="primary" style={{ margin: 10 }}>
+								เพิ่มบัญชีการเงิน
+							</Button>
+						</Row>
+						<div style= {{textAlign:'left'}}>
+						{
+							this.props.payment_accounts ? this.props.payment_accounts.length > 0 ? this.props.payment_accounts.map((account, index) => {
+								const method = account.method === 'credit-card' ? 'Credit card ends with : ' : 'Bank account ends with : '
+								const title = `${account.number.slice(account.number.length - 4, account.number.length)}`
+								return (
+									<Card title={method+title} bordered={true} style={{ width: 300, margin: 10 }}>
+										<p>ชำระผ่าน: {account.method}</p>
+										<p>ช่องทางการชำระเงิน: <img src="../../images/visa.png" style={{ maxHeight: '15px' }} /></p>
+									</Card>
+								)
+							}) : <h1>ท่านยังไม่มีบัญชีการเงินใดๆ</h1> : null
+						}
+						</div>
+					</div>
 				}
 			</div>
 		)
@@ -239,9 +422,31 @@ class Profile extends React.Component {
 					</Col>
 
 				</Row>
+				<Modal title="เพิ่มบัญชีการเงิน"
+					visible={this.state.visible}
+					onOk={()=>{ this.setState({ visible: false })}}
+					footer={null}
+					onCancel={() => { this.setState({ visible: false }) }}
+					onClose={() => { this.setState({ visible: false }) }}>
+					<section className="modal-card-body">
+						<WrappedAddPaymentAccountForm addPaymentAccount={this.props.addPaymentAccount} closeModal={()=> this.setState({visible: false})}/>
+					</section>
+				</Modal>
 			</div>
 		);
 	}
 }
 
-export default connect(null)(Profile);
+function mapStateToProps(state) {
+	return {
+		payment_accounts: state.payment_accounts.payment_accounts
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	const fetchPaymentAccount = CustomerActions.fetchMyPaymentAccount
+	const addPaymentAccount = CustomerActions.addPaymentAccount
+	return bindActionCreators({ fetchPaymentAccount, addPaymentAccount }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
