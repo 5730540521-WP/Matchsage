@@ -5,11 +5,12 @@ export default (state={},action)=>{
 	switch(action.type){
 		case(customerConstants.FETCH_CUSTOMER_RESERVATIONS):
 		const customerReservations = action.customerReservations;
-		return {...state,customerReservations};
+		const paymentAccounts = action.paymentAccounts;
+		return {...state,customerReservations,paymentAccounts};
 	case(customerConstants.FETCH_CUSTOMER_RESERVATION_HISTORY):
 		const reservationHistory = action.reservationHistory;
 		return {...state,reservationHistory};
-		default:
-			return state;
+	default:
+		return state;
 	}
 }
