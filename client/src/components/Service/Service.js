@@ -21,6 +21,8 @@ class Service extends React.Component{
 			term:'',
 			isServiceLoaded: false,
 			word:'',
+			location:'',
+			locate:'',
 			ratingMin:0
 		};
 		if(this.props.match.params.filter){
@@ -34,6 +36,11 @@ class Service extends React.Component{
 				let filter = fullFilter.slice(fullFilter.search('rating>=')+8);
 				if(filter.includes('&')) filter = filter.slice(0,filter.indexOf('&'));
 				this.state.ratingMin = filter;
+			}
+			if(fullFilter.includes('location=')) {
+				let filter = fullFilter.slice(fullFilter.search('location=')+9);
+				if(filter.includes('&')) filter = filter.slice(0,filter.indexOf('&'));
+				this.state.location = filter;
 			}
 		}
 
@@ -54,7 +61,7 @@ class Service extends React.Component{
 	renderServices(){
 		// this.setState({services:this.props.services});
 		if(!this.state.isServiceLoaded && this.props.services.length > 0) {
-			this.setState({ services: this.props.services, isServiceLoaded: true},()=>this.onChange(this.state.word,this.state.ratingMin))
+			this.setState({ services: this.props.services, isServiceLoaded: true},()=>this.onChange(this.state.word,this.state.ratingMin,this.state.location))
 		}
 		return <Row gutter={24}>
 				<Col span={12}>{this.state.services.map( (service,index) =>{
@@ -71,9 +78,10 @@ class Service extends React.Component{
 	linkWithFilter(){
 		let hasWord = this.state.word,
 		hasRatingMin = this.state.ratingMin>0,
+		hasLocation = this.state.location,
 		newSearchURL = '/service/search',
 		hasPreviousFilter = false;
-		if(hasWord || hasRatingMin) newSearchURL+='/';
+		if(hasWord || hasRatingMin || hasLocation) newSearchURL+='/';
 		if(hasWord){
 			if(hasPreviousFilter)	newSearchURL+='&'; else hasPreviousFilter =true;
 			newSearchURL+=`word=${this.state.word}`;
@@ -81,20 +89,29 @@ class Service extends React.Component{
 		if(hasRatingMin){
 			if(hasPreviousFilter)	newSearchURL+='&'; else hasPreviousFilter =true;
 			newSearchURL+=`rating>=${this.state.ratingMin}`;
+		} 
+		if(hasLocation){
+			if(hasPreviousFilter) newSearchURL+='&'; else hasPreviousFilter = true;
+			newSearchURL+=`location>=${this.state.location}`;
 		}
 		history.push(newSearchURL);
 	}
 
 	onInputChange(e){
-		this.onChange(e.target.value,this.state.ratingMin);
+		this.onChange(e.target.value,this.state.ratingMin,this.state.location);
+	}
+
+	onLocationChange(e){
+		this.onChange(this.state.word,this.state.ratingMin,e.target.value)
 	}
 
 	onSilderChange(ratingMin){
-		this.onChange(this.state.word,ratingMin);
+		this.onChange(this.state.word,ratingMin,this.state.location);
 	}
 
-	onChange(word,ratingMin){
+	onChange(word,ratingMin,location){
 		const term = word.toLowerCase();
+		const locate = location.toLowerCase();
 		let newlyDisplayed = _.filter(this.props.services,service =>{
 			return (
 				service.service_name.toLowerCase().includes(term)
@@ -102,8 +119,14 @@ class Service extends React.Component{
 			);
 		});
 		newlyDisplayed = newlyDisplayed.filter(service => (service.rating >= ratingMin ) );
-		this.setState({services:newlyDisplayed,word:word,ratingMin:ratingMin},()=>this.linkWithFilter());
+		newlyDisplayed = newlyDisplayed.filter(service => {
+			return (
+				service.address.toLowerCase().includes(locate)
+			);
+		});
+		this.setState({services:newlyDisplayed,word:word,ratingMin:ratingMin,location:location},()=>this.linkWithFilter());
 	}
+
 	render(){
 		
 		return(
@@ -133,6 +156,15 @@ class Service extends React.Component{
 						<p style={{marginTop:'16px'}}>คะแนนความพึงพอใจ</p>
 						<Slider defaultValue={this.state.ratingMin} max={5}
 							onChange={rate=>this.onSilderChange(rate)}
+						/>
+						
+						<p className="panel-heading">
+							ค้นหาจากสถานที่
+						</p>
+						<SearchInput
+							 placeholder="ค้นหาจากสถานที่"
+							 defaultValue={this.state.word}
+							 onChange={(e)=>this.onLocationChange(e)}
 						/>
 					</nav>
 				</div>

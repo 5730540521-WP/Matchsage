@@ -35,26 +35,13 @@ class PaymentSelection extends React.PureComponent{
 			data:[],
 			selectedCard:-1
 		};
-		this.props.fetchPaymentAccount();
+		
 	}
 
 	componentDidMount(){
 		console.log('Yoyo');
+		this.props.fetchPaymentAccount();
 		console.log(this.props.payment_accounts);
-		const data = [];
-		// const payment_accounts = this.props.payment_accounts;
-		this.props.payment_accounts.map((payment_account,i)=>{
-			data.push({
-				key: (i+1).toString(),
-				card_type:(<span className="icon"><i className="fa fa-cc-visa"/></span>),
-				end_num: this.markPaymentAccount(payment_account),
-				exp_date: '2018/01',
-				choice: <Checkbox onChange={(e)=>this.onCheckboxChange(e,payment_account)}/>
-			});
-		});
-		this.setState({data});
-		console.log(this.props.payment_accounts);
-
 	}
 
 	// onSelectaCard(){
@@ -71,9 +58,38 @@ class PaymentSelection extends React.PureComponent{
 		else this.props.selectPaymentAccountReservation('');
 	}
 
+	renderCard = (method, company)=>{
+		switch(method){
+			case 'credit-card':
+				return (
+					company==='mastercard' 
+					? (<span className="icon"><i className="fa fa-cc-mastercard"/></span>)
+					: (<span className="icon"><i className="fa fa-cc-visa"/></span>)
+				);
+			case 'bank-account':
+				return (<span className="icon"><i className="fa fa-bank"/></span>);
+			default:
+				return;
+		}
+	}
+
 	render(){
-		
-	return <PaymentSelectionTable dataSource={this.state.data} columns={columns}/>;
+		const data = [];
+		// const payment_accounts = this.props.payment_accounts;		
+		this.props.payment_accounts.map((payment_account,i)=>{
+			const {method, company, number} = payment_account;
+			console.log({method, company, number});
+			data.push({
+				key: (i+1).toString(),
+				card_type: this.renderCard(method, company),
+				end_num: this.markPaymentAccount(number),
+				exp_date: '2018/01',
+				choice: <Checkbox onChange={(e)=>this.onCheckboxChange(e,number)}/>
+			});
+		});
+		// this.setState({data});
+		console.log(this.props.payment_accounts);
+		return <PaymentSelectionTable dataSource={data} columns={columns}/>;
 	}
 }
 
@@ -85,7 +101,7 @@ function mapStateToProps({reservation}){
 function mapDispatchToProps(dispatch){
 	const fetchPaymentAccount = CustomerActions.fetchPaymentAccount;
 	const selectPaymentAccountReservation = CustomerActions.selectPaymentAccountReservation;
-	return bindActionCreators({fetchPaymentAccount,selectPaymentAccountReservation} ,dispatch);
+	return bindActionCreators({fetchPaymentAccount,selectPaymentAccountReservation}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentSelection);

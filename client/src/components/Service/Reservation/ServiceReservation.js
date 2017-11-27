@@ -64,12 +64,10 @@ class ServiceReservation extends React.PureComponent{
 			end_time:'',
 			employee_id:''
 		}
-		
 	}
 
 	componentDidMount(){
 		// this.props.selectServiceReservation(this.props.service_id);
-
 		console.log('DidMount');
 		const steps = [{
 			title: 'เลือกวันเวลา',
@@ -210,6 +208,7 @@ class ServiceReservation extends React.PureComponent{
 			end_time: this.state.end_time, 
 			date: this.state.date
 		}
+
 		const headers = authHeader();
 		const res = await axios.post(`${API_URL}/api/reservation/new`, data, {headers});
 
@@ -242,7 +241,7 @@ class ServiceReservation extends React.PureComponent{
             <Button onClick={() => this.prev()}> ย้อนกลับ </Button>
           }
           {
-            this.state.current < steps.length - 1
+            this.state.current < steps.length //-1
             &&
             <Button style={{ marginLeft: 8 }} type='primary' onClick={() => this.next()}>ต่อไป</Button>
           }
@@ -271,6 +270,7 @@ function mapStateToProps({reservation}){
 
 function mapDispatchToProps(dispatch){
 	// const fetchEmployees = CustomerActions.fetchEmployees;
+	
 	const selectServiceReservation = CustomerActions.selectServiceReservation;
 	return bindActionCreators({ selectServiceReservation },dispatch);
 }
