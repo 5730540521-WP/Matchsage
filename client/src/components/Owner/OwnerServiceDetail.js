@@ -118,7 +118,7 @@ class OwnerServiceDetail extends React.Component{
 						<H1>ที่อยู่</H1>
 						<P>{this.props.serviceReducer.service.address}<br/></P>
 						<P>เบอร์ {this.props.serviceReducer.service.contact_number}</P>
-						<P>อีเมล์ {this.props.serviceReducer.ownerDetail.email}</P>
+						<P>อีเมล {this.props.serviceReducer.ownerDetail.email}</P>
 						<H1>คะแนน</H1>
 						<P>{this.props.serviceReducer.service.rating}</P>
 						<H1>ราคา</H1>

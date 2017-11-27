@@ -70,14 +70,13 @@ class ServiceDetail extends React.Component{
 			}}
 			footer={[
 				<Button key="back" size="large" onClick={()=>{
-					this.setState({ loading: false,showServiceComplaint:false});
+					this.setState({ showServiceComplaint:false });
 				}}>ยกเลิก</Button>,
 				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
-					this.setState({ loading: true });
 					console.log(this.props.serviceState);
-					await this.props.sendComplaint(this.props.serviceState
+					this.props.sendComplaint(this.props.serviceState
 			.service.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
-					this.setState({ loading: false,showServiceComplaint:false });
+					this.setState({ showServiceComplaint:false });
 				}}>
 					ส่ง
 				</Button>,
