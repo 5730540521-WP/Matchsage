@@ -1,8 +1,9 @@
 import React from 'react';
-import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
+import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input,Rate } from 'antd';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
+import {history} from '../../helpers';
 import NotFound from '../NotFound';
 import styled from 'styled-components';
 import MapComponent from './MapComponent';
@@ -16,17 +17,29 @@ const H1 = styled.h1`
 	color:#402900
 `
 
+const H2 = styled.h2`
+text-align:left;
+font-size: 18px;
+color:#402900
+`
+
 const P = styled.p`
 	text-align:left;
 	text-indent:30px;
 	color:#402900
 `
 
+const Lalign = styled.div`
+text-align:left;
+`
+
+
 class ServiceDetail extends React.Component{
 	state={
 		current :'detail',
 		current2 : 'overall',
 		isReservation: false,
+		isRate: false,
 		showReportEmployeeModal: false,
 		selectedReportEmployee:'',
 		reportEmployeeTopic:'',
@@ -34,7 +47,10 @@ class ServiceDetail extends React.Component{
 		showServiceComplaint: false,
 		sendServiceComplaintLoading:false,
 		serviceComplaint_topic:'',
-		serviceComplaint_content:''
+		serviceComplaint_content:'',
+		serviceRating: 3,
+		serviceCurrentRate:''
+		
 	}
 	handleClick = (e) => {
 		if(e.key === 'detail' || e.key === 'employee'){
@@ -47,9 +63,30 @@ class ServiceDetail extends React.Component{
 				current2: e.key,
 			});
 		}
+	}
+	
+	handleChange = (value) => {
+    this.setState({ serviceRating:value });	
   }
+
 	componentDidMount(){
 		this.props.loadService(this.props.match.params.id);
+		// this.setState
+	}
+
+	onRatingService = (e) =>{ 
+		CustomerActions.rateService(this.props.serviceState.service.service_id, this.state.serviceRating,"service")
+		alert('Rating success!')
+		this.setState({serviceCurrentRate:this.props.serviceState.service.rating});
+		this.state.isRate=true;
+		window.location.reload()
+	
+
+		
+	}
+
+	get2Dec(number){
+		return parseFloat(number).toFixed(2);
 	}
 
 	onClickReservation = ()=>{
@@ -96,7 +133,7 @@ class ServiceDetail extends React.Component{
 			<div>
 				{this.state.current==='detail'?<div>
 					<Row>
-						<H1 style={{display:'inline',float:'left'}}>ชื่อร้าน {this.props.serviceState
+						<H1 style={{display:'inline',float:'left'}}>ชื่อบริการ {this.props.serviceState
 				.service.service_name}</H1>
 						<Button icon="exclamation-circle" type="danger" onClick={()=>this.setState({showServiceComplaint:true,serviceComplaint_topic:'',serviceComplaint_content:''})}
 						style={{display:'inline',float:'right'}}>รายงานบริการนี้</Button>
@@ -131,23 +168,56 @@ class ServiceDetail extends React.Component{
 						</Menu.Item>
 					</Menu>
 					</Row>
-					{this.state.current2==='overall'?<div>
-						<H1>คำอธิบายร้าน</H1>
-						<P>บลา บลา บลา</P>
-						<H1>เจ้าของ</H1>
-						<P>{this.props.serviceState
-				.ownerDetail.first_name} {this.props.serviceState
-				.ownerDetail.last_name}</P>
-						<H1>ที่อยู่</H1>
-						<P>555/555 บลา บลา บลา<br/></P>
-						<P>เบอร์ {this.props.serviceState
-				.service.contact_number}</P>
-						<P>อีเมล์ {this.props.serviceState
-				.ownerDetail.email}</P>
-						<H1>คะแนน</H1>
-						<P>{this.props.serviceState
-				.service.rating}</P>
-					</div>
+					{this.state.current2==='overall'?
+					<div>
+					<Col span={12}>					
+						
+							<H1>คำอธิบายบริการ</H1>
+							<P>บริการนี้สามารถลดหย่อนภาษีได้ ตามนโยบายของภาครัฐ</P>
+							<H1>เจ้าของบริการ</H1>
+							<P>{this.props.serviceState
+					.ownerDetail.first_name} {this.props.serviceState
+					.ownerDetail.last_name}</P>
+							<H1>ที่อยู่</H1>
+							<P>555/555 เขต รัชดา กทม<br/></P>
+							<P>เบอร์ {this.props.serviceState
+					.service.contact_number}</P>
+							<P>อีเมล์ {this.props.serviceState
+					.ownerDetail.email}</P>
+							<H1>คะแนน</H1>
+							<P>{this.get2Dec(this.props.serviceState
+					.service.rating)}</P>
+						
+				</Col>
+				<Col span={12}>
+					
+							<H1>คะแนนความพึงพอใจ</H1>
+							
+							<H2>คะแนนบริการ</H2>
+							<Lalign>
+								{/* {Service Rate} */}
+							<Rate disabled  defaultValue={this.props.serviceState.service.rating} style={{backgroundColor : '#bfbfbf'}} />
+							</Lalign>
+
+
+							<H2 style={{marginLeft:'20px',marginTop:'15px', fontSize:'15px'}}>ให้คะแนนบริการนี้</H2>
+							<Lalign>
+							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px', backgroundColor : '#ccffcc'}}/>
+							<Button type='primary' 
+								onClick={(e) => this.onRatingService(e)} style={{fontSize:'13px',marginLeft:'10px'}}>>
+								ส่ง</Button>
+							
+							</Lalign>
+
+							{/* <H1>ที่อยู่</H1>
+							<P>555/555 บลา บลา บลา<br/></P>
+							<P>เบอร์ {this.props.serviceState.service.contact_number}</P>
+							<P>อีเมล์ {this.props.serviceState.ownerDetail.email}</P>
+							<H1>คะแนน</H1>
+							<P>{this.props.serviceState.service.rating}</P> */}
+						
+				</Col>
+				</div>	
 					:
 					<div>
 						
