@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
+import { message,Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
@@ -74,9 +74,13 @@ class ServiceDetail extends React.Component{
 				}}>ยกเลิก</Button>,
 				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
 					this.setState({ loading: true });
-					console.log(this.props.serviceState);
-					await this.props.sendComplaint(this.props.serviceState
+					const hasError = await CustomerActions.sendServiceComplaint(this.props.serviceState
 			.service.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
+						if(hasError){
+							message.error('Error.');
+						}else {
+							message.success('Sending Complaint Successful.');
+						}
 					this.setState({ loading: false,showServiceComplaint:false });
 				}}>
 					ส่ง
@@ -145,7 +149,7 @@ class ServiceDetail extends React.Component{
 						<P>อีเมล์ {this.props.serviceState
 				.ownerDetail.email}</P>
 						<H1>คะแนน</H1>
-						<Rate disabled defaultValue={this.props.serviceState.service.rating} style={{float:'left',marginLeft:'30px'}}/>
+						<Rate allowHalf disabled defaultValue={this.props.serviceState.service.rating} style={{float:'left',marginLeft:'30px'}}/>
 					</div>
 					:
 					<div>
@@ -185,7 +189,7 @@ class ServiceDetail extends React.Component{
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
 				<br/>เพศ {employee.gender==='male'?'ชาย':'หญิง'}
-				<br/>คะแนน<Rate disabled defaultValue={employee.rating} style={{paddingLeft:'12px'}}/>
+				<br/>คะแนน<Rate allowHalf disabled defaultValue={employee.rating} style={{paddingLeft:'12px'}}/>
 				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>{
 					this.setState({showReportEmployeeModal:true,selectedReportEmployee:employee,reportEmployeeTopic:'',reportEmployeeContent:''})
 				}}>รายงานพนักงานคนนี้</Button>
@@ -251,9 +255,8 @@ function mapDispatchToProps(dispatch){
 
 	// }
 	const loadService = CustomerActions.fetchService;
-	const sendComplaint = CustomerActions.sendServiceComplaint;
 	const selectServiceReservation = CustomerActions.selectServiceReservation;
-	return bindActionCreators({loadService,sendComplaint,selectServiceReservation}, dispatch);
+	return bindActionCreators({loadService,selectServiceReservation}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceDetail);

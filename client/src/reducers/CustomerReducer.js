@@ -10,6 +10,9 @@ export default (state={},action)=>{
 	case(customerConstants.FETCH_CUSTOMER_RESERVATION_HISTORY):
 		const reservationHistory = action.reservationHistory;
 		return {...state,reservationHistory};
+	case(customerConstants.CUSTOMER_FETCH_BILL_DETAIL):
+		const billDetail = action.billDetail;
+		return {...state,billDetail};
 	default:
 		return state;
 	}
