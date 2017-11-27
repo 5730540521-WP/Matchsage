@@ -197,7 +197,6 @@ class RegistrationForm extends React.Component{
           })(
             <Cascader options={genders} />
           )}
-
 				</FormItem>
 
 				<FormItem
@@ -210,7 +209,6 @@ class RegistrationForm extends React.Component{
           })(
             <Cascader options={userTypes} />
           )}
-
 				</FormItem>
 
 				<FormItem {...tailFormItemLayout}>
