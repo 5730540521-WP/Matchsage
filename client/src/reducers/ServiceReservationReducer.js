@@ -45,7 +45,7 @@ export function reservation(state=initialState,action){
 			// const date = '1';// = action.
 			return {...state,date};	
 		case(customerConstants.CUSTOMER_RESERVE_SUCCESS):
-			return state;
+			return initialState;
 		case(customerConstants.CUSTOMER_RESERVE_FAILURE):
 			return initialState;
 		default:

@@ -18,6 +18,8 @@ export default (props)=>{
 							<strong style={{color:'#402900'}}>{service.service_name}</strong> Rating: <small>{service.rating}</small>
 							<br/>
 							{service.contact_number}
+							<br/>
+							{service.address}
 						</p>
 					</div>
 					<nav className="level is-mobile">
