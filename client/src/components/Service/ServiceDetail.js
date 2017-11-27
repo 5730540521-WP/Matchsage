@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
 import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input,Rate } from 'antd';
-=======
-import { Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
->>>>>>> 73c7cc7e243a9ea9439804c87950a7cbe80764b7
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
@@ -43,7 +39,7 @@ class ServiceDetail extends React.Component{
 		current :'detail',
 		current2 : 'overall',
 		isReservation: false,
-		isRate: false,
+		//isRate: false,
 		showReportEmployeeModal: false,
 		selectedReportEmployee:'',
 		reportEmployeeTopic:'',
@@ -53,7 +49,7 @@ class ServiceDetail extends React.Component{
 		serviceComplaint_topic:'',
 		serviceComplaint_content:'',
 		serviceRating: 3,
-		serviceCurrentRate:''
+		//serviceCurrentRate:''
 		
 	}
 	handleClick = (e) => {
@@ -111,13 +107,14 @@ class ServiceDetail extends React.Component{
 			}}
 			footer={[
 				<Button key="back" size="large" onClick={()=>{
-					this.setState({ showServiceComplaint:false });
+					this.setState({ loading: false,showServiceComplaint:false});
 				}}>ยกเลิก</Button>,
 				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
+					this.setState({ loading: true });
 					console.log(this.props.serviceState);
-					this.props.sendComplaint(this.props.serviceState
+					await this.props.sendComplaint(this.props.serviceState
 			.service.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
-					this.setState({ showServiceComplaint:false });
+					this.setState({ loading: false,showServiceComplaint:false });
 				}}>
 					ส่ง
 				</Button>,
@@ -171,7 +168,6 @@ class ServiceDetail extends React.Component{
 						</Menu.Item>
 					</Menu>
 					</Row>
-<<<<<<< HEAD
 					{this.state.current2==='overall'?
 					<div>
 					<Col span={12}>					
@@ -222,24 +218,6 @@ class ServiceDetail extends React.Component{
 						
 				</Col>
 				</div>	
-=======
-					{this.state.current2==='overall'?<div>
-						<H1>คำอธิบายร้าน</H1>
-						<P>บลา บลา บลา</P>
-						<H1>เจ้าของ</H1>
-						<P>{this.props.serviceState
-				.ownerDetail.first_name} {this.props.serviceState
-				.ownerDetail.last_name}</P>
-						<H1>ที่อยู่</H1>
-						<P>555/555 บลา บลา บลา<br/></P>
-						<P>เบอร์ {this.props.serviceState
-				.service.contact_number}</P>
-						<P>อีเมล์ {this.props.serviceState
-				.ownerDetail.email}</P>
-						<H1>คะแนน</H1>
-						<Rate disabled defaultValue={this.props.serviceState.service.rating} style={{float:'left',marginLeft:'30px'}}/>
-					</div>
->>>>>>> 73c7cc7e243a9ea9439804c87950a7cbe80764b7
 					:
 					<div>
 						
@@ -278,7 +256,7 @@ class ServiceDetail extends React.Component{
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
 				<br/>เพศ {employee.gender==='male'?'ชาย':'หญิง'}
-				<br/>คะแนน<Rate disabled defaultValue={employee.rating} style={{paddingLeft:'12px'}}/>
+				<br/>คะแนน {employee.rating}
 				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>{
 					this.setState({showReportEmployeeModal:true,selectedReportEmployee:employee,reportEmployeeTopic:'',reportEmployeeContent:''})
 				}}>รายงานพนักงานคนนี้</Button>
