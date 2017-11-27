@@ -42,7 +42,8 @@ class Admin extends React.Component{
 
 	render(){		
 		return (			
-			<div style={{color:'#402900'}}>				
+			<div style={{color:'#402900'}}>
+				<img src="/images/admin.jpg" style={{ width: '100%'}} />
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu			
