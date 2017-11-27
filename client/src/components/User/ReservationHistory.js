@@ -17,7 +17,7 @@ class ReservationHistory extends React.Component{
       {this.props.reservationHistory?this.props.reservationHistory.length>0?this.props.reservationHistory.map((reservation,index)=>{
         return <Row key={index} gutter={48} style={{paddingBottom:'24px',marginLeft:'0px',marginRight:'0px'}}>
           <Col span={10}>
-            <img src="../images/banner.jpg" style={{width:'100%',maxHeight:'114px'}}/>
+            <img src="/images/banner.jpg" style={{width:'100%',maxHeight:'114px'}}/>
           </Col>
           <Col span={14} style={{textAlign:'left'}}>
             <a onClick={()=>history.push(`/service/${reservation.service_id}`)}><h1 style={{fontWeight:'bold'}}>ร้าน {reservation.service_name}</h1></a>
@@ -30,14 +30,14 @@ class ReservationHistory extends React.Component{
                       case('credit-card'):
                         switch('visa'){
                           case('visa'):
-                            return '../../images/visa.png';
+                            return '/images/visa.png';
                           default:
                             return null;
                         }
                       case('bank-account'):
                         switch('Krungsri'){
                           case('Krungsri'):
-                            return '../../images/KTB.png';
+                            return '/images/KTB.png';
                           default:
                             return null;
                         }

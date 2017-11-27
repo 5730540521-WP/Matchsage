@@ -198,7 +198,8 @@ class OwnerServiceDetail extends React.Component{
 		let loaded = this.props.serviceReducer.service;
 		return (
 			loaded?this.props.serviceReducer.service.service_id?
-			<div style={{color:'#402900'}}>				
+			<div style={{color:'#402900'}}>	
+				<img src="/images/banner.jpg" style={{ width: '100%', height: 400 }} />			
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu			

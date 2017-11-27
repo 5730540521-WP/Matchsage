@@ -76,12 +76,17 @@ class ServiceDetail extends React.Component{
 
 	onRatingService = (e) =>{ 
 		CustomerActions.rateService(this.props.serviceState.service.service_id, this.state.serviceRating,"service")
-		alert('Rating success!')
+		const modal = Modal.success({
+			title: 'Rate success!',
+			content: 'close this modal to proceed.'
+		});
 		this.setState({serviceCurrentRate:this.props.serviceState.service.rating});
 		this.state.isRate=true;
-		window.location.reload()
-	
-
+		setTimeout(() => {
+			modal.destroy()
+			window.location.reload()
+		}, 1000)
+		
 		
 	}
 
@@ -251,7 +256,7 @@ class ServiceDetail extends React.Component{
 		return <div style={{paddingBottom:'2vw'}}>
 		<Card style={{ width: '22vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
 			<div>
-				<img src="../images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
+				<img src="/images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
 			</div>
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
@@ -271,7 +276,7 @@ class ServiceDetail extends React.Component{
 			loaded?this.props.serviceState
 .service.service_id?
 			<div style={{color:'#402900'}}>
-				<img src="../images/banner.jpg" style={{width:'100%',height:400}}/>
+				<img src="/images/banner.jpg" style={{width:'100%',height:400}}/>
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu

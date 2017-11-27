@@ -123,14 +123,14 @@ class ReservedServices extends React.Component{
         case('credit-card'):
           switch(record.company){
             case('visa'):
-              return '../../images/visa.png';
+              return '/images/visa.png';
             default:
               return null;
           }
         case('bank-account'):
           switch(record.company){
             case('Krungsri'):
-              return '../../images/KTB.png';
+              return '/images/KTB.png';
             default:
               return null;
           }
