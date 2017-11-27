@@ -90,7 +90,7 @@ class PaymentSelection extends React.PureComponent{
 		});
 		// this.setState({data});
 		console.log(this.props.payment_accounts);
-		return <PaymentSelectionTable dataSource={data} columns={columns}/>;
+		return <PaymentSelectionTable pagination={false} dataSource={data} columns={columns}/>;
 	}
 }
 

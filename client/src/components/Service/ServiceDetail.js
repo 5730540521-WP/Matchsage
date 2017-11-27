@@ -1,5 +1,5 @@
 import React from 'react';
-import { message,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input,Rate } from 'antd';
+import { message,Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
