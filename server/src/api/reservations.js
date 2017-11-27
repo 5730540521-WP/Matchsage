@@ -8,6 +8,7 @@ const UserModel = require('../models/user')
 const ServiceModel = require('../models/service')
 const EmailServ = require('../services/email')
 const ReceiptModel = require('../models/receipt')
+const PaymentAccountModel = require('../models/payment-account')
 
 const ExpressJoi = require('express-joi-validator')
 const Joi = require('joi')
@@ -57,7 +58,6 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
 }), async (req, res, next) => {
   try {
     const user = await UserModel.findByUserId(req.user.user_id)
-    console.log(user.payment_accounts, req.body.payment_number)
     if (!_.includes(user.payment_accounts, req.body.payment_number)) {
       const err = new Error('Invalid payment number')
       err.status = 400
@@ -86,7 +86,8 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
       employee_id: req.body.employee_id
     })
     const reserve = await ReserveModel.createReservation(body)
-    const receiptInput = Object.assign({ reservation_id: reserve.reserve_id, payment_date: body.date_reserved, payment_type: 'deposit-paid', price: price }, body)
+    const paymentAccount = await PaymentAccountModel.findByNumber(req.body.payment_number)
+    const receiptInput = Object.assign({ payment_method: paymentAccount.method, reservation_id: reserve.reserve_id, payment_date: body.date_reserved, payment_type: 'deposit-paid', price: price }, body)
     await ReceiptModel.createReceipt(receiptInput)
     res.json(reserve)
     await EmailServ.mailConfirmReservation(reserve.reserve_id)
