@@ -44,15 +44,15 @@ class AdminComplaint extends React.Component{
 			else if(this.state.current == 'employee')
 				data = this.props.complaints.filter((record) => record.complaint_type === 'employee')
 			const columns = [{
-				title: 'complaint_id',
+				title: 'หมายเลขคำร้องเรียน',
 				dataIndex: 'complaint_id',
 				key: 'complaint_id',
 			  }, {
-				title: 'customer_id',
+				title: 'ผู้ร้องเรียน',
 				dataIndex: 'customer_id',
 				key: 'customer_id',
 			  }, {
-				title: 'complaint_type',
+				title: 'ประเภทการร้องเรียน',
 				dataIndex: 'complaint_type',
 				key: 'complaint_type',
 			  }];	
@@ -85,9 +85,10 @@ class AdminComplaint extends React.Component{
 					pagination={false}/>:<div>no reservetions for this sevice now...</div>	}
 
 				<Modal
-					title={"คำร้องเรียนหมายเลข: " + this.state.ComplaintModaldata.complaint_id}
+					title={"คำร้องเรียนหมายเลข " + this.state.ComplaintModaldata.complaint_id}
 					visible={this.state.isComplaintModalActive}
 					closable = {false}
+					style={{ fontFamily: 'Kanit' }}
 					footer={[
 						<Button key="OK" 
 						size="large" 
@@ -96,7 +97,7 @@ class AdminComplaint extends React.Component{
 						OK</Button>			
 					  ]}
 					>	
-					<h2><strong>หัวข้อ </strong> {this.state.ComplaintModaldata.title}</h2>
+					<h1><strong>หัวข้อ {this.state.ComplaintModaldata.title}</strong></h1>
 					<br/>
 					<h2><strong>ผู้รายงาน </strong> {this.state.ComplaintModaldata.customer_id}</h2>
 					<br/>
@@ -117,8 +118,7 @@ class AdminComplaint extends React.Component{
 					<br/>
 					<br/>
 					{this.state.ComplaintModaldata.note}</h2>
-					<br/>
-					{JSON.stringify(this.state.ComplaintModaldata)}
+					<br/>					
 				</Modal>
 
 				</div>		

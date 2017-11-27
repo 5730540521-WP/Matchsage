@@ -1,5 +1,4 @@
 const { Router } = require('express')
-const _ = require('lodash')
 const AuthServ = require('../services/auth')
 const ReceiptModel = require('../models/receipt')
 const UserModel = require('../models/user')
@@ -61,9 +60,9 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
     if (receipt.customer_id !== req.user.user_id) {
       const error = new Error('Only customer who make this reservation can download this receipt')
       error.status = 400
-      throw error
+      next(error)
     }
-    ReceiptService.downloadReceipt(req.user.user_id, receipt.reservation_id)
+    await ReceiptService.downloadReceipt(req.user.user_id, receipt.reservation_id)
 
     res.download('receipt.pdf')
   } catch (error) {
@@ -73,5 +72,4 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
 
 module.exports = router
 
-
-//Done Validate
+// Done Validate
