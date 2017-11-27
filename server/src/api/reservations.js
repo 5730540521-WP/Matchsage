@@ -73,7 +73,7 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
 
     const dateCreated = Moment().format('YYYY-MM-DD')
 
-    await ReserveServ.makeDepositPayment(user.user_id, price * 0.3, req.body.payment_number)
+    await ReserveServ.makeDepositPayment(user.user_id, price, req.body.payment_number)
 
     const body = Object.assign({}, req.body, {
       date_reserved: dateReserved,
@@ -87,7 +87,12 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
     })
     const reserve = await ReserveModel.createReservation(body)
     const paymentAccount = await PaymentAccountModel.findByNumber(req.body.payment_number)
-    const receiptInput = Object.assign({ payment_method: paymentAccount.method, reservation_id: reserve.reserve_id, payment_date: body.date_reserved, payment_type: 'deposit-paid', price: price }, body)
+    const receiptInput = Object.assign({
+      payment_method: paymentAccount.method,
+      reservation_id: reserve.reserve_id,
+      payment_date: body.date_reserved,
+      payment_type: 'deposit-paid',
+      price: price * 0.3}, body)
     await ReceiptModel.createReceipt(receiptInput)
     res.json(reserve)
     await EmailServ.mailConfirmReservation(reserve.reserve_id)
