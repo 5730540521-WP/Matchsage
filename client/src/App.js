@@ -16,7 +16,7 @@ import Admin from './components/Admin/Admin';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
 // import ServiceReservation from 'components/Service/ServiceReservation';
-import Profile from './components/User/Proflle';
+import Profile from './components/User/Profile';
 import NotFound from './components/NotFound';
 import ReservedServices from 'components/User/ReservedServices';
 import ReservationHistory from 'components/User/ReservationHistory';
