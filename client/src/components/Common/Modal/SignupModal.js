@@ -34,7 +34,6 @@ class RegistrationForm extends React.Component{
 			password:'',
 			gender:'',
 			user_type:null,
-			gender:'',
 			// For antd magic
 			confirmDirty: false,
 			autoCompleteResult: [],
@@ -54,7 +53,7 @@ class RegistrationForm extends React.Component{
       if (!err) {
 				// console.log('Received values of form: ', values);
 				const {first_name,last_name,email,password,gender,user_type} = values;
-				this.props.register(first_name,last_name,email,password,gender,user_type);
+				this.props.register(first_name,last_name,email,password,gender[0],user_type[0]);
       }else{
 				console.log(values);
 			}
