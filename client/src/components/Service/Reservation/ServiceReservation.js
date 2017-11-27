@@ -242,7 +242,7 @@ class ServiceReservation extends React.PureComponent{
             <Button onClick={() => this.prev()}> ย้อนกลับ </Button>
           }
           {
-            this.state.current < steps.length - 1
+            this.state.current < steps.length -1
             &&
             <Button style={{ marginLeft: 8 }} type='primary' onClick={() => this.next()}>ต่อไป</Button>
           }
@@ -271,6 +271,7 @@ function mapStateToProps({reservation}){
 
 function mapDispatchToProps(dispatch){
 	// const fetchEmployees = CustomerActions.fetchEmployees;
+	
 	const selectServiceReservation = CustomerActions.selectServiceReservation;
 	return bindActionCreators({ selectServiceReservation },dispatch);
 }

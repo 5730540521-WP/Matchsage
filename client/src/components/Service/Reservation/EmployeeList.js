@@ -30,28 +30,26 @@ class EmployeeList extends React.PureComponent{
 		const {employees, onSelectEmployee} = this.props;
 		
 		return(
-			<div>
-				<Row gutter={16}>
-					<Col span={8}>
-						{employees.map( (employee,idx) => {
-							return ( idx%3==0 && <EmployeeDetail onClick={onSelectEmployee}
-								key={employee.employee_id} employee={employee}/>);
-						})}
-					</Col>
-					<Col span={8}>
-						{employees.map( (employee,idx) => {
-							return (idx%3==1 && <EmployeeDetail onClick={onSelectEmployee}
-								key={employee.employee_id} employee={employee}/>);
-						})}
-					</Col>
-					<Col span={8}>
-						{employees.map( (employee,idx) => {
-							return (idx%3==2 && <EmployeeDetail onClick={onSelectEmployee}
-								key={employee.employee_id} employee={employee}/>);
-						})}
-					</Col>
-				</Row>
-			</div>
+			<Row gutter={16}>
+				<Col span={8}>
+					{employees.map( (employee,idx) => {
+						return ( idx%3==0 && <EmployeeDetail onClick={onSelectEmployee}
+							key={employee.employee_id} employee={employee}/>);
+					})}
+				</Col>
+				<Col span={8}>
+					{employees.map( (employee,idx) => {
+						return (idx%3==1 && <EmployeeDetail onClick={onSelectEmployee}
+							key={employee.employee_id} employee={employee}/>);
+					})}
+				</Col>
+				<Col span={8}>
+					{employees.map( (employee,idx) => {
+						return (idx%3==2 && <EmployeeDetail onClick={onSelectEmployee}
+							key={employee.employee_id} employee={employee}/>);
+					})}
+				</Col>
+			</Row>
 		);
 	}
 }

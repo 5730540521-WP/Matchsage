@@ -16,11 +16,15 @@ const EmployeeCard = styled(Card)`
 
 class EmployeeDetail extends React.PureComponent{
 
-	onSelectEmployee = (employee_id)=>{
+	onSelectEmployee = ()=>{
+		const {employee_id} = this.props.employee;
+		
+		// console.log('Selected: ' + selected_employee);
+		console.log('Hmm1');
 		console.log(employee_id);
 		const {employees} = this.props;
 		const employee = employees.find(employee=>employee.employee_id===employee_id);
-		console.log('Hmm');
+		console.log('Hmm2');
 		console.log(employee);
 		this.props.selectEmployeeReservation(employee);
 	}
@@ -28,11 +32,12 @@ class EmployeeDetail extends React.PureComponent{
 	render(){
 		// const {employees} = this.props;
 		const {first_name, last_name, gender, rating, employee_id} = this.props.employee;
-
+		const selected_employee = this.props.employee_id;
 		return(
-			<EmployeeCard onClick={this.onSelectEmployee(employee_id)}>
+			<EmployeeCard onClick={this.onSelectEmployee} 
+				bordered={selected_employee===employee_id}>
 				<div className="custom-image">
-					<img alt="example" width="100%" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
+					<img alt="example" src="http://upic.me/i/r0/yqm18.jpg" />
 				</div>
 				<div className="custom-card">
 					<h3>ชื่อ: {first_name} {last_name}</h3>
@@ -45,8 +50,8 @@ class EmployeeDetail extends React.PureComponent{
 }
 
 function mapStateToProps({reservation}){
-	const {employees} = reservation;
-	return {employees};
+	const {employees, employee_id} = reservation;
+	return {employees,employee_id};
 }
 
 function mapDispatchToProps(dispatch){
