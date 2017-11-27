@@ -3,6 +3,7 @@ import { Row,Col,Button } from 'antd';
 import {connect} from 'react-redux';
 import {CustomerActions} from 'actions/CustomerActions';
 import * as JWT from 'jwt-decode';
+import { history } from 'helpers';
 
 class ReservationHistory extends React.Component{
 
@@ -19,11 +20,12 @@ class ReservationHistory extends React.Component{
             <img src="../images/banner.jpg" style={{width:'100%',maxHeight:'114px'}}/>
           </Col>
           <Col span={14} style={{textAlign:'left'}}>
-            <h1 style={{fontWeight:'bold'}}>ร้าน {reservation.service_name}</h1>
+            <a onClick={()=>history.push(`/service/${reservation.service_id}`)}><h1 style={{fontWeight:'bold'}}>ร้าน {reservation.service_name}</h1></a>
             <Row style={{marginTop:'12px'}}>
               <Col span={10}>
                 <div style={{fontSize:20}}>
                   <div style={{marginBottom:'6px'}}>วันที่จอง: {reservation.date_created}</div>
+                  {console.log(reservation)}
                   ช่องทางการชำระเงิน: <img src="../../images/visa.png" style={{maxHeight:'20px'}}/></div>
               </Col>
               <Col span={12}>
@@ -36,7 +38,7 @@ class ReservationHistory extends React.Component{
             </Row>
           </Col>
         </Row>
-      }):<h1>ท่านยังไม่เคยจองบริการใดๆ</h1>:null}
+      }):<h1>ท่านยังไม่มีประวัติการใช้บริการใดๆ</h1>:null}
     </div>
   }
 }

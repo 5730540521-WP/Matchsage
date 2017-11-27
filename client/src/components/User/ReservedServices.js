@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon,Table,Calendar,LocaleProvider,Row,Col,Button } from 'antd';
+import { Modal,Icon,Table,Calendar,LocaleProvider,Row,Col,Button } from 'antd';
 import thTH from 'antd/lib/locale-provider/th_TH';
 import './ReservedServices.css';
 import {CustomerActions} from 'actions/CustomerActions';
@@ -8,6 +8,10 @@ import {connect} from 'react-redux';
 import { history } from 'helpers';
 
 class ReservedServices extends React.Component{
+  state = {
+    loading: false,
+    visible: false,
+  }
   componentDidMount(){
     this.props.fetchReserved(JWT(localStorage.getItem('user')).user_id);
   }
@@ -44,8 +48,8 @@ class ReservedServices extends React.Component{
     })}
     return num ? (
       <div className="notes-month">
-        <section>{num}</section>
         <span>มีนัดนวด</span>
+        <section>{num}</section>
       </div>
     ) : null;
   }
@@ -58,7 +62,7 @@ class ReservedServices extends React.Component{
     title: 'ชื่อร้าน',
     dataIndex: 'name',
     render: (text,record) => (
-      <div onClick={()=>history.push(`/service/${record.service_id}`)}>{text}</div>
+      <a onClick={()=>history.push(`/service/${record.service_id}`)}>{text}</a>
     ),
   }, {
     title: 'ประเภทบริการ',
@@ -73,9 +77,41 @@ class ReservedServices extends React.Component{
     title: 'ชำระค่าบริการ',
     dataIndex: 'paid_status',
     render: (text, record) => (
-      text==='fully_paid'?<Button type="primary">ชำระค่าบริการที่เหลือ</Button>:<Button type="primary" disabled>ชำระค่าบริการแล้ว</Button>
+      <Button type="primary" onClick={()=>this.setState({visible:true})/*this.props.payService(JWT(localStorage.getItem('user')).user_id,record.reserve_id)*/}>ชำระค่าบริการที่เหลือ</Button>
     ),
   }];
+
+  handleOk = () => {
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({ loading: false, visible: false });
+    }, 3000);
+  }
+  handleCancel = () => {
+    this.setState({ visible: false });
+  }
+
+  renderChoosePaymentAccountModal = ()=>{
+    const { visible, loading } = this.state;
+    return <Modal
+      visible={visible}
+      title="เลือกวิธีการชำระค่าบริการ"
+      onOk={this.handleOk}
+      onCancel={this.handleCancel}
+      footer={[
+        <Button key="back" size="large" onClick={this.handleCancel}>ยกเลิก</Button>,
+        <Button key="submit" type="primary" size="large" loading={loading} onClick={this.handleOk}>
+          ชำระค่าบริการ
+        </Button>,
+      ]}
+    >
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </Modal>
+  }
 
   render(){
     
@@ -88,6 +124,7 @@ class ReservedServices extends React.Component{
           <Col span={14}>
             <h1>บริการที่จองไว้</h1>
             <Table columns={this.columns} dataSource={this.props.customerReservations} />
+            {this.renderChoosePaymentAccountModal()}
           </Col>
         </Row>
       </div>
@@ -105,7 +142,10 @@ function mapDispatchToProps(dispatch){
 	return {
 		fetchReserved: (customer_id)=>{
 			dispatch(CustomerActions.fetchReservedServices(customer_id))
-		}
+    },
+    payService: (user_id,reserve_id)=>{
+      dispatch(CustomerActions.payService(user_id,reserve_id))
+    }
 	}
 }
 

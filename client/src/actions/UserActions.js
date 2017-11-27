@@ -114,7 +114,7 @@ async function deleteAccount(){
 async function fetchUserProfile(id){
 	const headers = authHeader();
 	const user = await axios.get(API_URL + `/api/users/${id}` , {headers} )
-	
+
 	return {
 		type:userConstants.FETCH_PROFILE,
 		user: user.data,
