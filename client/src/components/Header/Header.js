@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 // import {Field,reduxForm} from 'redux-form';
 import styled from 'styled-components';
-import {Icon} from 'antd';
+import {Icon,Affix} from 'antd';
 import GuestNavbar from './GuestNavbar';
 import CustomerNavbar from './CustomerNavbar'
 import ServiceOwnerNavbar from './ServiceOwnerNavbar'
@@ -60,11 +60,13 @@ class Header extends Component{
 		console.log(location)
 		if (location.substring(0,6) === '/admin') return null
 		return(
+		<Affix>
 			<NavBar style={{borderBottom: '1px solid #b1b1b1'}}>
 				<div className="navbar-brand">
-					<a className="navbar-item" onClick={()=>history.push('/')}>
+					<a className="navbar-item" onClick={()=>history.push('/')} style={{padding:'0px',paddingLeft:'1vw'}}>
 						{/* <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"/> */}
-						<h1>Matchsage</h1>
+						<img src="../images/Picture1.png" style={{maxHeight:'52px'}}/>
+						{/* <h1>Matchsage</h1> */}
 					</a>
 					{/* <a className="navbar-item is-hidden-desktop" href="https://github.com/jgthms/bulma" target="">
 						<span className="icon">
@@ -138,6 +140,7 @@ class Header extends Component{
 				</div>
 	
 			</NavBar>
+		</Affix>
 		)
 	}
 }	

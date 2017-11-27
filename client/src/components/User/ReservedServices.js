@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon,Table,Calendar,LocaleProvider,Row,Col,Button } from 'antd';
 import thTH from 'antd/lib/locale-provider/th_TH';
 import './ReservedServices.css';
-import {userActions} from 'actions/UserActions';
+import {CustomerActions} from 'actions/CustomerActions';
 import * as JWT from 'jwt-decode';
 import {connect} from 'react-redux';
 import { history } from 'helpers';
@@ -36,18 +36,16 @@ class ReservedServices extends React.Component{
     );
   }
   
-  getMonthData = (value)=> {
-    if (value.month() === 8) {
-      return 0;
-    }
-  }
-  
   monthCellRender = (value)=> {
-    const num = this.getMonthData(value);
+    let num = 0;
+    if(this.props.customerReservations){this.props.customerReservations.map((reservation)=>{
+      const reservationDate = new Date(reservation.date);
+      if(reservationDate.getMonth()===value.month() && reservationDate.getFullYear()===value.year()) num++;
+    })}
     return num ? (
       <div className="notes-month">
         <section>{num}</section>
-        <span>Backlog number</span>
+        <span>มีนัดนวด</span>
       </div>
     ) : null;
   }
@@ -99,14 +97,14 @@ class ReservedServices extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		customerReservations: state.UserReducer.customerReservations
+		customerReservations: state.ServiceRecieverReducer.customerReservations
 	}
 }
 
 function mapDispatchToProps(dispatch){
 	return {
 		fetchReserved: (customer_id)=>{
-			dispatch(userActions.fetchReservations(customer_id))
+			dispatch(CustomerActions.fetchReservedServices(customer_id))
 		}
 	}
 }

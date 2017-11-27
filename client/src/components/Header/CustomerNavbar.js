@@ -61,7 +61,7 @@ class CustomerNavbar extends React.Component{
 							<Icon type="exclamation-circle-o" style={{marginRight:'20px'}}/>
 									บริการที่จองไว้
 						</a>
-						<a className="navbar-item">
+						<a className="navbar-item" onClick={()=>history.push('/user/reservation-history')}>
 							<Icon type="clock-circle-o" style={{marginRight:'20px'}}/>
 									ประวัติการจอง
 						</a>

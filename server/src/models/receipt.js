@@ -17,6 +17,9 @@ const ReceiptSchema = new mongoose.Schema({
   payment_type: {
     type: String
   },
+  payment_method: {
+    type: String
+  },
   price: {
     type: Number,
     required: true,
