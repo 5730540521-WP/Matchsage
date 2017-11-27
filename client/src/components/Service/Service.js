@@ -92,7 +92,7 @@ class Service extends React.Component{
 		} 
 		if(hasLocation){
 			if(hasPreviousFilter) newSearchURL+='&'; else hasPreviousFilter = true;
-			newSearchURL+=`location>=${this.state.location}`;
+			newSearchURL+=`location=${this.state.location}`;
 		}
 		history.push(newSearchURL);
 	}
