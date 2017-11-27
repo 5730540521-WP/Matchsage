@@ -193,11 +193,10 @@ class RegistrationForm extends React.Component{
         >
 					{getFieldDecorator('gender', {
             initialValue: ['ชาย', 'หญิง'],
-            rules: [{ type: 'string', required: true, message: 'โปรดระบุเพศ' }],
+            rules: [{ type: 'array', required: true, message: 'โปรดระบุเพศ' }],
           })(
             <Cascader options={genders} />
           )}
-
 				</FormItem>
 
 				<FormItem
@@ -206,11 +205,10 @@ class RegistrationForm extends React.Component{
         >
 					{getFieldDecorator('user_type', {
             initialValue: ['ผู้ใช้บริการ', 'ผู้ให้บริการ'],
-            rules: [{ type: 'string', required: true, message: 'โปรดเลือกประเภทของสมาชิก' }],
+            rules: [{ type: 'array', required: true, message: 'โปรดเลือกประเภทของสมาชิก' }],
           })(
             <Cascader options={userTypes} />
           )}
-
 				</FormItem>
 
 				<FormItem {...tailFormItemLayout}>

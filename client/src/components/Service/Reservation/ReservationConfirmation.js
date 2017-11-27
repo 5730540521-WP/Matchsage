@@ -30,6 +30,7 @@ const Employee = styled(Card)`
 	height: 250px;
 	margin-left: 100px;
 	margin-top: 100px;
+	border-radius:25px;
 `;
 
 const ReserveButton = styled(Button)`
