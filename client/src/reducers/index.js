@@ -3,7 +3,7 @@ import {combineReducers} from 'redux';
 import NavBarReducer from './NavbarReducer';
 import UserReducer from './UserReducer';
 import OwnerReducer from './OwnerReducer';
-import ServiceRecieverReducer from './ServiceRecieverReducer';
+import CustomerReducer from './CustomerReducer';
 import PaymentAccounts from './PaymentReducer'
 import AdminReducer from './AdminReducer';
 import {registration} from './RegistrationReducer';
@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
 	// navbarState: NavBarReducer
 	UserReducer,
 	OwnerReducer,
-	ServiceRecieverReducer,
+	CustomerReducer,
 	AdminReducer,
 	registration,
 	authentication,

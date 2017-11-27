@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
+import { Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
@@ -145,8 +145,7 @@ class ServiceDetail extends React.Component{
 						<P>อีเมล์ {this.props.serviceState
 				.ownerDetail.email}</P>
 						<H1>คะแนน</H1>
-						<P>{this.props.serviceState
-				.service.rating}</P>
+						<Rate disabled defaultValue={this.props.serviceState.service.rating} style={{float:'left',marginLeft:'30px'}}/>
 					</div>
 					:
 					<div>
@@ -186,7 +185,7 @@ class ServiceDetail extends React.Component{
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
 				<br/>เพศ {employee.gender==='male'?'ชาย':'หญิง'}
-				<br/>คะแนน {employee.rating}
+				<br/>คะแนน<Rate disabled defaultValue={employee.rating} style={{paddingLeft:'12px'}}/>
 				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>{
 					this.setState({showReportEmployeeModal:true,selectedReportEmployee:employee,reportEmployeeTopic:'',reportEmployeeContent:''})
 				}}>รายงานพนักงานคนนี้</Button>

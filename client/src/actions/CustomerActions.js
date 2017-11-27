@@ -217,21 +217,35 @@ async function fetchReservedServices(customer_id){
 	const resFetchReservedServices = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
 	let formattedReservationsData = [];
 	await Promise.all(resFetchReservedServices.data.reservations.map(async(reservation)=>{
-		const headers = authHeader();
-		const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
-		formattedReservationsData = [...formattedReservationsData,{
-			reserve_id: reservation.reserve_id,
-			name: resServiceDetail.data.service_name,
-			service_type: '',
-			date: reservation.date_reserved,
-			time: `${reservation.start_time.toString().substr(0,2)}:${reservation.start_time.toString().substr(2,2)} ถึง ${reservation.end_time.toString().substr(0,2)}:${reservation.end_time.toString().substr(0,2)}`,
-			paid_status: reservation.paid_status,
-			service_id: reservation.service_id
-		}]
+		if(reservation.paid_status==='deposit-paid'){
+			const headers = authHeader();
+			const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
+			formattedReservationsData = [...formattedReservationsData,{
+				reserve_id: reservation.reserve_id,
+				name: resServiceDetail.data.service_name,
+				service_type: '',
+				date: reservation.date_reserved,
+				time: `${reservation.start_time.toString().substr(0,2)}:${reservation.start_time.toString().substr(2,2)} ถึง ${reservation.end_time.toString().substr(0,2)}:${reservation.end_time.toString().substr(0,2)}`,
+				service_id: reservation.service_id
+			}]
+		}
 	}));
+	const resPaymentAccounts = await axios.get(API_URL + `/api/users/${customer_id}/payment_accounts` , {headers} );
+	let formattedPaymentAccounts = [];
+	resPaymentAccounts.data.payment_accounts.map((payment_account,index)=>{
+		console.log(payment_account)
+		formattedPaymentAccounts = [...formattedPaymentAccounts,{
+			choice : index,
+			payment_method : payment_account.method,
+			payment_number : payment_account.number,
+			expire_date : '2018/01',
+			company : payment_account.company
+		}]
+	})
 	return {
 		type:customerConstants.FETCH_CUSTOMER_RESERVATIONS,
-		customerReservations:formattedReservationsData
+		customerReservations:formattedReservationsData,
+		paymentAccounts:formattedPaymentAccounts
 	}
 }
 
@@ -241,10 +255,12 @@ async function informReservationHistory(customer_id){
 	const resFetchReservedServices = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
 	let reservationHistory=[];
 	await Promise.all(resFetchReservedServices.data.reservations.map(async(reservation)=>{
-		const headers = authHeader();
-		const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
-		reservationHistory = [...reservationHistory,{...reservation,service_name:resServiceDetail.data.service_name
-		}]
+		if(reservation.paid_status==='fully-paid'){
+			const headers = authHeader();
+			const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
+			reservationHistory = [...reservationHistory,{...reservation,service_name:resServiceDetail.data.service_name
+			}]
+		}
 	}));
 	return {
 		type:customerConstants.FETCH_CUSTOMER_RESERVATION_HISTORY,
@@ -258,23 +274,43 @@ function payDeposit(){
 }
 
 // Use case: 15
-function payService(){
-
+async function payService(payment_number,reserve_id){
+	const headers = authHeader();
+	const data = {
+		payment_number
+	}
+	const res = await axios.post(API_URL + `/api/reservations/${reserve_id}/make-full-payment`,data,{headers});
+	return res.data.success
 }
 
 // Use case: 16
 async function informBillDetail(reserve_id){
 	const headers = authHeader();
 	const res = await axios.get(API_URL + `/api/receipts/${reserve_id}`,{headers});
-	console.log(res)
+	console.log(res.data)
 	return;
 }
 
 // Use case: 17
 async function downloadBillDetail(reserve_id){
 	const headers = authHeader();
+	let newWindow = window.open('', '_blank');
 	const res = await axios.get(API_URL + `/api/receipts/${reserve_id}/download`,{headers});
-	console.log(res)
+	let uriContent = "data:application/pdf," + encodeURIComponent(res.data);
+	//window.open(uriContent, 'neuesDokument')
+	newWindow.location.href = uriContent;
+	// var pom = document.createElement('a');
+	// pom.setAttribute('href', 'data:application/pdf,' + encodeURIComponent(res.data));
+	// pom.setAttribute('download', 'receipt.pdf');
+
+	// if (document.createEvent) {
+	// 		var event = document.createEvent('MouseEvents');
+	// 		event.initEvent('click', true, true);
+	// 		pom.dispatchEvent(event);
+	// }
+	// else {
+	// 		pom.click();
+	// }
 	return;
 }
 
@@ -302,8 +338,9 @@ async function sendEmployeeComplaint(service_id,employee_id,topic,content){
 		complaint_type: 'employee'
 	}
 	const headers = authHeader();
-	const res = await axios.post(API_URL + '/api/complaints/new', data, {headers}).catch(error=>{
+	const res = await axios.post(API_URL + '/api/complaints/new', data,{headers}).catch(error=>{
 		return console.log(error);
 	});
+	console.log(res)
 	return res;
 }
