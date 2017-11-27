@@ -25,7 +25,7 @@ class NormalLoginForm extends React.Component {
           .then(() => {
             this.setState({ loginState: false })
             alert('Login successful!')
-            history.push('/admin/users/search')
+            history.push('/admin')
           })
           .catch(e => {
             this.setState({ loginState: false })
@@ -90,7 +90,7 @@ const WrappedNormalLoginForm = Form.create({})(NormalLoginForm)
 class AdminLogin extends Component {
   render() {
     return (
-      <div className="fuck">
+      <div className="fuck" style={{ margin: 50 }}>
         <WrappedNormalLoginForm />
       </div>
     )

@@ -17,7 +17,7 @@ router.get('/', AuthServ.isAuthenticated, async (req, res) => {
   let opts = req.query
   delete opts.keyword
   const users = await UserModel.findWithRegexp(keyword, opts)
-  res.json({ users: _.map(users, user => _.pick(user, filters.user)) })
+  res.json({ users: _.map(users, user => _.pick(user, _.concat(filters.user, ['is_delete']))) })
 })
 // get user detail
 router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
@@ -92,6 +92,21 @@ router.post('/:id/update', AuthServ.isAuthenticated, async (req, res, next) => {
       throw error
     }
     await UserModel.findOneAndUpdate({ user_id: req.params.id }, req.body)
+    res.json({ success: true })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/:id/revive', AuthServ.isAuthenticatedAdmin, async (req, res, next) => {
+  try {
+    const user = await UserModel.findDeletedByUserId(req.params.id)
+    if (!user) {
+      const error = new Error('Not a deleted user')
+      error.status = 404
+      throw error
+    }
+    await UserModel.findOneAndUpdate({user_id: req.params.id}, { is_delete: false })
     res.json({ success: true })
   } catch (error) {
     next(error)

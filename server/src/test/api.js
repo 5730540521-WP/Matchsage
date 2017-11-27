@@ -4,6 +4,7 @@ const _ = require('lodash')
 const mongoose = require('mongoose')
 const Promise = require('bluebird')
 const jwt = require('jsonwebtoken')
+const Moment = require('moment')
 
 const app = require('../')
 const UserModel = require('../models/user')
@@ -107,6 +108,7 @@ describe('API tests', () => {
   let cusToken2 = ''
   let ownerToken2 = ''
   let cusTokenTestDel = ''
+  let payment1 = {number: '1', amount: 10000000, company: 'Task world'}
 
   before(async () => {
     owner1 = await UserModel.createUser(owner1)
@@ -132,7 +134,8 @@ describe('API tests', () => {
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
-      date: '2048-13-32'
+      date_reserved: '2048-13-32',
+      date_created: Moment().format('YYYY-MM-DD')
     })
     reserve3 = await ReserveModel.createReservation({
       customer_id: customer2.user_id,
@@ -140,7 +143,8 @@ describe('API tests', () => {
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
-      date: '2048-13-32'
+      date_reserved: '2048-13-32',
+      date_created: Moment().format('YYYY-MM-DD')
     })
     serviceTestRemovewUser.owner_id = customerTestDel.user_id
     serviceTestRemovewUser = await ServiceModel.createService(serviceTestRemovewUser)
@@ -152,7 +156,8 @@ describe('API tests', () => {
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
-      date: '2048-13-32'
+      date_reserved: '2048-13-32',
+      date_created: Moment().format('YYYY-MM-DD')
     })
     reserveTestRemovewUser2 = await ReserveModel.createReservation({
       customer_id: customerTestDel.user_id,
@@ -160,7 +165,8 @@ describe('API tests', () => {
       employee_id: employee2.employee_id,
       start_time: '0000',
       end_time: '0300',
-      date: '2048-13-32'
+      date_reserved: '2048-13-32',
+      date_created: Moment().format('YYYY-MM-DD')
     })
   })
 
@@ -273,6 +279,7 @@ describe('API tests', () => {
       .expect(200)
       .then(async res => {
         expect(res.body.users.length).to.equal(2)
+        expect(res.body.users[0].is_delete).to.equal(false)
       })
     })
   })
@@ -334,6 +341,69 @@ describe('API tests', () => {
         expect(reser1).to.equal(null)
         const reser2 = await ReserveModel.findByReservationId(tmpReserId2)
         expect(reser2).to.equal(null)
+      })
+    })
+  })
+
+  describe('# revive user', () => {
+    it('Admin should be able to revive deleted user', () => {
+      return request(app)
+      .get(`/api/users/${customerTestDel.user_id}/revive`)
+      .set('Accept', 'appication/json')
+      .set('Authorization', adminToken)
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customerTestDel.user_id)
+        expect(user.user_id).to.equal(customerTestDel.user_id)
+      })
+    })
+  })
+
+  describe('# add payment', () => {
+    it('should be able to add credit card', () => {
+      return request(app)
+      .post(`/api/users/${customer1.user_id}/add-credit-card`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customer1.user_id)
+        const card = await PaymentAccountModel.findByNumber('xxxxxxxxxxxxxxxx')
+        expect(card.user_id).to.equal(customer1.user_id)
+        expect(card.amount).to.equal(5000)
+        expect(user.payment_accounts[0]).to.equal('xxxxxxxxxxxxxxxx')
+        payment1 = await PaymentAccountModel.findByNumber(user.payment_accounts[0])
+        customer1 = await UserModel.findByUserId(customer1.user_id)
+      })
+    })
+    it('should be able to add bank account', () => {
+      return request(app)
+      .post(`/api/users/${customer1.user_id}/add-bank-account`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
+      .expect(200)
+      .then(async res => {
+        const user = await UserModel.findByUserId(customer1.user_id)
+        const account = await PaymentAccountModel.findByNumber('yyyyyyyyyyyyyyyy')
+        expect(account.user_id).to.equal(customer1.user_id)
+        expect(account.company).to.equal('kasikorn')
+        expect(account.amount).to.equal(7000)
+        expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
+      })
+    })
+  })
+
+  describe('# get payment accounts', () => {
+    it('Should list all correct payment accounts of a user', () => {
+      return request(app)
+      .get(`/api/users/${customer1.user_id}/payment_accounts`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .expect(200)
+      .then(async res => {
+        expect(res.body.payment_accounts.length).to.equal(2)
       })
     })
   })
@@ -519,12 +589,14 @@ describe('API tests', () => {
   describe('# create reservation', () => {
     it('Should create a new reservation', () => {
       console.log(customer1)
+      const tmpAmount = payment1.amount
       const body = {
         service_id: service1.service_id,
         employee_id: employee1.employee_id,
         start_time: '0100',
         end_time: '0300',
-        date: '29-12-2017'
+        date_reserved: '29-12-2017',
+        payment_number: payment1.number
       }
       return request(app)
       .post(`/api/reservations/new`)
@@ -537,7 +609,8 @@ describe('API tests', () => {
         expect(res.body.service_id).to.equal(service1.service_id)
         expect(res.body.customer_id).to.equal(customer1.user_id)
         expect(res.body.employee_id).to.equal(employee1.employee_id)
-        
+        payment1 = await PaymentAccountModel.findByNumber(payment1.number)
+        expect(payment1.amount).to.equal(tmpAmount - res.body.price * 0.3)
       })
     })
   })
@@ -570,13 +643,40 @@ describe('API tests', () => {
     })
   })
 
+  describe('# make full payment for reservation', () => {
+    it('UnAuthorized customer should not be able to pay for other\'s reservation', () => {
+      return request(app)
+      .post(`/api/reservations/${reserve1.reserve_id}/make-full-payment`)
+      .set('Accept', 'application/json')
+      .set('Authorization', ownerToken)
+      .send({payment_number: customer1.payment_accounts[0]})
+      .expect(401)
+    })
+
+    it('Authorized customer should be able to pay for his own reservation', () => {
+      const tmpAmount = payment1.amount
+      return request(app)
+      .post(`/api/reservations/${reserve1.reserve_id}/make-full-payment`)
+      .set('Accept', 'application/json')
+      .set('Authorization', cusToken)
+      .send({payment_number: customer1.payment_accounts[0]})
+      .expect(200)
+      .then(async () => {
+        const reserve = await ReserveModel.findByReservationId(reserve1.reserve_id)
+        expect(reserve.paid_status).to.equal('fully-paid')
+        payment1 = await PaymentAccountModel.findByNumber(payment1.number)
+        expect(payment1.amount).to.equal(tmpAmount - reserve.price * 0.7)
+      })
+    })
+  })
+
   describe('# cancel reservation', () => {
     it('UnAuthorized customer should not be able to cancel other reservation', () => {
       return request(app)
       .get(`/api/reservations/${reserve1.reserve_id}/cancel`)
       .set('Accept', 'application/json')
       .set('Authorization', ownerToken)
-      .expect(400)
+      .expect(401)
     })
 
     it('Authorized customer should be able to cancel his own reservation', () => {
@@ -650,56 +750,9 @@ describe('API tests', () => {
     })
   })
 
-  describe('# add payment', () => {
-    it('should be able to add credit card', () => {
-      return request(app)
-      .post(`/api/users/${customer1.user_id}/add-credit-card`)
-      .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
-      .send({ number: 'xxxxxxxxxxxxxxxx', amount: 5000, company: 'visa' })
-      .expect(200)
-      .then(async res => {
-        const user = await UserModel.findByUserId(customer1.user_id)
-        const card = await PaymentAccountModel.findByNumber('xxxxxxxxxxxxxxxx')
-        expect(card.user_id).to.equal(customer1.user_id)
-        expect(card.amount).to.equal(5000)
-        expect(user.payment_accounts[0]).to.equal('xxxxxxxxxxxxxxxx')
-      })
-    })
-    it('should be able to add bank account', () => {
-      return request(app)
-      .post(`/api/users/${customer1.user_id}/add-bank-account`)
-      .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
-      .send({ number: 'yyyyyyyyyyyyyyyy', amount: 7000, company: 'kasikorn' })
-      .expect(200)
-      .then(async res => {
-        const user = await UserModel.findByUserId(customer1.user_id)
-        const account = await PaymentAccountModel.findByNumber('yyyyyyyyyyyyyyyy')
-        expect(account.user_id).to.equal(customer1.user_id)
-        expect(account.company).to.equal('kasikorn')
-        expect(account.amount).to.equal(7000)
-        expect(_.includes(user.payment_accounts, 'yyyyyyyyyyyyyyyy')).to.equal(true)
-      })
-    })
-  })
-
-  describe('# get payment accounts', () => {
-    it('Should list all correct payment accounts of a user', () => {
-      return request(app)
-      .get(`/api/users/${customer1.user_id}/payment_accounts`)
-      .set('Accept', 'application/json')
-      .set('Authorization', cusToken)
-      .expect(200)
-      .then(async res => {
-        expect(res.body.payment_accounts.length).to.equal(2)
-      })
-    })
-  })
-
   // add receipt test
   describe('# receipt', () => {
-    it('should be able to create new receipt', () => {
+    /* it('should be able to create new receipt', () => {
       return request(app)
       .post(`/api/receipts/new`)
       .set('Accept', 'application/json')
@@ -711,6 +764,7 @@ describe('API tests', () => {
         expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
       })
     })
+    new receipt move to created on new reservation*/
     it('should list all receipts', () => {
       return request(app)
       .get(`/api/receipts/`)

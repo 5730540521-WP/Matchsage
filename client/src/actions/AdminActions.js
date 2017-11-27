@@ -4,11 +4,12 @@ import {userConstants} from '../constants/UserConstants';
 import {API_URL} from '../constants/ConfigConstants';
 import withQuery from 'with-query';
 
-export const AdminActions = {
-	informComplaint,
-	restrictPrivilege,
+export const AdminActions = {	
+	reviveUser,
+	killUser,
 	login,
-	getUsers	
+	getUsers,
+	fetchComplaints	
 }
 
 let myheaders = new Headers({
@@ -43,9 +44,9 @@ async function login({ email, password }) {
 	}		
 }
 
-async function getUsers({ keyword = '', gender, user_type }) {		
-	try {		
-		console.log(localStorage.getItem('admin'))		
+async function getUsers(params) {		
+	try {
+		const { keyword, gender, user_type } = params	
 		const url = withQuery(`${API_URL}/api/users`, {		
 			keyword,		
 			gender,		
@@ -59,19 +60,65 @@ async function getUsers({ keyword = '', gender, user_type }) {
 		})		
 		
 		const res = await raw.json()		
-		if (res.error) throw Error(res.error)		
-		return res		
+		if (res.error) throw Error(res.error)				
+		return{
+			type: userConstants.ADMIN_FETCH_USERS,
+			payload: res	
+		}			
 	} catch (error) {		
 		alert(error)		
 	}		
 }
 
 // Use case: 29
-function informComplaint(){
-
+async function fetchComplaints(){	
+	setHeaderWithAccessToken()
+	const res = await axios.get(API_URL + '/api/complaints', {
+		headers: {		
+			"Authorization": 'JWT ' + localStorage.getItem('admin'),		
+			"Content-Type": "application/json"		
+		}
+	})
+	.catch(err => {
+		console.log(err);	
+	});	
+	
+	return{
+		type: userConstants.ADMIN_FETCH_COMPLAINTS,
+		payload: res	
+	}	
 }
 
-// Use case: 30
-function restrictPrivilege(){
+async function killUser(id){
+	const res = await axios.get(API_URL + '/api/users/'+id+'/delete', {
+		headers: {		
+			"Authorization": 'JWT ' + localStorage.getItem('admin'),		
+			"Content-Type": "application/json"		
+		}
+	})
+	.catch(err => {
+		console.log(err);	
+	});	
+	
+	return{		
+		type: userConstants.ADMIN_KILL_USER,
+		payload: res	
+	}	
+}
 
+async function reviveUser(id){
+	const res = await axios.get(API_URL + '/api/users/'+id+'/revive', {
+		headers: {		
+			"Authorization": 'JWT ' + localStorage.getItem('admin'),		
+			"Content-Type": "application/json"		
+		}
+	})
+	.catch(err => {
+		console.log(err);	
+	});	
+	
+	return{		
+		type: userConstants.ADMIN_REVIVE_USER,
+		payload: res	
+	}	
 }

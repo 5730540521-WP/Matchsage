@@ -4,10 +4,10 @@ module.exports = {
     'rating', 'address', 'price_per_hour'],
 
   reservation: ['reserve_id', 'service_id', 'customer_id', 'employee_id', 'start_time',
-    'end_time', 'date', 'is_cancel', 'paid_status', 'price'],
+    'end_time', 'date_created', 'date_reserved', 'is_cancel', 'paid_status', 'price'],
 
   user: ['user_id', 'email', 'first_name', 'last_name', 'gender', 'user_type',
-    'address', 'contact'],
+    'address', 'contact', 'payment_accounts'],
 
   payment: ['number', 'method', 'company']
 

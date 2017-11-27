@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
 import NotFound from '../NotFound';
 import styled from 'styled-components';
@@ -52,6 +53,8 @@ class ServiceDetail extends React.Component{
 	}
 
 	onClickReservation = ()=>{
+		this.props.selectServiceReservation(this.props.serviceState.service.service_id,
+			this.props.serviceState.service.price_per_hour);
 		this.setState({isReservation:true});
 	}
 
@@ -71,7 +74,9 @@ class ServiceDetail extends React.Component{
 				}}>ยกเลิก</Button>,
 				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
 					this.setState({ loading: true });
-					await this.props.sendComplaint(this.props.serviceStore.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
+					console.log(this.props.serviceState);
+					await this.props.sendComplaint(this.props.serviceState
+			.service.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
 					this.setState({ loading: false,showServiceComplaint:false });
 				}}>
 					ส่ง
@@ -91,10 +96,12 @@ class ServiceDetail extends React.Component{
 			<div>
 				{this.state.current==='detail'?<div>
 					<Row>
-						<H1 style={{display:'inline',float:'left'}}>ชื่อร้าน {this.props.serviceStore.service.service_name}</H1>
+						<H1 style={{display:'inline',float:'left'}}>ชื่อร้าน {this.props.serviceState
+				.service.service_name}</H1>
 						<Button icon="exclamation-circle" type="danger" onClick={()=>this.setState({showServiceComplaint:true,serviceComplaint_topic:'',serviceComplaint_content:''})}
 						style={{display:'inline',float:'right'}}>รายงานบริการนี้</Button>
-						{this.renderServiceComplaint(this.props.serviceStore.service.service_name)}
+						{this.renderServiceComplaint(this.props.serviceState
+				.service.service_name)}
 					</Row>
 				<Row gutter={16} style={{marginBottom:'10px'}}>
 					<Col span={12}>
@@ -128,13 +135,18 @@ class ServiceDetail extends React.Component{
 						<H1>คำอธิบายร้าน</H1>
 						<P>บลา บลา บลา</P>
 						<H1>เจ้าของ</H1>
-						<P>{this.props.serviceStore.ownerDetail.first_name} {this.props.serviceStore.ownerDetail.last_name}</P>
+						<P>{this.props.serviceState
+				.ownerDetail.first_name} {this.props.serviceState
+				.ownerDetail.last_name}</P>
 						<H1>ที่อยู่</H1>
 						<P>555/555 บลา บลา บลา<br/></P>
-						<P>เบอร์ {this.props.serviceStore.service.contact_number}</P>
-						<P>อีเมล์ {this.props.serviceStore.ownerDetail.email}</P>
+						<P>เบอร์ {this.props.serviceState
+				.service.contact_number}</P>
+						<P>อีเมล์ {this.props.serviceState
+				.ownerDetail.email}</P>
 						<H1>คะแนน</H1>
-						<P>{this.props.serviceStore.service.rating}</P>
+						<P>{this.props.serviceState
+				.service.rating}</P>
 					</div>
 					:
 					<div>
@@ -146,13 +158,16 @@ class ServiceDetail extends React.Component{
 				<div>
 					<Row >
 						<Col span={8}>
-							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%3===0?this.renderEmployeeCard(employee,index):null})}
+							{this.props.serviceState
+					.employees.employees.map((employee,index)=>{return index%3===0?this.renderEmployeeCard(employee,index):null})}
 						</Col>
 						<Col span={8}>
-							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%3===1?this.renderEmployeeCard(employee,index):null})}
+							{this.props.serviceState
+					.employees.employees.map((employee,index)=>{return index%3===1?this.renderEmployeeCard(employee,index):null})}
 						</Col>
 						<Col span={8}>
-							{this.props.serviceStore.employees.employees.map((employee,index)=>{return index%3===2?this.renderEmployeeCard(employee,index):null})}
+							{this.props.serviceState
+					.employees.employees.map((employee,index)=>{return index%3===2?this.renderEmployeeCard(employee,index):null})}
 						</Col>
 					</Row>
 					<ReportEmployeeModal changeTopic={(topic)=>this.setState({reportEmployeeTopic:topic})} changeContent={(content)=>this.setState({reportEmployeeContent:content})} topic={this.state.reportEmployeeTopic} content={this.state.reportEmployeeContent} employee={this.state.selectedReportEmployee} visible={this.state.showReportEmployeeModal} close={()=>this.setState({showReportEmployeeModal:false})}/>
@@ -181,9 +196,10 @@ class ServiceDetail extends React.Component{
 	}
 
 	render(props){
-		let loaded = this.props.serviceStore.service;
+		let loaded = this.props.serviceState.service;
 		return (
-			loaded?this.props.serviceStore.service.service_id?
+			loaded?this.props.serviceState
+.service.service_id?
 			<div style={{color:'#402900'}}>
 				<img src="../images/banner.jpg" style={{width:'100%',height:'12vw'}}/>
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
@@ -219,22 +235,26 @@ class ServiceDetail extends React.Component{
 	}
 }
 
-function mapStateToProps(store){
+function mapStateToProps(state){
 	return {
-		serviceStore: store.service
+		serviceState: state.service
 	}
 }
 
 function mapDispatchToProps(dispatch){
-	return {
-		loadService: (id)=>{
-			dispatch(CustomerActions.fetchService(id))
-		},
-		sendComplaint:(service_id,topic,content)=>{
-			dispatch(CustomerActions.sendServiceComplaint(service_id,topic,content))
-		}
-	}
-}
+	// return {
+	// 	loadService: (id)=>{
+	// 		dispatch(CustomerActions.fetchService(id))
+	// 	},
+	// 	sendComplaint:(service_id,topic,content)=>{
+	// 		dispatch(CustomerActions.sendServiceComplaint(service_id,topic,content))
+	// 	},
 
+	// }
+	const loadService = CustomerActions.fetchService;
+	const sendComplaint = CustomerActions.sendServiceComplaint;
+	const selectServiceReservation = CustomerActions.selectServiceReservation;
+	return bindActionCreators({loadService,sendComplaint,selectServiceReservation}, dispatch);
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceDetail);

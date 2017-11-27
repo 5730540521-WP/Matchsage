@@ -1,17 +1,19 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {customerConstants} from 'constants/CustomerConstants'
 import axios from 'axios';
 import {API_URL} from 'constants/ConfigConstants';
 import {authHeader} from 'helpers';
-import { Steps, Icon,Button, message, DatePicker, TimePicker} from 'antd';
+import { Steps, Icon,Button, message, DatePicker, TimePicker, LocaleProvider } from 'antd';
+import enUS from 'antd/lib/locale-provider/en_US';
 import moment from 'moment';
 import styled from 'styled-components';
 
+import DateTimeSelection from './DateTimeSelection';
 import EmployeeList from './EmployeeList';
 import PaymentSelection from './PaymentSelection';
 import ReservationConfirmation from './ReservationConfirmation';
+import { CustomerActions } from 'actions/CustomerActions';
 
 const Step = Steps.Step;
 
@@ -62,48 +64,59 @@ class ServiceReservation extends React.PureComponent{
 			end_time:'',
 			employee_id:''
 		}
+		
 	}
 
-	async componentDidMount(){
-		// const fetchE = await this.fetchEmployees(this.props.service_id);
-		// if(fetchE){
+	componentDidMount(){
+		// this.props.selectServiceReservation(this.props.service_id);
+
+		console.log('DidMount');
 		const steps = [{
 			title: 'เลือกวันเวลา',
-			content: this.renderSelectDateAndTime(),
+			content: <DateTimeSelection/>,
 		}, {
 			title: 'เลือกผู้ให้บริการ',
-			content: this.renderSelectEmployee(),
+			content: <EmployeeList/>,
 		}, {
 			title: 'เลือกช่องทางการชำระค่าบริการ',
-			content: this.renderSelectPaymentAccount(),
+			content: <PaymentSelection/>,
 		},{
 			title: 'ยอมรับเงื่อนไขการให้บริการ',
-			content: this.renderConfirmReservation()
+			content: <ReservationConfirmation/>
 		}];
 		this.setState({steps, isStepsLoaded:true,service_id:this.props.service_id});
 		// }
 	}
 
+	componentWillReceiveProps(){
+
+	}
+
 	next() {
     const current = this.state.current + 1;
-    this.setState({ current });
+		this.setState({ current });
+		console.log('next');
   }
   prev() {
     const current = this.state.current - 1;
-    this.setState({ current });
+		this.setState({ current });
+		console.log('prev');
 	}
 
 	// ===== START Step1: choose day =====
 	renderSelectDateAndTime = ()=>{
 		const dateFormat = 'YYYY/MM/DD';
+		const timeFormat = 'HH:mm'
 		return(
-			<div>
+			<LocaleProvider locale={enUS}>
+				<div>
 				เลือกวันที่ต้องการ
 				<DatePicker onChange={this.onSelectDate} defaultValue={moment('2017/01/01', dateFormat)} format={dateFormat} />
 				เลือกเวลาที่ต้องการ
-				<TimePicker onChange={this.onSelectStartTime} defaultOpenValue={moment('00:00', 'HH:mm')} />,			
-				<TimePicker onChange={this.onSelectEndTime} defaultOpenValue={moment('00:00', 'HH:mm')} />,			
-			</div>
+				<TimePicker onChange={this.onSelectStartTime} defaultValue={moment('00:00', timeFormat)} format={timeFormat}/>,			
+				<TimePicker onChange={this.onSelectEndTime} defaultValue={moment('00:00', timeFormat)} format={timeFormat}/>,			
+				</div>
+			</LocaleProvider>
 		);
 	}
 
@@ -131,16 +144,24 @@ class ServiceReservation extends React.PureComponent{
 
 	// ===== START Step2: choose employee =====
 	renderSelectEmployee = ()=>{
-		// console.log(5555);
-		// console.log(this.state.employees);
+		
+		// const res = this.fetchEmployees();
+		// if(res){
+		const {date, start_time, end_time} = this.props;
+		this.props.fetchEmployees(date, start_time, end_time);
+		console.log(5555);
+		console.log(this.state.employees);
 		return(
-			<div>
+			// date && start_time && end_time && this.state.current===1 && 
+			this.state.current===1 && 
+			(<div>
 				{/* <EmployeeList employees={}/> */}
 				{/* {this.state.isEmployeesLoaded? <EmployeeList/> : loader} */}
 				<EmployeeList onSelectEmployee={this.onSelectEmployee}/>
 				{/* <EmployeeList employees={this.state.employees}/> */}
-			</div>
+			</div>)
 		);	
+		// }
 	}
 
 	fetchEmployees = async (service_id)=>{
@@ -228,13 +249,13 @@ class ServiceReservation extends React.PureComponent{
           {
             this.state.current === steps.length - 1
             &&
-            <Button style={{ marginLeft: 8 }} type="primary" 
-							disabled={!(isSelectDate && isSelectTime && 
-								isSelectEmployee && isSelectPaymentAccount && isConfirmAgreement)}
+            {/* <Button style={{ marginLeft: 8 }} type="primary" 
+							// disabled={!(isSelectDate && isSelectTime && 
+							// 	isSelectEmployee && isSelectPaymentAccount && isConfirmAgreement)}
 							onClick={() => message.success('การจองบริการสำเร็จ')}
 						> 
-							เสร็จสิ้นการจอง
-						</Button>
+							จองบริการ
+						</Button> */}
           }
           
 				</StepsAction>
@@ -243,13 +264,15 @@ class ServiceReservation extends React.PureComponent{
 	}
 }
 
-function mapStateToProps({service}){
-	return {service};
+function mapStateToProps({reservation}){
+	const {start_time, end_time, employees} = reservation;
+	return {start_time, end_time, employees};
 }
 
 function mapDispatchToProps(dispatch){
-	const fetchEmployees = customerConstants.CUSTOMER_FETCH_EMPLOYEES_RESERVATION;
-	return bindActionCreators({ fetchEmployees },dispatch);
+	// const fetchEmployees = CustomerActions.fetchEmployees;
+	const selectServiceReservation = CustomerActions.selectServiceReservation;
+	return bindActionCreators({ selectServiceReservation },dispatch);
 }
 
-export default connect(mapStateToProps)(ServiceReservation);
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceReservation);

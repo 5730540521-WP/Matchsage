@@ -56,8 +56,11 @@ class Header extends Component{
 		// const {isLogin} = this.props;
 		// const {userType} = this.props;
 		const user = localStorage.getItem('user');
+		const location = history.location.pathname
+		console.log(location)
+		if (location.substring(0,6) === '/admin') return null
 		return(
-			<NavBar>
+			<NavBar style={{borderBottom: '1px solid #b1b1b1'}}>
 				<div className="navbar-brand">
 					<a className="navbar-item" onClick={()=>history.push('/')}>
 						{/* <img src="http://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"/> */}

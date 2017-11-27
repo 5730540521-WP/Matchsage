@@ -15,16 +15,14 @@ class AdminSearch extends Component {
           isMale: false,
           isFemale: false,
           isOwner: false,
-          isCustomer: false,
-          users: undefined
+          isCustomer: false,    
+          param: []      
         }
       }
 
-  onSearchButtonClick = async () => {
+  onSearchButtonClick = () => {
       let user_type = undefined
       let gender = undefined
-
-
 
       if(this.state.isMale && !this.state.isFemale) gender = 'male'
       if(!this.state.isMale && this.state.isFemale) gender = 'female'
@@ -32,17 +30,13 @@ class AdminSearch extends Component {
       if(this.state.isOwner && !this.state.isCustomer) user_type = 'owner'
       if(!this.state.isOwner && this.state.isCustomer) user_type = 'customer'     
 
-
-      const res = await AdminActions.getUsers({keyword: this.state.keyword ,gender:gender ,user_type:user_type})
-      const list = res.users.map((r) =>({
-          first_name: r.first_name ? r.first_name : '-', 
-          last_name: r.last_name ? r.last_name : '-', 
-          email: r.email ? r.email : '-', 
-          user_type: r.user_type,
-          gender: r.gender ? r.gender : '-'
-        }))
-      this.setState({ users: list })
-
+      const param = {
+        keyword: this.state.keyword,
+        gender: gender,
+        user_type: user_type
+      }
+      this.setState({param: param})
+      this.props.fetchUsers(param)   
   }
 
   onChangeMale = () => {
@@ -64,6 +58,22 @@ class AdminSearch extends Component {
   onChangeKeyword = (e) => {
     this.setState({keyword: e.target.value})
   }  
+
+  onClickKill = (id) => {    
+    this.props.killUser(id)
+    /*setTimeout(() => {
+      this.props.fetchUsers(this.state.param)
+    }, 500);     */        
+    console.log('killl')
+  }
+
+  onClickRevive = async (id) => {
+    const res = await this.props.reviveUser(id)    
+    /*setTimeout(() => {
+      this.props.fetchUsers(this.state.param)
+    }, 500);  */
+    console.log('revivee')
+  }
 
   renderSearchBar = () =>{
       return(
@@ -101,8 +111,9 @@ class AdminSearch extends Component {
   
     
   render() {
-    console.log(this.state.users)
-
+    
+    if(!this.props.alreadyFetch) 
+      this.props.fetchUsers(this.state.param)
     const columns = [{
         title: 'First Name',
         dataIndex: 'first_name',
@@ -119,6 +130,18 @@ class AdminSearch extends Component {
         title: 'Gender',
         dataIndex: 'gender',
         key: 'gender',
+      }, {
+        title: 'Status',
+        dataIndex: '',
+        key: 'status',
+        render: (record,index) => record.is_delete ? <dev>die</dev> : <dev>alive</dev>
+      }, {
+        title: 'Option',
+        dataIndex: '',
+        key: 'Option',
+        render: (record,index) => record.is_delete ? 
+        <a onClick={() => this.onClickRevive(record.user_id)}>revive</a> 
+        : <a onClick={() => this.onClickKill(record.user_id)}>kill</a>
       }];
 
     return (
@@ -126,9 +149,9 @@ class AdminSearch extends Component {
         <div className="fuck">
             {this.renderSearchBar()}        
         </div>        
-        {this.state.users && 
+        {this.props.users && 
         <div>
-            <Table className="tableja" dataSource={this.state.users} columns={columns} pagination={false}/>
+            <Table className="tableja" dataSource={this.props.users} columns={columns} pagination={false}/>
         </div>
         }
       </div>
@@ -136,4 +159,25 @@ class AdminSearch extends Component {
   }
 }
 
-export default connect()(AdminSearch)
+function mapStateToProps(state){
+	return {		
+    users: state.AdminReducer.users.users,
+    alreadyFetch: state.AdminReducer.alreadyFetch
+	}
+}
+
+function mapDispatchToProps(dispatch){
+	return {
+		fetchUsers: (params)=>{
+			dispatch(AdminActions.getUsers(params))
+    },
+    killUser: (id)=>{
+			dispatch(AdminActions.killUser(id))
+    },
+    reviveUser: (id)=>{
+			dispatch(AdminActions.reviveUser(id))
+    }
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminSearch);

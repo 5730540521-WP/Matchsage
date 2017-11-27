@@ -12,12 +12,13 @@ import Team from './components/Team';
 import AdminLogin from './components/Admin/AdminLogin';
 import Owner from './components/Owner/Owner';
 import OwnerServiceDetail from './components/Owner/OwnerServiceDetail';
-import AdminSearch from './components/Admin/AdminSearch';
+import Admin from './components/Admin/Admin';
 import Service from './components/Service/Service';
 import ServiceDetail from './components/Service/ServiceDetail';
 // import ServiceReservation from 'components/Service/ServiceReservation';
 import Profile from './components/User/Proflle';
 import NotFound from './components/NotFound';
+import ReservedServices from 'components/User/ReservedServices';
 import * as JWT from 'jwt-decode';
 import './theme.css';
 import './App.css';
@@ -90,16 +91,16 @@ class App extends React.Component {
 					}} />
 					<Route exact path='/admin/login' render={() => {
 						if (localStorage.admin) {
-							return (<Redirect to='/admin/users/search' />)
+							return (<Redirect to='/admin/' />)
 						} else {
 							return (<AdminLogin />)
 						}
 					}} />
-					<Route exact path="/admin/users/search" render={() => {
+					<Route exact path="/admin/" render={() => {
 						if (!localStorage.admin) {
 							return (<Redirect to='/admin/login' />)
 						} else {
-							return (<AdminSearch />)
+							return (<Admin />)
 						}
 					}} />
 					<Route exact path="/team" component={Team} />
@@ -107,13 +108,14 @@ class App extends React.Component {
 					<Route exact path="/service/search/:filter?" component={user ? Service : () => { return <Redirect to="/" /> }} />
 					<Route exact path="/service/edit/:id" component={user && JWT(localStorage.getItem('user')).user_type == 'owner' ? OwnerServiceDetail : () => { return <Redirect to='/' /> }} />
 					<Route exact path="/service/:id" component={user ? ServiceDetail : () => { return <Redirect to='/' /> }} />
-					<Route exact path="/Profile" component={user?Profile:()=>{return <Redirect to="/"/>}}/>
+					<Route exact path="/user/profile" component={user?Profile:()=>{return <Redirect to="/"/>}}/>
+					<Route exact path="/user/reserved-services" component={user?ReservedServices:()=>{return <Redirect to="/"/>}}/>
 					{/* <Route exact path="/service/:id/reserve" component={user?ServiceReservation:()=>(<Redirect to='/'/>)}/> */}
-
+					
 					{/* <Route path="/posts/:id" component={}/> */}
 					<Route component={NotFound} />
 
-				</Switch>
+					</Switch>
 				</Wrap>
 			</Router>
 		)
