@@ -312,9 +312,9 @@ class Profile extends React.Component {
 								</PadSpace>
 								<PadSpace>
 									<Row>
-										<Col span={6}>
+										<Col span={4}>
 										</Col>
-										<Col span={2}><Aright>เบอร์โทรศัพท์</Aright></Col>
+										<Col span={4}><Aright>เบอร์โทรศัพท์</Aright></Col>
 										<Col span={8}>
 											<Input name='contact' value={this.state.contact} style={{ fontSize: '15px' }} size="large"
 												onChange={(e) => this.onInputChange(e)} />
@@ -346,9 +346,9 @@ class Profile extends React.Component {
 										</Col>
 									</Row>
 									<Row>
-										<Col span={6}>
+										<Col span={4}>
 										</Col>
-										<Col span={2}><Aright>ประเภทสมาชิก</Aright> </Col>
+										<Col span={4}><Aright>ประเภทสมาชิก</Aright> </Col>
 										<Col span={6}><Bspace><Aleft>{this.state.isCustomer ? ": ผู้รับบริการ" : this.state.isOwner ? ": ผู้ให้บริการ" : ": ผู้ดูแลระบบ"}</Aleft></Bspace> </Col>
 									</Row>
 								</PadSpace>
