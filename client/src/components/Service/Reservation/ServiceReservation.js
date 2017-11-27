@@ -217,6 +217,7 @@ class ServiceReservation extends React.PureComponent{
 	// ===== END Step4: confirm reservation =====
 	
 	render(){
+		console.log(this.state.current);
 		const { isStepsLoaded, steps, current, isSelectDate, isSelectTime, 
 			isSelectEmployee, isSelectPaymentAccount, isConfirmAgreement } = this.state;
 
@@ -241,7 +242,7 @@ class ServiceReservation extends React.PureComponent{
             <Button onClick={() => this.prev()}> ย้อนกลับ </Button>
           }
           {
-            this.state.current < steps.length //-1
+            this.state.current < steps.length -1 && this.state.current!==3
             &&
             <Button style={{ marginLeft: 8 }} type='primary' onClick={() => this.next()}>ต่อไป</Button>
           }

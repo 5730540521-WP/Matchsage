@@ -10,6 +10,9 @@ import {API_URL} from 'constants/ConfigConstants';
 import styled from 'styled-components';
 import {Button, Card, Row, Col, message} from 'antd';
 
+const H1 = styled.h1`
+	font-size: 25px;
+`;
 
 const Agreement = styled.div`
 	border: 2px solid grey;
@@ -34,6 +37,8 @@ const Employee = styled(Card)`
 `;
 
 const ReserveButton = styled(Button)`
+	color: #0088cc;
+	text-size: 20px;
 	widht: 150px;
 	height: 100px;
 `;
@@ -102,7 +107,7 @@ class ReservationConfirmation extends React.PureComponent{
 					<br/>
 					2. ทางผู้รับบริการจะรับผิดชอบค่าเสียหาย
 				</Agreement>
-				<Row gutter={16}>
+				{/* <Row gutter={16}>
 					<Col span={8}>
 						<Employee>
 							<div className="custom-image">
@@ -113,15 +118,15 @@ class ReservationConfirmation extends React.PureComponent{
 							</div>
 						</Employee>
 					</Col>
-					<Col span={8}>
+					<Col span={8}> */}
 						<Price>
 							{/* ค่าบริการทั้งหมด <h3>{this.props.price}</h3> */}
-							ค่าบริการทั้งหมด: <strong><h3>{this.state.price}</h3></strong>
+							ค่าบริการทั้งหมด: <strong><H1>{this.state.price} บาท</H1></strong> 
 							<br/>
 							<ReserveButton onClick={this.reserveService}> จองบริการ </ReserveButton>
 						</Price>
-					</Col>
-				</Row>
+					{/* </Col>
+				</Row> */}
 			</div>
 		);
 	}

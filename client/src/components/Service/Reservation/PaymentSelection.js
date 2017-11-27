@@ -6,7 +6,8 @@ import {CustomerActions} from 'actions/CustomerActions';
 
 import styled from 'styled-components';
 
-import {Table, Checkbox} from 'antd';
+import {Table, Checkbox, Radio} from 'antd';
+const RadioGroup = Radio.Group;
 
 const PaymentSelectionTable = styled(Table)`
 	margin-left: 15%;
