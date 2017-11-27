@@ -196,13 +196,13 @@ class ServiceDetail extends React.Component{
 							<H2>คะแนนบริการ</H2>
 							<Lalign>
 								{/* {Service Rate} */}
-							<Rate disabled  defaultValue={this.props.serviceState.service.rating} style={{backgroundColor : '#bfbfbf'}} />
+									<Rate disabled defaultValue={this.props.serviceState.service.rating} style={{}} />
 							</Lalign>
 
 
 							<H2 style={{marginLeft:'20px',marginTop:'15px', fontSize:'15px'}}>ให้คะแนนบริการนี้</H2>
 							<Lalign>
-							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px', backgroundColor : '#ccffcc'}}/>
+							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px' }}/>
 							<Button type='primary' 
 								onClick={(e) => this.onRatingService(e)} style={{fontSize:'13px',marginLeft:'10px'}}>>
 								ส่ง</Button>
@@ -271,7 +271,7 @@ class ServiceDetail extends React.Component{
 			loaded?this.props.serviceState
 .service.service_id?
 			<div style={{color:'#402900'}}>
-				<img src="../images/banner.jpg" style={{width:'100%',height:'12vw'}}/>
+				<img src="../images/banner.jpg" style={{width:'100%',height:400}}/>
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu
