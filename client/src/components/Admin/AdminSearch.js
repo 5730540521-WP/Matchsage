@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import propTypes from 'prop-types'
-import { Form, Icon, Input, Button, Menu, Dropdown, Checkbox, Table} from 'antd'
+import { Form, Icon, Input, Button, Menu, Dropdown, Checkbox, Table, Modal} from 'antd'
 import { AdminActions } from '../../actions/AdminActions'
 import './AdminSearch.css';
 // import { pushRoute } from '../../helpers/router'
@@ -115,28 +115,32 @@ class AdminSearch extends Component {
     if(!this.props.alreadyFetch) 
       this.props.fetchUsers(this.state.param)
     const columns = [{
-        title: 'First Name',
+       title: 'หมายเลขสมาชิก',
+       dataIndex: 'user_id',
+        key: 'user_id',
+      },{
+        title: 'ชื่อจริง',
         dataIndex: 'first_name',
         key: 'first_name',
       }, {
-        title: 'Last Name',
+        title: 'นามสกุล',
         dataIndex: 'last_name',
         key: 'last_name',
       }, {
-        title: 'User Type',
+        title: 'เพศ',
+        dataIndex: 'gender',
+        key: 'gender',        
+      }, {
+        title: 'ประเภทผู้ใช้งาน',
         dataIndex: 'user_type',
         key: 'user_type',
       }, {
-        title: 'Gender',
-        dataIndex: 'gender',
-        key: 'gender',
-      }, {
-        title: 'Status',
+        title: 'สถานะ',
         dataIndex: '',
         key: 'status',
         render: (record,index) => record.is_delete ? <dev>die</dev> : <dev>alive</dev>
       }, {
-        title: 'Option',
+        title: 'ตัวเลือก',
         dataIndex: '',
         key: 'Option',
         render: (record,index) => record.is_delete ? 

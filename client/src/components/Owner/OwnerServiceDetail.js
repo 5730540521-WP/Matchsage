@@ -80,7 +80,7 @@ class OwnerServiceDetail extends React.Component{
 	renderServiceDetail = ()=>{
 		return(
 			<div>				
-				<H1>ชื่อร้าน {this.props.serviceReducer.service.service_name}</H1>
+				<H1 style={{marginBottom:'10px'}}>ชื่อร้าน {this.props.serviceReducer.service.service_name}</H1>
 				<Row gutter={16} style={{marginBottom:'10px'}}>
 					<Col span={12}>
 						<Carousel autoplay>
@@ -126,12 +126,18 @@ class OwnerServiceDetail extends React.Component{
 					</div>
 					:
 					<div>
-						<Row >
-							<Col span={12}>
-								{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%2===0?<div><div><Avatar shape="square" size="large" icon="user" /></div>ชื่อ {employee.first_name} {employee.last_name}<br/>คะแนน {employee.rating}</div>:null})}
+						<Row>
+							<Col span={6}>
+								{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%4===0?<div><div><Avatar shape="square" size="large" icon="user" /></div>ชื่อ {employee.first_name} {employee.last_name}<br/>คะแนน {employee.rating}</div>:null})}
 							</Col>
-							<Col span={12}>
-								{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%2===1?<div><div><Avatar shape="square" size="large" icon="user" /></div>ชื่อ {employee.first_name} {employee.last_name}<br/>คะแนน {employee.rating}</div>:null})}
+							<Col span={6}>
+								{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%4===1?<div><div><Avatar shape="square" size="large" icon="user" /></div>ชื่อ {employee.first_name} {employee.last_name}<br/>คะแนน {employee.rating}</div>:null})}
+							</Col>
+							<Col span={6}>
+								{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%4===2?<div><div><Avatar shape="square" size="large" icon="user" /></div>ชื่อ {employee.first_name} {employee.last_name}<br/>คะแนน {employee.rating}</div>:null})}
+							</Col>
+							<Col span={6}>
+								{this.props.serviceReducer.employees.employees.map((employee,index)=>{return index%4===3?<div><div><Avatar shape="square" size="large" icon="user" /></div>ชื่อ {employee.first_name} {employee.last_name}<br/>คะแนน {employee.rating}</div>:null})}
 							</Col>
 						</Row>
 					</div>
@@ -149,30 +155,42 @@ class OwnerServiceDetail extends React.Component{
 	renderServiceHistory = () =>{
 
 		const columns = [{
-			title: 'customer_id',
+			title: 'หมายเลขการจองบริการ',
+			dataIndex: 'reserve_id',
+			key: 'reserve_id',
+		  }, {
+			title: 'ลูกค้า',
 			dataIndex: 'customer_id',
 			key: 'customer_id',
 		  }, {
-			title: 'employee_id',
+			title: 'พนักงาน',
 			dataIndex: 'employee_id',
 			key: 'employee_id',
 		  }, {
-			title: 'date',
-			dataIndex: 'date',
-			key: 'date',
+			title: 'วันที่จองบริการ',
+			dataIndex: 'date_created',
+			key: 'date_created',
 		  }, {
-			title: 'paid_status',
+			title: 'วันที่รับบริการ',
+			dataIndex: 'date_reserved',
+			key: 'date_reserved',
+		  }, {
+			title: 'สถานะการชำระเงิน',
 			dataIndex: 'paid_status',
 			key: 'paid_status',
 		  }];	
 		  
 		return(
-			this.props.History.length > 0 ?
-			<Table className="tableja"
-			dataSource={this.props.History}
-			columns={columns}	
-			onRowClick={this.onReserveClick}		  
-			pagination={false}/>:<div>no reservetions for this sevice now...</div>
+			<div>
+				<H1 style={{marginBottom: '10px'}}>ข้อมูลการใช้บริการ</H1>
+				<div style= {{cursor: 'pointer'}}>				
+					<Table className="tableja"
+					dataSource={this.props.History}
+					columns={columns}	
+					onRowClick={this.onReserveClick}		  
+					pagination={false}/>
+				</div>
+			</div>
 		)
 	}
 
@@ -189,13 +207,13 @@ class OwnerServiceDetail extends React.Component{
 							selectedKeys={[this.state.currentWindow]}
 							style={{color:'#402900'}}>
 							<Menu.Item key="detail">
-								ข้อมูลร้าน
+								ข้อมูลบริการ
 							</Menu.Item>
 							<Menu.Item key="history">
-								ข้อมูลการใช้บริการ
+								ข้อมูลการจองบริการ
 							</Menu.Item>	
 							<Menu.Item key="edit">
-								แก้ไขข้อมูลร้าน
+								แก้ไขข้อมูลบริการ
 							</Menu.Item>
 							<Menu.Item key="add">
 								เพิ่มพนักงาน
@@ -231,18 +249,35 @@ class OwnerServiceDetail extends React.Component{
 				/>
 
 				<Modal
-					title="Reserveeee"
+					title={"หมายเลขการจองบริการ "+ this.state.reserveModaldata.reserve_id}
 					visible={this.state.isReserveModalActive}
 					closable = {false}
+					style={{ fontFamily: 'Kanit' }}
 					footer={[
 						<Button key="OK" 
 						size="large" 
 						type = "primary"
 						onClick = {() => this.toggleReserveModalModal(false)}>
 						OK</Button>			
-					  ]}
-					>	
-						{JSON.stringify(this.state.reserveModaldata)}
+					  ]}>						  
+						<h1><strong>บริการ  {this.state.reserveModaldata.service_id}</strong></h1>
+						<br/>
+						<h2><strong>ผู้ใช้บริการ </strong> {this.state.reserveModaldata.customer_id}</h2>
+						<br/>
+						<h2><strong>พนักงานผู้ให้บริการ </strong> {this.state.reserveModaldata.employee_id}</h2>
+						<br/>
+						<h2><strong>พนักงานผู้ให้บริการ </strong> {this.state.reserveModaldata.employee_id}</h2>
+						<br/>
+						<h2><strong>วันที่จองบริการ </strong> {this.state.reserveModaldata.date_created}</h2>
+						<br/>
+						<h2><strong>วันที่รับบริการ </strong> {this.state.reserveModaldata.date_reserved}</h2>
+						<br/>
+						<h2><strong>ช่วงเวลาที่รับบริการ </strong> {this.state.reserveModaldata.start_time + " - " + this.state.reserveModaldata.end_time}</h2>
+						<br/>
+						<h2><strong>สถานะการชำระเงิน </strong> {this.state.reserveModaldata.paid_status}</h2>
+						<br/>
+						<h2><strong>ค่าใช้จ่ายรวม </strong> {this.state.reserveModaldata.price}</h2>
+						<br/>										
 				</Modal>
 
 			</div>:<NotFound/>
