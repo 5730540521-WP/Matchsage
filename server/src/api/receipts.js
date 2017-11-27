@@ -64,7 +64,8 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
     }
     await ReceiptService.downloadReceipt(req.user.user_id, receipt.reservation_id)
     // res.setHeader({'Content-disposition': 'attachment; filename=receipt.pdf'})
-    res.download('receipt.pdf')
+    console.log(__dirname)
+    res.download(__dirname + '/../../tmp/receipt.pdf')
   } catch (error) {
     next(error)
   }
