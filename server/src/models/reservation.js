@@ -35,11 +35,6 @@ const ReservationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  is_cancel: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
   paid_status: {
     type: String,
     required: true,
@@ -69,12 +64,11 @@ ReservationSchema.statics = {
   createReservation: async function (values) {
     const reserveCount = await Reservation.find().count()
     values.reserve_id = 'match-res-' + (reserveCount + 1).toString()
-    values.is_cancel = false
     return Reservation.create(values)
   },
 
   cancelReservation: async function (reserveId) {
-    const cancelReserve = await Reservation.findOneAndUpdate({ reserve_id: reserveId }, { is_cancel: true })
+    const cancelReserve = await Reservation.findOneAndUpdate({ reserve_id: reserveId }, { is_delete: true, paid_status: 'cancel' })
     return cancelReserve
   }
 }

@@ -46,7 +46,7 @@ async function getAvailableEmployees ({ date, start_time, end_time, serviceId })
     const reserve = await ReserveModel.findOne({
       date,
       service_id: serviceId,
-      is_cancel: false,
+      is_delete: false,
       employee_id: employee.employee_id,
       $or: [{ start_time: { $gt: start_time, $lt: end_time } }, { end_time: { $gt: start_time, $lt: end_time } }]
     })
@@ -73,7 +73,7 @@ async function addEmployee (serviceId, values) {
 }
 
 async function getReservations (serviceId) {
-  const reserveList = await ReserveModel.find({service_id: serviceId})
+  const reserveList = await ReserveModel.find({service_id: serviceId, is_delete: false})
   return _.map(reserveList, reserve => _.pick(reserve, filteredReserveKeys))
 }
 
