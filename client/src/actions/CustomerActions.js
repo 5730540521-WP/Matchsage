@@ -74,7 +74,7 @@ async function searchService(keyword){
 
 // Use case: 8
 async function reserveService(service_id, employee_id, start_time, end_time, date_reserved, payment_number){
-
+	console.log();
 	const data = {
 		service_id, employee_id, start_time, end_time, date_reserved, payment_number
 	}
