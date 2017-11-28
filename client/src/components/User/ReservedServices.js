@@ -75,9 +75,6 @@ class ReservedServices extends React.Component{
       <a onClick={()=>history.push(`/service/${record.service_id}`)}>{text}</a>
     ),
   }, {
-    title: 'ประเภทบริการ',
-    dataIndex: 'service_type',
-  }, {
     title: 'วันที่จอง',
     dataIndex: 'date',
   },{
@@ -85,11 +82,23 @@ class ReservedServices extends React.Component{
     dataIndex: 'time',
   }, {
     title: 'ชำระค่าบริการ',
-    dataIndex: 'paid_status',
     render: (text, record) => (
       <Button type="primary" onClick={()=>this.setState({visible:true,clickedReserved:record.reserve_id})}>ชำระค่าบริการที่เหลือ</Button>
-    ),
-  }];
+    )
+  },{
+    title: 'ยกเลิกการจอง',
+    render: (text, record) => (
+      <Button type="danger" onClick={async()=>{
+        const respond = await CustomerActions.cancelReserveService(record.reserve_id);
+        if(respond===true){
+          this.props.fetchReserved(JWT(localStorage.getItem('user')).user_id);
+          message.success('Cancel Successful.');
+        }else{
+          message.error(respond);
+        }
+      }}>ยกเลิกการจอง</Button>
+    )
+  } ];
 
   handleOk = async () => {
     this.setState({ loading: true });
@@ -155,7 +164,7 @@ class ReservedServices extends React.Component{
     title: 'เลขบัญชี',
     dataIndex: 'payment_number',
     key: 'payment_number',
-    render: (text)=>(`${text.substr(0,4)}-${text.substr(4,4)}-${text.substr(8,4)}-${text.substr(12,4)}`)
+    render: (text)=>(`XXXX-XXXX-XXXX-${text.substr(12,4)}`)
   }, {
     title: 'วันหมดอายุ',
     dataIndex: 'expire_date',
