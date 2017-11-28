@@ -43,7 +43,7 @@ const accountMethod = [{
 	value: 'credit-card',
 	label: 'เครดิต'
 }, {
-	value: 'owner',
+	value: 'bank-account',
 	label: 'บัญชีธนาคาร'
 }];
 
@@ -71,7 +71,7 @@ class AddPaymentAccountForm extends React.Component {
 			if (!err) {
 				// console.log('Received values of form: ', values);
 				const { number, company, method } = values;
-				this.props.addPaymentAccount({number, company, method});
+				this.props.addPaymentAccount({number, company, method: method[0]});
 				this.props.closeModal()
 			} else {
 				console.log(values);
