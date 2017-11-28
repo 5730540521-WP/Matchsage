@@ -1,5 +1,5 @@
 import React from 'react';
-import { message,Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
+import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input,Rate } from 'antd';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
@@ -39,17 +39,19 @@ class ServiceDetail extends React.Component{
 		current :'detail',
 		current2 : 'overall',
 		isReservation: false,
-		//isRate: false,
+		isRateEmp: false,
 		showReportEmployeeModal: false,
 		selectedReportEmployee:'',
 		reportEmployeeTopic:'',
 		reportEmployeeContent:'',
+		rateEmployeeModal: false,
 		showServiceComplaint: false,
 		sendServiceComplaintLoading:false,
 		serviceComplaint_topic:'',
 		serviceComplaint_content:'',
 		serviceRating: 3,
 		employeeRating: 0,
+
 		//serviceCurrentRate:''
 		
 	}
@@ -86,19 +88,15 @@ class ServiceDetail extends React.Component{
 
 	onRatingService = (e) =>{ 
 		CustomerActions.rateService(this.props.serviceState.service.service_id, this.state.serviceRating,"service")
-		const modal = Modal.success({
-			title: 'Rate success!',
-			content: 'close this modal to proceed.'
-		});
+		alert('Rating success!')
 		this.setState({serviceCurrentRate:this.props.serviceState.service.rating});
 		this.state.isRate=true;
-<<<<<<< HEAD
 		window.location.reload()	
 
 	}
 
-	onRatingEmployee = (e) =>{ 
-		CustomerActions.rateService(this.props.serviceState.service.service_id, this.state.employeeRating,"employee")
+	onRatingEmployee = (employee) =>{ 
+		CustomerActions.rateService(employee.employee_id, this.state.employeeRating,"employee")
 		alert('Rating success!')
 		// this.setState({serviceCurrentRate:this.props.serviceState.service.rating});
 		// this.state.isRate=true;
@@ -109,14 +107,6 @@ class ServiceDetail extends React.Component{
 
 	handleEmployeeRate= (value) => {
 		this.setState({ employeeRating:value });	
-=======
-		setTimeout(() => {
-			modal.destroy()
-			window.location.reload()
-		}, 1000)
-		
-		
->>>>>>> cf4dce3cfc50970e915917b1018b711161e8d8e5
 	}
 
 	get2Dec(number){
@@ -145,13 +135,9 @@ class ServiceDetail extends React.Component{
 				}}>ยกเลิก</Button>,
 				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
 					this.setState({ loading: true });
-					const hasError = await CustomerActions.sendServiceComplaint(this.props.serviceState
+					console.log(this.props.serviceState);
+					await this.props.sendComplaint(this.props.serviceState
 			.service.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
-						if(hasError){
-							message.error('Error.');
-						}else {
-							message.success('Sending Complaint Successful.');
-						}
 					this.setState({ loading: false,showServiceComplaint:false });
 				}}>
 					ส่ง
@@ -178,7 +164,7 @@ class ServiceDetail extends React.Component{
 				<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleChange} style={{margin:'10px'}} />
 				<br/>
 				<Button type='primary' style={{margin:'10px'}} 
-					onClick={(e) => this.onRatingEmployee(e)}>
+					onClick={(e) => this.onRatingEmployee(this.props.serviceState.employee)}>
 					ให้คะแนน
 				</Button>
 			</Modal>
@@ -256,17 +242,13 @@ class ServiceDetail extends React.Component{
 							<H2>คะแนนบริการ</H2>
 							<Lalign>
 								{/* {Service Rate} */}
-<<<<<<< HEAD
 							<Rate disabled  allowHalf defaultValue={this.getHalf( this.props.serviceState.service.rating )} style={{backgroundColor : '#eeeeee'}} />
-=======
-									<Rate disabled defaultValue={this.props.serviceState.service.rating} style={{}} />
->>>>>>> cf4dce3cfc50970e915917b1018b711161e8d8e5
 							</Lalign>
 
 
 							<H2 style={{marginLeft:'20px',marginTop:'15px', fontSize:'15px'}}>ให้คะแนนบริการนี้</H2>
 							<Lalign>
-							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px' }}/>
+							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px', backgroundColor : '#ccffcc'}}/>
 							<Button type='primary' 
 								onClick={(e) => this.onRatingService(e)} style={{fontSize:'13px',marginLeft:'10px'}}>>
 								ส่ง</Button>
@@ -317,7 +299,7 @@ class ServiceDetail extends React.Component{
 		return <div style={{paddingBottom:'2vw'}}>
 		<Card style={{ width: '22vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
 			<div>
-				<img src="/images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
+				<img src="../images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
 			</div>
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
@@ -329,7 +311,7 @@ class ServiceDetail extends React.Component{
 				
 
 				<br/> <Button type='primary' style={{marginBottom:'10px'}}
-					onClick={(e)=>this.renderRateEmployeeModal(employee)}>
+					onClick={()=>{this.setState({})}}>
 								ให้คะแนนพนักงาน
 					</Button>	
 
@@ -351,7 +333,7 @@ class ServiceDetail extends React.Component{
 			loaded?this.props.serviceState
 .service.service_id?
 			<div style={{color:'#402900'}}>
-				<img src="/images/banner.jpg" style={{width:'100%',height:400}}/>
+				<img src="../images/banner.jpg" style={{width:'100%',height:'12vw'}}/>
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu
@@ -402,8 +384,9 @@ function mapDispatchToProps(dispatch){
 
 	// }
 	const loadService = CustomerActions.fetchService;
+	const sendComplaint = CustomerActions.sendServiceComplaint;
 	const selectServiceReservation = CustomerActions.selectServiceReservation;
-	return bindActionCreators({loadService,selectServiceReservation}, dispatch);
+	return bindActionCreators({loadService,sendComplaint,selectServiceReservation}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceDetail);
