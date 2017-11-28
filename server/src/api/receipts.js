@@ -42,7 +42,7 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
 // show specific receipt by reservation ID
 router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    const receipt = await ReceiptModel.findByReservationId(req.params.id)
+    const receipt = await ReceiptModel.findByReceiptId(req.params.id)
     const user = await UserModel.findByUserId(req.user.user_id)
     if (receipt.customer_id !== user.user_id) {
       const error = new Error('Only customer who make this reservation can view this receipt')
@@ -57,13 +57,13 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
 
 router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
-    const receipt = await ReceiptModel.findByReservationId(req.params.id)
+    const receipt = await ReceiptModel.findByReceiptId(req.params.id)
     if (receipt.customer_id !== req.user.user_id) {
       const error = new Error('Only customer who make this reservation can download this receipt')
       error.status = 400
       next(error)
     }
-    await ReceiptService.downloadReceipt(req.user.user_id, receipt.reservation_id)
+    await ReceiptService.downloadReceipt(req.user.user_id, receipt.receipt_id)
     // res.setHeader({'Content-disposition': 'attachment; filename=receipt.pdf'})
     //console.log(__dirname+ '/../../tmp/')
     var file = path.join(__dirname + '/../../tmp/receipt.pdf')

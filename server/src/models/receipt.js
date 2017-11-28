@@ -34,6 +34,9 @@ const ReceiptSchema = new mongoose.Schema({
 
 ReceiptSchema.statics = {
 
+  findByReceiptId: function (receiptId) {
+    return Receipt.findOne({ receipt_id: receiptId })
+  },
   findByReservationId: function (reservationId) {
     return Receipt.findOne({ reservation_id: reservationId })
   },

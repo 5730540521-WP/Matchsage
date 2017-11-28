@@ -76,6 +76,15 @@ describe('API tests', () => {
   let reserve1 = {}
   let reserve2 = {}
   let reserve3 = {}
+  let receipt1 = {
+    receipt_id: 'match-rec-1',
+    customer_id: 'match-user-4',
+    reservation_id: 'match-res-10',
+    payment_type: 'deposit-paid',
+    payment_method: 'credit-card',
+    price: 1000,
+    payment_date: '28-11-2017'
+  }
   let employee2 = {
     email: 'employee2@test.com',
     user_type: 'employee',
@@ -778,18 +787,18 @@ describe('API tests', () => {
 
     it('should be able to show receipt for specific reservation', () => {
       return request(app)
-      .get(`/api/receipts/${reserve1.reserve_id}`)
+      .get(`/api/receipts/${receipt1.receipt_id}`)
       .set('Accept', 'application/json')
       .set('Authorization', cusToken)
       .expect(200)
       .then(async res => {
-        expect(res.body.reservation_id).to.equal(reserve1.reserve_id)
+        expect(res.body.receipt_id).to.equal(receipt1.receipt_id)
       })
     })
 
     it('should be able to download the pdf receipt', () => {
       return request(app)
-      .get(`/api/receipts/${reserve1.reserve_id}/download`)
+      .get(`/api/receipts/${receipt1.receipt_id}/download`)
       .set('Accept', 'application/pdf')
       .set('Authorization', cusToken)
       .expect(200)
