@@ -17,6 +17,7 @@ async function cancelReservation (userId, reserveId) {
 async function makeFullPayment (userId, reserveId, paymentNumber) {
   const reserve = await ReserveModel.findByReservationId(reserveId)
   const user = await UserModel.findByUserId(userId)
+  console.log(reserve)
   if (reserve.customer_id !== user.user_id) {
     console.log('A: ', reserve.customer_id, 'B: ', user.user_id, 'RESERVE:', reserveId)
     const error = new Error('Only customer who make this reservation can make payment on this reservation.')
