@@ -32,14 +32,16 @@ const P = styled.p`
 const Lalign = styled.div`
 text-align:left;
 `
-
+const Calign = styled.div`
+text-align:center;
+`
 
 class ServiceDetail extends React.Component{
 	state={
 		current :'detail',
 		current2 : 'overall',
 		isReservation: false,
-		isRateEmp: false,
+		showRateEmployee: false,
 		showReportEmployeeModal: false,
 		selectedReportEmployee:'',
 		reportEmployeeTopic:'',
@@ -98,8 +100,7 @@ class ServiceDetail extends React.Component{
 	onRatingEmployee = (employee) =>{ 
 		CustomerActions.rateService(employee.employee_id, this.state.employeeRating,"employee")
 		alert('Rating success!')
-		// this.setState({serviceCurrentRate:this.props.serviceState.service.rating});
-		// this.state.isRate=true;
+		
 		window.location.reload()	
 				
 	}
@@ -152,26 +153,30 @@ class ServiceDetail extends React.Component{
 		</Modal>
 	}
 
-	renderRateEmployeeModal(){
-		return
-			<Modal title="ให้คะแนนพนักงาน"
-				visible={this.props.modalState}
-				onOk={this.hideModal}
-				footer={null}
-				onCancel={this.props.onCloseLoginModal}
-				onClose={this.props.onCloseLoginModal}
-			>
-				<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleChange} style={{margin:'10px'}} />
-				<br/>
-				<Button type='primary' style={{margin:'10px'}} 
-					onClick={(e) => this.onRatingEmployee(this.props.serviceState.employee)}>
-					ให้คะแนน
-				</Button>
-			</Modal>
+	// renderRateEmployeeModal(){
+	// 	return 
+	// 		<Modal title="ให้คะแนนพนักงาน"
+	// 			visible={this.state.showRateEmployee}
+	// 			onOk={null}
+	// 			footer={null}
+	// 			onCancel={()=>{
+	// 				this.setState({showRateEmployee:false})
+	// 			}}
+	// 			onClose={null}
+	// 		>
+			
+	// 			<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleChange} style={{margin:'10px'}} />
+				
+	// 			<Button type='primary' style={{margin:'10px'}} 
+	// 				onClick={(e) => this.onRatingEmployee(this.props.serviceState.employee)}>
+	// 				ให้คะแนน
+	// 			</Button>
+			
+	// 		</Modal>
 
 		
 
-	}
+	// }
 
 
 	renderServiceDetail = ()=>{
@@ -294,7 +299,7 @@ class ServiceDetail extends React.Component{
 	}
 
 	renderEmployeeCard(employee,index){
-		
+		const {emp} = employee;
 
 		return <div style={{paddingBottom:'2vw'}}>
 		<Card style={{ width: '22vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
@@ -311,9 +316,32 @@ class ServiceDetail extends React.Component{
 				
 
 				<br/> <Button type='primary' style={{marginBottom:'10px'}}
-					onClick={()=>{this.setState({})}}>
+					onClick={()=>{this.setState({showRateEmployee:true})}}>
 								ให้คะแนนพนักงาน
 					</Button>	
+					<Modal title={'ให้คะแนน  '+employee.first_name+' '+ employee.last_name}
+						visible={this.state.showRateEmployee}
+						onOk={null}
+						maskClosable='true'
+						maskStyle= {{opacity:'0.5'}}
+						width= '400'
+						footer={
+							<Calign><Button type='primary' style={{margin:'10px'}} 
+							onClick={(e) => this.onRatingEmployee(this.props.serviceState.employee)}>
+							ยืนยัน
+							</Button>
+							</Calign>
+						}
+						
+						onClose={()=>{
+							this.setState({showRateEmployee:false})
+						}}
+					>	
+						<Calign>				
+						
+						<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleChange} style={{margin:'10px',textAlign:'center'}} />
+						</Calign>
+					</Modal>
 
 
 
