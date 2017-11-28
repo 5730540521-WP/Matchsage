@@ -33,7 +33,7 @@ const StepsContent = styled.div.attrs({
   background-color: #fafafa;
   min-height: 200px;
   text-align: center;
-  padding-top: 80px;
+  padding-top: 20px;
 `;
 
 const StepsAction = styled.div.attrs({
@@ -242,20 +242,20 @@ class ServiceReservation extends React.PureComponent{
             <Button onClick={() => this.prev()}> ย้อนกลับ </Button>
           }
           {
-            this.state.current < steps.length -1 && this.state.current!==3
+            this.state.current < steps.length -1
             &&
             <Button style={{ marginLeft: 8 }} type='primary' onClick={() => this.next()}>ต่อไป</Button>
           }
           {
-            this.state.current === steps.length - 1
-            &&
-            {/* <Button style={{ marginLeft: 8 }} type="primary" 
+            // this.state.current === steps.length - 1
+            // &&
+            /* <Button style={{ marginLeft: 8 }} type="primary" 
 							// disabled={!(isSelectDate && isSelectTime && 
 							// 	isSelectEmployee && isSelectPaymentAccount && isConfirmAgreement)}
 							onClick={() => message.success('การจองบริการสำเร็จ')}
 						> 
 							จองบริการ
-						</Button> */}
+						</Button> */
           }
           
 				</StepsAction>

@@ -74,7 +74,7 @@ async function searchService(keyword){
 
 // Use case: 8
 async function reserveService(service_id, employee_id, start_time, end_time, date_reserved, payment_number){
-
+	console.log();
 	const data = {
 		service_id, employee_id, start_time, end_time, date_reserved, payment_number
 	}
@@ -214,6 +214,7 @@ async function addPaymentAccount({ number, method, company }){
 	const data = {
 		number, company
 	}
+	console.log(method)
 	const methodString = method === 'credit-card' ? 'add-credit-card' : 'add-bank-account'
 	await axios.post(`${API_URL}/api/users/${user_id}/${methodString}`, data, { headers });
 	const accs = await axios.get(`${API_URL}/api/users/${user_id}/payment_accounts`, { headers });
@@ -242,7 +243,7 @@ async function fetchReservedServices(customer_id){
 				name: resServiceDetail.data.service_name,
 				service_type: '',
 				date: reservation.date_reserved,
-				time: `${reservation.start_time.toString().substr(0,2)}:${reservation.start_time.toString().substr(2,2)} ถึง ${reservation.end_time.toString().substr(0,2)}:${reservation.end_time.toString().substr(0,2)}`,
+				time: `${reservation.start_time.toString().substr(0,2)}:${reservation.start_time.toString().substr(2,2)} ถึง ${reservation.end_time.toString().substr(0,2)}:${reservation.end_time.toString().substr(2,2)}`,
 				service_id: reservation.service_id
 			}]
 		}

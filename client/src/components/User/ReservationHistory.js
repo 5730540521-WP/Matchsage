@@ -35,8 +35,8 @@ class ReservationHistory extends React.Component{
         <div style={{backgroundColor:'white',padding:'150px'}}>
           <p style={{fontFamily:'"Times New Roman", Times, serif',fontSize:'36px',color:'black'}}>Receipt No. {this.props.billDetail.receipt_id}
             <br/>Value Customer: {this.props.billDetail.first_name} {this.props.billDetail.last_name}
-            <br/>Service: {this.props.billDetail.reservation_id}
-            <br/>Payment Method: {'ยังไม่มีในบิล'}
+            <br/>Reservation: {this.props.billDetail.reservation_id}
+            <br/>Payment Method: {this.props.billDetail.payment_method}
             <br/>Price: {this.props.billDetail.price}
           </p>
         </div>

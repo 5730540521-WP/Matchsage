@@ -8,10 +8,12 @@ import {Card, Icon} from 'antd';
 const EmployeeCard = styled(Card)`
 	max-width: 240px;
 	max-height: 360px;
+	margin: auto;
 	margin-bottom: 20px;
 	&:hover{
 		cursor: pointer;
 	}
+	
 `;
 
 const IconChecked = styled(Icon).attrs({
@@ -50,7 +52,7 @@ class EmployeeDetail extends React.PureComponent{
 					<h3>เพศ: {gender}</h3>
 					<h3>คะแนน: {rating}</h3> {selected_employee===employee_id && <IconChecked/>}
 				</div>
-			</EmployeeCard>		
+			</EmployeeCard>
 		);
 	}
 }

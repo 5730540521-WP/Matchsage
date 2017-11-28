@@ -51,7 +51,7 @@ class PaymentSelection extends React.PureComponent{
 
 	markPaymentAccount(paymentAccountNumber){
 		const len = paymentAccountNumber.length;
-		return ('****-'.repeat(3)) + paymentAccountNumber.slice(len-5,len-1);
+		return ('****-'.repeat(3)) + paymentAccountNumber.slice(len-4,len);
 	}
 
 	onCheckboxChange = (e,payment_account)=>{
@@ -90,7 +90,7 @@ class PaymentSelection extends React.PureComponent{
 		});
 		// this.setState({data});
 		console.log(this.props.payment_accounts);
-		return <PaymentSelectionTable dataSource={data} columns={columns}/>;
+		return <PaymentSelectionTable pagination={false} dataSource={data} columns={columns}/>;
 	}
 }
 

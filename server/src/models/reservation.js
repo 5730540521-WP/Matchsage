@@ -4,7 +4,8 @@ const Promise = require('bluebird')
 const ReservationSchema = new mongoose.Schema({
   reserve_id: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   service_id: {
     type: String,
