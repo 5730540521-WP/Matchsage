@@ -687,7 +687,7 @@ describe('API tests', () => {
       .expect(200)
       .then(async () => {
         const reserve = await ReserveModel.findByReservationId(reserve1.reserve_id)
-        expect(reserve.is_cancel).to.equal(true)
+        expect(reserve).to.equal(undefined || null)
       })
     })
   })

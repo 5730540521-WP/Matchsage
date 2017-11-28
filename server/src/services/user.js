@@ -22,7 +22,7 @@ async function addBankAccount (userId, values) {
 }
 
 async function getReserveListByCustomer (userId) {
-  const reserveList = await ReserveModel.find({customer_id: userId})
+  const reserveList = await ReserveModel.find({customer_id: userId, is_delete: false})
   return _.map(reserveList, reserve => _.pick(reserve, filteredReserveKeys))
 }
 
