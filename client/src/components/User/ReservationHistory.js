@@ -26,13 +26,13 @@ class ReservationHistory extends React.Component{
       closable={false}
       onCancel={this.handleCancel}
       footer={null}
-      width="70%"
+      width="60%"
       wrapClassName="vertical-center-modal"
     >
       {this.props.billDetail?
       <div>
         <h1 style={{textAlign:'center',fontFamily:'Kanit',fontSize:'48px'}}>Receipt</h1>
-        <div style={{backgroundColor:'white',padding:'150px'}}>
+        <div style={{backgroundColor:'white',padding:'100px'}}>
           <p style={{fontFamily:'"Times New Roman", Times, serif',fontSize:'36px',color:'black'}}>Receipt No. {this.props.billDetail.receipt_id}
             <br/>Value Customer: {this.props.billDetail.first_name} {this.props.billDetail.last_name}
             <br/>Reservation: {this.props.billDetail.reservation_id}
@@ -51,18 +51,19 @@ class ReservationHistory extends React.Component{
       <h1 style={{marginBottom:'24px'}}>ประวัติการจอง</h1>
       {this.renderReceiptModal()}
       {this.props.reservationHistory?this.props.reservationHistory.length>0?this.props.reservationHistory.map((reservation,index)=>{
+        const isFullyPaid = reservation.paid_status==='fully-paid';
         return <Row key={index} gutter={48} style={{paddingBottom:'24px',marginLeft:'0px',marginRight:'0px'}}>
-          <Col span={10}>
+          <Col span={8}>
             <img src="/images/banner.jpg" style={{width:'100%',maxHeight:'114px'}}/>
           </Col>
-          <Col span={14} style={{textAlign:'left'}}>
+          <Col span={16} style={{textAlign:'left'}}>
             <a onClick={()=>history.push(`/service/${reservation.service_id}`)} style={{display:'inline-block'}}><h1 style={{fontWeight:'bold'}}>ร้าน {reservation.service_name}</h1></a>
             <Row style={{marginTop:'12px'}}>
-              <Col span={10}>
+              <Col span={8}>
                 <div style={{fontSize:20}}>
                   <div style={{marginBottom:'6px'}}>วันที่จอง: {reservation.date_created}</div>
                   ช่องทางการชำระเงิน: <img src={(()=>{
-                    switch('credit-card'){
+                    switch(isFullyPaid?reservation.payment_methods_of_receipts[1]:reservation.payment_methods_of_receipts[0]){
                       case('credit-card'):
                         switch('visa'){
                           case('visa'):
@@ -90,20 +91,28 @@ class ReservationHistory extends React.Component{
                     }
                   })()} style={{maxHeight:'20px'}}/></div>
               </Col>
-              <Col span={12}>
+              <Col span={16}>
                 <div style={{fontSize:20}}>
-                  <div style={{marginBottom:'6px'}}>วันที่ใช้บริการ: {reservation.date_reserved}</div>
+                  <div style={{marginBottom:'6px'}}>วันที่ใช้บริการ: {isFullyPaid?reservation.date_reserved:'ยังไม่ได้ไปใช้บริการ/ยังไม่ได้ชำระเงินหลังรับบริการ'}</div>
                 </div>
                 <Button style={{marginRight:'12px'}} onClick={()=>{
+                  this.props.informReceipt(reservation.receipts_of_reservation[0]);
                   this.setState({visible:true});
-                  this.props.informReceipt(reservation.reserve_id);
+                }}>ดูใบเสร็จค่ามัดจำ</Button>
+                <Button style={{marginRight:'12px'}} onClick={()=>this.props.downloadReceipt(reservation.receipts_of_reservation[0])}>ดาวน์โหลดใบเสร็จค่ามัดจำ</Button>
+                {reservation.receipts_of_reservation.length>1?
+                <div style={{display:'inline'}}><Button style={{marginRight:'12px'}} onClick={()=>{
+                  this.props.informReceipt(reservation.receipts_of_reservation[1]);
+                  this.setState({visible:true});
                 }}>ดูใบเสร็จ</Button>
-                <Button onClick={()=>this.props.downloadReceipt(reservation.reserve_id)}>ดาวน์โหลดใบเสร็จ</Button>
+                <Button onClick={()=>this.props.downloadReceipt(reservation.receipts_of_reservation[1])}>ดาวน์โหลดใบเสร็จ</Button></div>
+                :null}
               </Col>
             </Row>
           </Col>
         </Row>
       }):<h1>ท่านยังไม่มีประวัติการใช้บริการใดๆ</h1>:null}
+    
     </div>
   }
 }
@@ -120,11 +129,11 @@ function mapDispatchToProps(dispatch){
 		fetchReservationHistory: (customer_id)=>{
       dispatch(CustomerActions.informReservationHistory(customer_id))
     },
-    informReceipt: (reserve_id)=>{
-      dispatch(CustomerActions.informBillDetail(reserve_id))
+    informReceipt: (receipt_id)=>{
+      dispatch(CustomerActions.informBillDetail(receipt_id))
     },
-    downloadReceipt: (reserve_id)=>{
-      dispatch(CustomerActions.downloadBillDetail(reserve_id))
+    downloadReceipt: (receipt_id)=>{
+      dispatch(CustomerActions.downloadBillDetail(receipt_id))
     }
 	}
 }

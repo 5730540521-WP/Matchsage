@@ -183,8 +183,12 @@ function selectPaymentAccountReservation(payment_account){
 }
 
 // Use case: 9
-function cancelReserveService(){
-
+async function cancelReserveService(reserve_id){
+	const headers = authHeader();
+	let hasError = false,errorMessage='';
+	const res = await axios.get(`${API_URL}/api/reservations/${reserve_id}/cancel`, { headers }).catch(error=>{hasError=true;errorMessage=error.response.data.error});
+	if(hasError) return errorMessage
+	else return res.data.success
 }
 
 // Use case: 10
@@ -270,14 +274,21 @@ async function fetchReservedServices(customer_id){
 async function informReservationHistory(customer_id){
 	const headers = authHeader();
 	const resFetchReservedServices = await axios.get(API_URL + `/api/users/${customer_id}/reservations`,{headers});
+	const resFetchReceiptList = await axios.get(API_URL+ `/api/receipts`,{headers});
 	let reservationHistory=[];
 	await promise.mapSeries(resFetchReservedServices.data.reservations,(async(reservation)=>{
-		if(reservation.paid_status==='fully-paid'){
-			const headers = authHeader();
-			const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
-			reservationHistory = [...reservationHistory,{...reservation,service_name:resServiceDetail.data.service_name
-			}]
-		}
+		const headers = authHeader();
+		const resServiceDetail = await axios.get(API_URL+`/api/services/${reservation.service_id}`,{headers});
+		let receipts_of_reservation = [];
+		let payment_methods_of_receipts = [];
+		resFetchReceiptList.data.receipt.map((receipt)=>{
+			if(reservation.reserve_id===receipt.reservation_id){
+				receipts_of_reservation = [...receipts_of_reservation,receipt.receipt_id];
+				payment_methods_of_receipts = [...payment_methods_of_receipts,receipt.payment_method];
+			}
+		});
+		reservationHistory = [...reservationHistory,{...reservation,service_name:resServiceDetail.data.service_name,receipts_of_reservation,payment_methods_of_receipts
+		}]
 	}));
 	return {
 		type:customerConstants.FETCH_CUSTOMER_RESERVATION_HISTORY,
@@ -304,10 +315,11 @@ async function payService(payment_number,reserve_id){
 }
 
 // Use case: 16
-async function informBillDetail(reserve_id){
+async function informBillDetail(receipt_id){
 	const headers = authHeader();
-	const res = await axios.get(API_URL + `/api/receipts/${reserve_id}`,{headers});
+	const res = await axios.get(API_URL + `/api/receipts/${receipt_id}`,{headers});
 	let billDetail = res.data;
+	console.log(billDetail)
 	const user = await axios.get(API_URL + `/api/users/${billDetail.customer_id}` , {headers} );
 	billDetail = {...billDetail,first_name:user.data.first_name,last_name:user.data.last_name}
 	return {
@@ -317,10 +329,10 @@ async function informBillDetail(reserve_id){
 }
 
 // Use case: 17
-async function downloadBillDetail(reserve_id){
+async function downloadBillDetail(receipt_id){
 	const headers = authHeader();
 	let newWindow = window.open('', '_blank');
-	const res = await axios.get(API_URL + `/api/receipts/${reserve_id}/download`,{headers});
+	const res = await axios.get(API_URL + `/api/receipts/${receipt_id}/download`,{headers});
 	let uriContent = "data:application/pdf," + encodeURIComponent(res.data);
 	//window.open(uriContent, 'neuesDokument')
 	newWindow.location.href = uriContent;
