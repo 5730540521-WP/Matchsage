@@ -43,9 +43,10 @@ class ServiceDetail extends React.Component{
 		current2 : 'overall',
 		isReservation: false,
 		showRateEmployee: false,
+		selectRateEmployee:'',
 		showReportEmployeeModal: false,
 		selectedReportEmployee:'',
-		reportEmployeeTopic:'',
+		reportEmployeeTopic:'',	
 		reportEmployeeContent:'',
 		showServiceComplaint: false,
 		sendServiceComplaintLoading:false,
@@ -104,11 +105,12 @@ class ServiceDetail extends React.Component{
 	}
 
 	onRatingEmployee = (employee_id) =>{ 
-		CustomerActions.rateService(employee_id, this.state.employeeRating,"employee")
-		console.log(employee_id)
+		CustomerActions.rateEmployee(employee_id, this.state.employeeRating,"employee")
+		console.log(employee_id, this.state.employeeRating)
 		alert('Rating success!')
-		
-		window.location.reload()	
+		setTimeout(() => {
+			window.location.reload()
+		}, 1000)	
 				
 	}
 
@@ -164,34 +166,34 @@ class ServiceDetail extends React.Component{
 		</Modal>
 	}
 
-	// renderRateEmployeeModal(employee){
-	// 	return <Modal
-	// 	  title={'ให้คะแนน  '+employee.first_name+' '+ employee.last_name}
-	// 		visible={this.state.showRateEmployee}
-	// 		onOk={null}
-	// 		maskClosable='true'
-	// 		maskStyle= {{opacity:'0.5'}}
-	// 		width= '400'
-	// 		footer={
-	// 			<Calign><Button type='primary' style={{margin:'10px'}} 
-	// 			onClick={(e) => this.onRatingEmployee(employee.employee_id)}>
-	// 			ยืนยัน
-	// 			</Button>
-	// 			</Calign>
-	// 		}
+	renderRateEmployeeModal(employee){
+		return <Modal
+		  title={'ให้คะแนน  '+employee.first_name+' '+ employee.last_name}
+			visible={this.state.showRateEmployee}
+			onOk={null}
+			maskClosable='true'
+			maskStyle= {{opacity:'0.5'}}
+			width= '400'
+			footer={
+				<Calign><Button type='primary' style={{margin:'10px'}} 
+				onClick={(e) => this.onRatingEmployee(employee.employee_id)}>
+				ยืนยัน
+				</Button>
+				</Calign>
+			}
 			
-	// 		onClose={()=>{
-	// 			this.setState({showRateEmployee:false})
-	// 		}}
-	// 	>	
-	// 			<Calign>				
+			onClose={()=>{
+				this.setState({showRateEmployee:false})
+			}}
+		>	
+				<Calign>				
 				
-	// 			<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleChange} style={{margin:'10px',textAlign:'center'}} />
-	// 			</Calign>
-	// 		</Modal>
+				<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleEmployeeRate} style={{margin:'10px',textAlign:'center'}} />
+				</Calign>
+			</Modal>
 		
 
-	// }
+	}
 
 
 	renderServiceDetail = ()=>{
@@ -306,7 +308,12 @@ class ServiceDetail extends React.Component{
 					.employees.employees.map((employee,index)=>{return index%3===2?this.renderEmployeeCard(employee,index):null})}
 						</Col>
 					</Row>
-					<ReportEmployeeModal changeTopic={(topic)=>this.setState({reportEmployeeTopic:topic})} changeContent={(content)=>this.setState({reportEmployeeContent:content})} topic={this.state.reportEmployeeTopic} content={this.state.reportEmployeeContent} employee={this.state.selectedReportEmployee} visible={this.state.showReportEmployeeModal} close={()=>this.setState({showReportEmployeeModal:false})}/>
+
+					{this.renderRateEmployeeModal(this.state.selectRateEmployee)}
+					<ReportEmployeeModal changeTopic={(topic)=>this.setState({reportEmployeeTopic:topic})} 
+					changeContent={(content)=>this.setState({reportEmployeeContent:content})} topic={this.state.reportEmployeeTopic} 
+					content={this.state.reportEmployeeContent} employee={this.state.selectedReportEmployee} visible={this.state.showReportEmployeeModal} 
+					close={()=>this.setState({showReportEmployeeModal:false})}/>
 				</div>
 				}
 			</div>
@@ -322,19 +329,19 @@ class ServiceDetail extends React.Component{
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
 				<br/>เพศ {employee.gender==='male'?'ชาย':'หญิง'}
-				<br/>คะแนน {employee.rating}
+				<br/>คะแนน {this.get2Dec( employee.rating)}
 				<br/><Rate disabled allowHalf value={this.getHalf( employee.rating) } />
 
 
 				
 
 				<br/> <Button type='primary' style={{marginBottom:'10px'}}
-					onClick={()=>{this.setState({showRateEmployee:true})}}>
+					onClick={()=>{this.setState({showRateEmployee:true , selectRateEmployee: employee})}}>
 								ให้คะแนนพนักงาน
 					</Button>	
 					{/* {this.renderRateEmployeeModal(employee)} */}
 
-					<Modal title={'ให้คะแนน  '+employee.first_name+' '+ employee.last_name}
+					{/* <Modal title={'ให้คะแนน  '+employee.first_name+' '+ employee.last_name}
 						visible={this.state.showRateEmployee}
 						onOk={null}
 						maskClosable='true'
@@ -356,7 +363,7 @@ class ServiceDetail extends React.Component{
 						
 						<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleChange} style={{margin:'10px',textAlign:'center'}} />
 						</Calign>
-					</Modal>
+					</Modal> */}
 
 
 
