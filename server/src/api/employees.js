@@ -12,13 +12,11 @@ let router = Router()
 router.post('/:id/rate', AuthServ.isAuthenticated, ExpressJoi({
   body: {
     score: Joi.number().required(),
-    rating_type: Joi.string().required().valid('employee'),
-    price: Joi.number().optional(),
-    payment_date: Joi.string().optional()
+    rating_type: Joi.string().required().valid('employee')
   }
 }), async (req, res, next) => {
   try {
-    const opts = Object.assign(req.body, { employee_id: req.params.id, customer_id: req.user.user_id })
+    const opts = Object.assign({}, req.body, { employee_id: req.params.id, customer_id: req.user.user_id })
     await RatingServ.rate(opts)
     res.json({ success: true })
   } catch (error) {
@@ -27,5 +25,3 @@ router.post('/:id/rate', AuthServ.isAuthenticated, ExpressJoi({
 })
 
 module.exports = router
-
-//Done validating
