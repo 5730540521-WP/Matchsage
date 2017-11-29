@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input,Rate} from 'antd';
+import { message,Rate,Row,Col,Button,Menu,Carousel,Avatar,Card,Modal,Input } from 'antd';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {CustomerActions} from '../../actions';
@@ -32,6 +32,7 @@ const P = styled.p`
 const Lalign = styled.div`
 text-align:left;
 `
+
 const Calign = styled.div`
 text-align:center;
 `
@@ -46,14 +47,12 @@ class ServiceDetail extends React.Component{
 		selectedReportEmployee:'',
 		reportEmployeeTopic:'',
 		reportEmployeeContent:'',
-		rateEmployeeModal: false,
 		showServiceComplaint: false,
 		sendServiceComplaintLoading:false,
 		serviceComplaint_topic:'',
 		serviceComplaint_content:'',
 		serviceRating: 3,
 		employeeRating: 0,
-
 		//serviceCurrentRate:''
 		
 	}
@@ -73,14 +72,14 @@ class ServiceDetail extends React.Component{
 	handleChange = (value) => {
     this.setState({ serviceRating:value });	
 	}
-	
+	  
 	getHalf(number){
-			if(number-4 >= 0.5 ) return 4.5;
-			else if(number-3 >= 0.5 && number-3 <1) return 3.5;
-			else if(number-2 >= 0.5 && number-2 <1) return 2.5;
-			else if(number-1 >= 0.5 && number-1 <1) return 1.5;
-			else if(number >= 0.5 && number  <1) return 0.5;
-			else return number;
+		if(number-4 >= 0.5 ) return 4.5;
+		else if(number-3 >= 0.5 && number-3 <1) return 3.5;
+		else if(number-2 >= 0.5 && number-2 <1) return 2.5;
+		else if(number-1 >= 0.5 && number-1 <1) return 1.5;
+		else if(number >= 0.5 && number  <1) return 0.5;
+		else return number;
 	}
 
 	componentDidMount(){
@@ -90,11 +89,18 @@ class ServiceDetail extends React.Component{
 
 	onRatingService = (e) =>{ 
 		CustomerActions.rateService(this.props.serviceState.service.service_id, this.state.serviceRating,"service")
-		alert('Rating success!')
+		const modal = Modal.success({
+			title: 'Rate success!',
+			content: 'close this modal to proceed.'
+		});
 		this.setState({serviceCurrentRate:this.props.serviceState.service.rating});
 		this.state.isRate=true;
-		window.location.reload()	
-
+		setTimeout(() => {
+			modal.destroy()
+			window.location.reload()
+		}, 1000)
+		
+		
 	}
 
 	onRatingEmployee = (employee_id) =>{ 
@@ -137,9 +143,13 @@ class ServiceDetail extends React.Component{
 				}}>ยกเลิก</Button>,
 				<Button key="submit" type="primary" size="large" loading={this.state.sendServiceComplaintLoading} onClick={async()=>{
 					this.setState({ loading: true });
-					console.log(this.props.serviceState);
-					await this.props.sendComplaint(this.props.serviceState
+					const hasError = await CustomerActions.sendServiceComplaint(this.props.serviceState
 			.service.service_id,this.state.serviceComplaint_topic,this.state.serviceComplaint_content);
+						if(hasError){
+							message.error('Error.');
+						}else {
+							message.success('Sending Complaint Successful.');
+						}
 					this.setState({ loading: false,showServiceComplaint:false });
 				}}>
 					ส่ง
@@ -252,13 +262,13 @@ class ServiceDetail extends React.Component{
 							<H2>คะแนนบริการ</H2>
 							<Lalign>
 								{/* {Service Rate} */}
-							<Rate disabled  allowHalf defaultValue={this.getHalf( this.props.serviceState.service.rating )} style={{backgroundColor : '#eeeeee'}} />
+								<Rate disabled  allowHalf defaultValue={this.getHalf( this.props.serviceState.service.rating )} style={{backgroundColor : '#eeeeee'}} />
 							</Lalign>
 
 
 							<H2 style={{marginLeft:'20px',marginTop:'15px', fontSize:'15px'}}>ให้คะแนนบริการนี้</H2>
 							<Lalign>
-							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px', backgroundColor : '#ccffcc'}}/>
+							<Rate allowHalf defaultValue={this.state.serviceRating} onChange={this.handleChange} style={{marginLeft:'20px',marginTop:'5px',marginBottom:'5px' }}/>
 							<Button type='primary' 
 								onClick={(e) => this.onRatingService(e)} style={{fontSize:'13px',marginLeft:'10px'}}>>
 								ส่ง</Button>
@@ -295,7 +305,7 @@ class ServiceDetail extends React.Component{
 							{this.props.serviceState
 					.employees.employees.map((employee,index)=>{return index%3===2?this.renderEmployeeCard(employee,index):null})}
 						</Col>
-					</Row>					
+					</Row>
 					<ReportEmployeeModal changeTopic={(topic)=>this.setState({reportEmployeeTopic:topic})} changeContent={(content)=>this.setState({reportEmployeeContent:content})} topic={this.state.reportEmployeeTopic} content={this.state.reportEmployeeContent} employee={this.state.selectedReportEmployee} visible={this.state.showReportEmployeeModal} close={()=>this.setState({showReportEmployeeModal:false})}/>
 				</div>
 				}
@@ -304,12 +314,10 @@ class ServiceDetail extends React.Component{
 	}
 
 	renderEmployeeCard(employee,index){
-		const {emp} = employee;
-
 		return <div style={{paddingBottom:'2vw'}}>
 		<Card style={{ width: '22vw',margin:'auto' }} bodyStyle={{ padding: 0 }}>
 			<div>
-				<img src="../images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
+				<img src="/images/Auteur-zonder-foto-1.png" style={{margin:'auto',display:'block',maxHeight:'22vw'}}/>
 			</div>
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
@@ -353,8 +361,7 @@ class ServiceDetail extends React.Component{
 
 
 
-
-				<br/><Button icon="exclamation-circle" type="danger" style={{marginBottom:'10px'}} onClick={()=>{
+				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>{
 					this.setState({showReportEmployeeModal:true,selectedReportEmployee:employee,reportEmployeeTopic:'',reportEmployeeContent:''})
 				}}>รายงานพนักงานคนนี้</Button>
 			</div>
@@ -368,7 +375,7 @@ class ServiceDetail extends React.Component{
 			loaded?this.props.serviceState
 .service.service_id?
 			<div style={{color:'#402900'}}>
-				<img src="../images/banner.jpg" style={{width:'100%',height:'12vw'}}/>
+				<img src="/images/banner.jpg" style={{width:'100%',height:400}}/>
 				<Row type="flex" justify="space-between" gutter={48} style={{marginBottom:'20px',marginTop:'20px',paddingLeft:'48px',paddingRight:'48px'}}>
 					<Col span={5} style={{paddingLeft:'0px'}}>
 						<Menu
@@ -419,9 +426,8 @@ function mapDispatchToProps(dispatch){
 
 	// }
 	const loadService = CustomerActions.fetchService;
-	const sendComplaint = CustomerActions.sendServiceComplaint;
 	const selectServiceReservation = CustomerActions.selectServiceReservation;
-	return bindActionCreators({loadService,sendComplaint,selectServiceReservation}, dispatch);
+	return bindActionCreators({loadService,selectServiceReservation}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ServiceDetail);
