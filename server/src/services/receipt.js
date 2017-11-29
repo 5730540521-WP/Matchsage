@@ -23,17 +23,17 @@ async function downloadReceipt (userId, receiptId) {
   }
 
   var tempReceipt = new Pdf()
-  return new Promise((resolve, reject) => {
-    let pendingStepCount = 2
+  return Promise.resolve().then(() => {
+    // let pendingStepCount = 2
 
-    const stepFinished = () => {
-      if (--pendingStepCount === 0) {
-        resolve()
-      }
-    }
+    // const stepFinished = () => {
+    //   if (--pendingStepCount === 0) {
+    //     resolve()
+    //   }
+    // }
 
-    var ws = fs.createWriteStream('tmp/receipt.pdf')
-    ws.on('close', stepFinished)
+    var ws = fs.createWriteStream(`tmp/receipt-${receiptId}.pdf`)
+    // ws.on('close', stepFinished)
     tempReceipt.pipe(ws)
 
     tempReceipt.font('Times-Roman')
@@ -45,9 +45,9 @@ async function downloadReceipt (userId, receiptId) {
     Price: ${receipt.price}`, 100, 100)
     tempReceipt.end()
 
-    stepFinished()
-    ws.on('close', () => {
-    })
+    // stepFinished()
+    // ws.on('close', () => {
+    // })
   })
 }
 

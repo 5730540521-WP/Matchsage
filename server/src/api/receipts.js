@@ -66,9 +66,8 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
     }
     await ReceiptService.downloadReceipt(req.user.user_id, receipt.receipt_id)
     // res.setHeader({'Content-disposition': 'attachment; filename=receipt.pdf'})
-    //console.log(__dirname+ '/../../tmp/')
-    var file = path.join(__dirname + '/../../tmp/receipt.pdf')
-    res.download(file, function (err) {
+    // var file = path.join(__dirname, `receipt-${receipt.receipt_id}.pdf`)
+    res.download(`tmp/receipt-${receipt.receipt_id}.pdf`, function (err) {
       if (err) {
         console.log('Error')
         console.log(err)
@@ -76,9 +75,6 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
         console.log('success')
       }
     })
-    
-    //res.download(__dirname + '/../../tmp/receipt.pdf')
-    //console.log('success')
   } catch (error) {
     next(error)
   }
