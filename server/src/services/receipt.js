@@ -1,7 +1,11 @@
+const setTimeout = require('timers').setTimeout
+
 const ReceiptModel = require('../models/receipt')
 const UserModel = require('../models/user')
 const Pdf = require('pdfkit')
 const fs = require('fs')
+const Promise = require('bluebird')
+Promise.promisifyAll(fs)
 
 async function viewReceipt (userId, receiptId) {
   const receipt = await ReceiptModel.findByReceiptId(receiptId)
@@ -21,34 +25,31 @@ async function downloadReceipt (userId, receiptId) {
     error.status = 400
     throw Error
   }
+  // return Promise.resolve().then(async () => {
+    // let pendingStepCount = 2
 
+    // const stepFinished = () => {
+    //   if (--pendingStepCount === 0) {
+    //     resolve()
+    //   }
+    // }
   var tempReceipt = new Pdf()
-  return new Promise((resolve, reject) => {
-    let pendingStepCount = 2
+  var ws = await fs.createWriteStream(`tmp/receipt-${receiptId}.pdf`)
+    // ws.on('close', stepFinished)
+  tempReceipt.pipe(ws)
 
-    const stepFinished = () => {
-      if (--pendingStepCount === 0) {
-        resolve()
-      }
-    }
-
-    var ws = fs.createWriteStream('tmp/receipt.pdf')
-    ws.on('close', stepFinished)
-    tempReceipt.pipe(ws)
-
-    tempReceipt.font('Times-Roman')
+  tempReceipt.font('Times-Roman')
     .fontSize(30)
     .text(`     Receipt No. ${receipt.receipt_id} \n
     Value Customer:  ${user.first_name}   ${user.last_name}\n
     Service : ${receipt.reservation_id}\n
     Payment_method : ${receipt.payment_method}\n
     Price: ${receipt.price}`, 100, 100)
-    tempReceipt.end()
-
-    stepFinished()
-    ws.on('close', () => {
-    })
-  })
+  tempReceipt.end()
+    // stepFinished()
+    // ws.on('close', () => {
+    // })
+  // })
 }
 
 module.exports = {
