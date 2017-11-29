@@ -1,3 +1,5 @@
+const { setTimeout } = require('timers')
+
 const { Router } = require('express')
 const AuthServ = require('../services/auth')
 const ReceiptModel = require('../models/receipt')
@@ -64,17 +66,13 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
       error.status = 400
       next(error)
     }
-    await ReceiptService.downloadReceipt(req.user.user_id, receipt.receipt_id)
+    ReceiptService.downloadReceipt(req.user.user_id, receipt.receipt_id).then(() => {
+      setTimeout((response) => {
+        res.download(`tmp/receipt-${receipt.receipt_id}.pdf`)
+      }, 1000)
+    })
     // res.setHeader({'Content-disposition': 'attachment; filename=receipt.pdf'})
     // var file = path.join(__dirname, `receipt-${receipt.receipt_id}.pdf`)
-    res.download(`tmp/receipt-${receipt.receipt_id}.pdf`, function (err) {
-      if (err) {
-        console.log('Error')
-        console.log(err)
-      } else {
-        console.log('success')
-      }
-    })
   } catch (error) {
     next(error)
   }
