@@ -44,6 +44,7 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const receipt = await ReceiptModel.findByReceiptId(req.params.id)
     const user = await UserModel.findByUserId(req.user.user_id)
+    console.log(receipt)
     if (receipt.customer_id !== user.user_id) {
       const error = new Error('Only customer who make this reservation can view this receipt')
       error.status = 400
