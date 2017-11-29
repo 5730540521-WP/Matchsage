@@ -24,6 +24,7 @@ export const CustomerActions = {
 	// END Reserve
 	cancelReserveService,
 	rateService,
+	rateEmployee,
 	addCreditCard,
 	informReservationHistory,
 	payDeposit,
@@ -209,6 +210,15 @@ async function rateService(service_id,score,rating_type){
 	// 	employees: employees
 	// }
 
+}
+
+async function rateEmployee(employee_id,score,rating_type){
+	const data ={
+		score, rating_type
+	};
+
+	const headers = authHeader();
+	await axios.post(`${API_URL}/api/employees/${employee_id}/rate`, data, {headers});
 }
 
 // Use case: 11

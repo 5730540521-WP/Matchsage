@@ -33,22 +33,27 @@ const Lalign = styled.div`
 text-align:left;
 `
 
+const Calign = styled.div`
+text-align:center;
+`
 
 class ServiceDetail extends React.Component{
 	state={
 		current :'detail',
 		current2 : 'overall',
 		isReservation: false,
-		//isRate: false,
+		showRateEmployee: false,
+		selectRateEmployee:'',
 		showReportEmployeeModal: false,
 		selectedReportEmployee:'',
-		reportEmployeeTopic:'',
+		reportEmployeeTopic:'',	
 		reportEmployeeContent:'',
 		showServiceComplaint: false,
 		sendServiceComplaintLoading:false,
 		serviceComplaint_topic:'',
 		serviceComplaint_content:'',
 		serviceRating: 3,
+		employeeRating: 0,
 		//serviceCurrentRate:''
 		
 	}
@@ -67,7 +72,16 @@ class ServiceDetail extends React.Component{
 	
 	handleChange = (value) => {
     this.setState({ serviceRating:value });	
-  }
+	}
+	  
+	getHalf(number){
+		if(number-4 >= 0.5 ) return 4.5;
+		else if(number-3 >= 0.5 && number-3 <1) return 3.5;
+		else if(number-2 >= 0.5 && number-2 <1) return 2.5;
+		else if(number-1 >= 0.5 && number-1 <1) return 1.5;
+		else if(number >= 0.5 && number  <1) return 0.5;
+		else return number;
+	}
 
 	componentDidMount(){
 		this.props.loadService(this.props.match.params.id);
@@ -88,6 +102,21 @@ class ServiceDetail extends React.Component{
 		}, 1000)
 		
 		
+	}
+
+	onRatingEmployee = (employee_id) =>{ 
+		CustomerActions.rateEmployee(employee_id, this.state.employeeRating,"employee")
+		console.log(employee_id, this.state.employeeRating)
+		alert('Rating success!')
+		setTimeout(() => {
+			window.location.reload()
+		}, 1000)	
+				
+	}
+
+
+	handleEmployeeRate= (value) => {
+		this.setState({ employeeRating:value });	
 	}
 
 	get2Dec(number){
@@ -136,6 +165,36 @@ class ServiceDetail extends React.Component{
 
 		</Modal>
 	}
+
+	renderRateEmployeeModal(employee){
+		return <Modal
+		  title={'ให้คะแนน  '+employee.first_name+' '+ employee.last_name}
+			visible={this.state.showRateEmployee}
+			onOk={null}
+			maskClosable='true'
+			maskStyle= {{opacity:'0.5'}}
+			width= '400'
+			footer={
+				<Calign><Button type='primary' style={{margin:'10px'}} 
+				onClick={(e) => this.onRatingEmployee(employee.employee_id)}>
+				ยืนยัน
+				</Button>
+				</Calign>
+			}
+			
+			onClose={()=>{
+				this.setState({showRateEmployee:false})
+			}}
+		>	
+				<Calign>				
+				
+				<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleEmployeeRate} style={{margin:'10px',textAlign:'center'}} />
+				</Calign>
+			</Modal>
+		
+
+	}
+
 
 	renderServiceDetail = ()=>{
 		return(
@@ -205,7 +264,7 @@ class ServiceDetail extends React.Component{
 							<H2>คะแนนบริการ</H2>
 							<Lalign>
 								{/* {Service Rate} */}
-									<Rate disabled defaultValue={this.props.serviceState.service.rating} style={{}} />
+								<Rate disabled  allowHalf defaultValue={this.getHalf( this.props.serviceState.service.rating )} style={{backgroundColor : '#eeeeee'}} />
 							</Lalign>
 
 
@@ -249,7 +308,12 @@ class ServiceDetail extends React.Component{
 					.employees.employees.map((employee,index)=>{return index%3===2?this.renderEmployeeCard(employee,index):null})}
 						</Col>
 					</Row>
-					<ReportEmployeeModal changeTopic={(topic)=>this.setState({reportEmployeeTopic:topic})} changeContent={(content)=>this.setState({reportEmployeeContent:content})} topic={this.state.reportEmployeeTopic} content={this.state.reportEmployeeContent} employee={this.state.selectedReportEmployee} visible={this.state.showReportEmployeeModal} close={()=>this.setState({showReportEmployeeModal:false})}/>
+
+					{this.renderRateEmployeeModal(this.state.selectRateEmployee)}
+					<ReportEmployeeModal changeTopic={(topic)=>this.setState({reportEmployeeTopic:topic})} 
+					changeContent={(content)=>this.setState({reportEmployeeContent:content})} topic={this.state.reportEmployeeTopic} 
+					content={this.state.reportEmployeeContent} employee={this.state.selectedReportEmployee} visible={this.state.showReportEmployeeModal} 
+					close={()=>this.setState({showReportEmployeeModal:false})}/>
 				</div>
 				}
 			</div>
@@ -265,7 +329,45 @@ class ServiceDetail extends React.Component{
 			<div>
 				ชื่อ {employee.first_name} {employee.last_name}
 				<br/>เพศ {employee.gender==='male'?'ชาย':'หญิง'}
-				<br/>คะแนน {employee.rating}
+				<br/>คะแนน {this.get2Dec( employee.rating)}
+				<br/><Rate disabled allowHalf value={this.getHalf( employee.rating) } />
+
+
+				
+
+				<br/> <Button type='primary' style={{marginBottom:'10px'}}
+					onClick={()=>{this.setState({showRateEmployee:true , selectRateEmployee: employee})}}>
+								ให้คะแนนพนักงาน
+					</Button>	
+					{/* {this.renderRateEmployeeModal(employee)} */}
+
+					{/* <Modal title={'ให้คะแนน  '+employee.first_name+' '+ employee.last_name}
+						visible={this.state.showRateEmployee}
+						onOk={null}
+						maskClosable='true'
+						maskStyle= {{opacity:'0.5'}}
+						width= '400'
+						footer={
+							<Calign><Button type='primary' style={{margin:'10px'}} 
+							onClick={(e) => this.onRatingEmployee(employee.employee_id)}>
+							ยืนยัน
+							</Button>
+							</Calign>
+						}
+						
+						onClose={()=>{
+							this.setState({showRateEmployee:false})
+						}}
+					>	
+						<Calign>				
+						
+						<Rate allowHalf defaultValue={this.state.employeeRating} onChange={this.handleChange} style={{margin:'10px',textAlign:'center'}} />
+						</Calign>
+					</Modal> */}
+
+
+
+
 				<br/><Button icon="exclamation-circle" type="danger" onClick={()=>{
 					this.setState({showReportEmployeeModal:true,selectedReportEmployee:employee,reportEmployeeTopic:'',reportEmployeeContent:''})
 				}}>รายงานพนักงานคนนี้</Button>
