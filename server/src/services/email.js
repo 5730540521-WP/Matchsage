@@ -16,12 +16,13 @@ async function mailConfirmReservation (reserveId) {
   const reserve = await ReserveModel.findByReservationId(reserveId)
   const cust = await UserModel.findByUserId(reserve.customer_id)
   const service = await ServiceModel.findByServiceId(reserve.service_id)
-
+  
   send({
     to: [cust.email],
     subject: 'reservation cofirmed!!',
     text: `Hello ${cust.first_name},\n\nyour reservation: ${reserve.reserve_id}\nat ${service.service_name}\nfrom ${reserve.start_time}-${reserve.end_time} is confirmed\n\nEnjoy your massage with Matchsage :)`
   }, function (err, res) {
+    console.log('hey')
     console.log('confirm reserve callback returned: err:', err, '; res:', res, 'send to', cust.email)
     if (err) {
       err.status = 550

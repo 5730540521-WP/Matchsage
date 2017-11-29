@@ -38,7 +38,7 @@ describe('API tests', () => {
   }
 
   let customer1 = {
-    email: 'customer1@test.com',
+    email: 'wasinwatt@gmail.com',
     password: 'test',
     user_type: 'customer',
     first_name: 'wasin',
@@ -187,6 +187,7 @@ describe('API tests', () => {
 
   describe('# user signup', () => {
     it('should be able to sign up && user will appear in the database', () => {
+      const tmpMail = customer1.email
       return request(app)
       .post('/api/signup')
       .send(customer1)
@@ -197,7 +198,7 @@ describe('API tests', () => {
         const { user_id } = await jwt.verify(cusToken.split(' ')[1], 'MATCHSAGE_USER')
         const user = await UserModel.findByUserId(user_id)
         customer1 = user
-        expect(user.email).to.equal('customer1@test.com')
+        expect(user.email).to.equal(tmpMail)
       })
     })
   })

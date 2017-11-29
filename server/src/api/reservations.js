@@ -95,8 +95,9 @@ router.post('/new', AuthServ.isAuthenticated, ExpressJoi({
       price: body.price * 0.3,
       payment_date: body.date_created}
     await ReceiptModel.createReceipt(receiptInput)
-    res.json(reserve)
     await EmailServ.mailConfirmReservation(reserve.reserve_id)
+    res.json(reserve)
+    
   } catch (error) {
     next(error)
   }
