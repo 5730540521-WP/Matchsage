@@ -6,7 +6,6 @@ import {authHeader, history} from '../helpers';
 import {message} from 'antd';
 import { log, error } from 'util';
 import promise from 'bluebird';
-import FileDownload from 'js-file-download';
 
 export const CustomerActions = {
 	fetchServices,
@@ -331,40 +330,44 @@ async function informBillDetail(receipt_id){
 
 // Use case: 17
 async function downloadBillDetail(receipt_id){
-	// const headers = authHeader();
+	
+	// let newWindow = window.open();
 	// const res = await axios.get(API_URL + `/api/receipts/${receipt_id}/download`,{headers});
-	// FileDownload(res.data,`${receipt_id}.pdf`);
-
+	// //window.open('/user/res')
+	// let uriContent = "data:application/x-download," + encodeURI(res.data);
+	// newWindow.location.href = uriContent;
 	const headers = authHeader();
 	var req = new XMLHttpRequest();
 	req.open("GET", API_URL + `/api/receipts/${receipt_id}/download`, true);
-	req.setRequestHeader('Authorization', headers.Authorization);
+	req.setRequestHeader('authorization',headers.Authorization);
 	req.responseType = "blob";
 	req.onreadystatechange = function () {
-					if (req.readyState === 4 && req.status === 200) {
-									var filename = "PdfName-" + new Date().getTime() + ".pdf";
-									if (typeof window.chrome !== 'undefined') {
-													// Chrome version
-													console.log('1')
-													var link = document.createElement('a');
-													link.href = window.URL.createObjectURL(req.response);
-													link.download = "PdfName-" + new Date().getTime() + ".pdf";
-													link.click();
-									} else if (typeof window.navigator.msSaveBlob !== 'undefined') {
-													// IE version
-													console.log('2')
-													var blob = new Blob([req.response], { type: 'application/pdf' });
-													window.navigator.msSaveBlob(blob, filename);
-									} else {
-													// Firefox version
-													console.log('3')
-													var file = new File([req.response], filename, { type: 'application/force-download' });
-													window.open(URL.createObjectURL(file));
-									}
+			if (req.readyState === 4 && req.status === 200) {
+					var filename = receipt_id + ".pdf";
+					if (typeof window.chrome !== 'undefined') {
+							// Chrome version
+							var link = document.createElement('a');
+							link.href = window.URL.createObjectURL(req.response);
+							link.download = receipt_id + ".pdf";
+							link.click();
+					} else if (typeof window.navigator.msSaveBlob !== 'undefined') {
+							// IE version
+							var blob = new Blob([req.response], { type: 'application/pdf' });
+							window.navigator.msSaveBlob(blob, filename);
+					} else {
+							// Firefox version
+							var file = new File([req.response], filename, { type: 'application/force-download' });
+							var link = document.createElement('a');
+							link.href = window.URL.createObjectURL(file);
+							link.download = receipt_id + ".pdf";
+							document.body.appendChild(link);
+							link.click();
+							document.body.removeChild(link);
 					}
+			}
 	};
 	req.send();
-
+	return;
 }
 
 // Use case: 18
