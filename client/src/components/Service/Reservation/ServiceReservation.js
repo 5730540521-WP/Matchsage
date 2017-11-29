@@ -223,7 +223,7 @@ class ServiceReservation extends React.PureComponent{
 
 		return(
 			<div>
-				<Steps current={current}>
+				<Steps current={current} style={{textAlign:'left',backgroundColor:'#FFF8EB'}}>
 					{/* <Step status="finish" title="เลือกบริการ" icon={<Icon type="user" />} />
 					<Step status="finish" title="ยืนยันอีเมล์" icon={<Icon type="solution" />} />
 					<Step status="process" title="จำระค่ามัดจำ" icon={<Icon type="credit-card" />} />
