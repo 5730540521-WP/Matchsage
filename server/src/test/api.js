@@ -802,6 +802,9 @@ describe('API tests', () => {
       .set('Accept', 'application/pdf')
       .set('Authorization', cusToken)
       .expect(200)
+      .then(res => {
+        console.log(res.body)
+      })
     })
   })
 })

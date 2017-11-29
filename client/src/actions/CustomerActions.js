@@ -340,24 +340,43 @@ async function informBillDetail(receipt_id){
 
 // Use case: 17
 async function downloadBillDetail(receipt_id){
+	
+	// let newWindow = window.open();
+	// const res = await axios.get(API_URL + `/api/receipts/${receipt_id}/download`,{headers});
+	// //window.open('/user/res')
+	// let uriContent = "data:application/x-download," + encodeURI(res.data);
+	// newWindow.location.href = uriContent;
 	const headers = authHeader();
-	let newWindow = window.open('', '_blank');
-	const res = await axios.get(API_URL + `/api/receipts/${receipt_id}/download`,{headers});
-	let uriContent = "data:application/pdf," + encodeURIComponent(res.data);
-	//window.open(uriContent, 'neuesDokument')
-	newWindow.location.href = uriContent;
-	// var pom = document.createElement('a');
-	// pom.setAttribute('href', 'data:application/pdf,' + encodeURIComponent(res.data));
-	// pom.setAttribute('download', 'receipt.pdf');
-
-	// if (document.createEvent) {
-	// 		var event = document.createEvent('MouseEvents');
-	// 		event.initEvent('click', true, true);
-	// 		pom.dispatchEvent(event);
-	// }
-	// else {
-	// 		pom.click();
-	// }
+	var req = new XMLHttpRequest();
+	req.open("GET", API_URL + `/api/receipts/${receipt_id}/download`, true);
+	req.setRequestHeader('authorization',headers.Authorization);
+	req.responseType = "blob";
+	req.onreadystatechange = function () {
+			if (req.readyState === 4 && req.status === 200) {
+					var filename = receipt_id + ".pdf";
+					if (typeof window.chrome !== 'undefined') {
+							// Chrome version
+							var link = document.createElement('a');
+							link.href = window.URL.createObjectURL(req.response);
+							link.download = receipt_id + ".pdf";
+							link.click();
+					} else if (typeof window.navigator.msSaveBlob !== 'undefined') {
+							// IE version
+							var blob = new Blob([req.response], { type: 'application/pdf' });
+							window.navigator.msSaveBlob(blob, filename);
+					} else {
+							// Firefox version
+							var file = new File([req.response], filename, { type: 'application/force-download' });
+							var link = document.createElement('a');
+							link.href = window.URL.createObjectURL(file);
+							link.download = receipt_id + ".pdf";
+							document.body.appendChild(link);
+							link.click();
+							document.body.removeChild(link);
+					}
+			}
+	};
+	req.send();
 	return;
 }
 

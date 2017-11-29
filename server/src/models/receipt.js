@@ -4,7 +4,8 @@ const Promise = require('bluebird')
 const ReceiptSchema = new mongoose.Schema({
   receipt_id: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   customer_id: {
     type: String,
@@ -12,7 +13,8 @@ const ReceiptSchema = new mongoose.Schema({
   },
   reservation_id: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   payment_type: {
     type: String

@@ -1,3 +1,5 @@
+const { setTimeout } = require('timers')
+
 const { Router } = require('express')
 const AuthServ = require('../services/auth')
 const ReceiptModel = require('../models/receipt')
@@ -44,6 +46,7 @@ router.get('/:id', AuthServ.isAuthenticated, async (req, res, next) => {
   try {
     const receipt = await ReceiptModel.findByReceiptId(req.params.id)
     const user = await UserModel.findByUserId(req.user.user_id)
+    console.log(receipt)
     if (receipt.customer_id !== user.user_id) {
       const error = new Error('Only customer who make this reservation can view this receipt')
       error.status = 400
@@ -63,21 +66,13 @@ router.get('/:id/download', AuthServ.isAuthenticated, async (req, res, next) => 
       error.status = 400
       next(error)
     }
-    await ReceiptService.downloadReceipt(req.user.user_id, receipt.receipt_id)
-    // res.setHeader({'Content-disposition': 'attachment; filename=receipt.pdf'})
-    //console.log(__dirname+ '/../../tmp/')
-    var file = path.join(__dirname + '/../../tmp/receipt.pdf')
-    res.download(file, function (err) {
-      if (err) {
-        console.log('Error')
-        console.log(err)
-      } else {
-        console.log('success')
-      }
+    ReceiptService.downloadReceipt(req.user.user_id, receipt.receipt_id).then(() => {
+      setTimeout((response) => {
+        res.download(`tmp/receipt-${receipt.receipt_id}.pdf`)
+      }, 1000)
     })
-    
-    //res.download(__dirname + '/../../tmp/receipt.pdf')
-    //console.log('success')
+    // res.setHeader({'Content-disposition': 'attachment; filename=receipt.pdf'})
+    // var file = path.join(__dirname, `receipt-${receipt.receipt_id}.pdf`)
   } catch (error) {
     next(error)
   }
