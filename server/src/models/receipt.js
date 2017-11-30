@@ -13,8 +13,7 @@ const ReceiptSchema = new mongoose.Schema({
   },
   reservation_id: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   payment_type: {
     type: String

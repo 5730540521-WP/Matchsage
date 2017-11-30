@@ -317,6 +317,7 @@ async function payService(payment_number,reserve_id){
 	const data = {
 		payment_number
 	}
+	console.log(payment_number)
 	let hasError = false;
 	let errorMessage='';
 	const res = await axios.post(API_URL + `/api/reservations/${reserve_id}/make-full-payment`,data,{headers}).catch(error=>{hasError=true;errorMessage=error.response.data.error})
