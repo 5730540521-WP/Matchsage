@@ -23,7 +23,7 @@ const userTypes=[{
 	label:'ผู้ใช้บริการ'
 },{
 	value:'owner',
-	label:'ผู้ให้บริการ'
+	label:'เจ้าของบริการ'
 }];
 class RegistrationForm extends React.Component{
 	constructor(props){
@@ -203,7 +203,7 @@ class RegistrationForm extends React.Component{
           label="ประเภท"
         >
 					{getFieldDecorator('user_type', {
-            initialValue: ['ผู้ใช้บริการ', 'ผู้ให้บริการ'],
+            initialValue: ['ผู้ใช้บริการ', 'เจ้าของบริการ'],
             rules: [{ type: 'array', required: true, message: 'โปรดเลือกประเภทของสมาชิก' }],
           })(
             <Cascader options={userTypes} />
