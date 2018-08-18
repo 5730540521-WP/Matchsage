@@ -16,7 +16,7 @@ Matchsage web application using React and NodeJs.
 
 * **Wasin Watthanasrisong** - [WasinWatt](https://github.com/wasinwatt)
 * **Wasin Saengow** [chrsow](https://github.com/chrsow)
-* **Wasin Panitansirikul** [5730447921-PW](https://github.com/5730447921-PW)
+* **Wasin Panitansirikul** [5730540521-WP](https://github.com/5730540521-WP)
 * **Kissada Pornratthanapong** [5730022821-KP](https://github.com/5730022821-KP)
 * **Narit Kemtongchareon** [5730290621-NK](https://github.com/5730290621-NK)
 * **Panuvit Wonganankit** [5730447921-PW](https://github.com/5730447921-PW)
